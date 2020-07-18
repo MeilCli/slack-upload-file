@@ -1617,12 +1617,13 @@ function readOption() {
     };
 }
 function run() {
+    var _a;
     return __awaiter(this, void 0, void 0, function () {
-        var option, client, file, error_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var option, client, file, result, error_1;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
+                    _b.trys.push([0, 2, , 3]);
                     option = readOption();
                     client = new slack.WebClient(option.slackToken, { slackApiUrl: option.slackApiUrl });
                     file = void 0;
@@ -1640,10 +1641,16 @@ function run() {
                             title: option.title,
                         })];
                 case 1:
-                    _a.sent();
+                    result = _b.sent();
+                    if (result.ok == false) {
+                        core.setFailed((_a = result.error) !== null && _a !== void 0 ? _a : "unknown error");
+                        return [2 /*return*/];
+                    }
+                    core.info(JSON.stringify(result));
+                    core.setOutput("response", JSON.stringify(result));
                     return [3 /*break*/, 3];
                 case 2:
-                    error_1 = _a.sent();
+                    error_1 = _b.sent();
                     core.setFailed(error_1.message);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];

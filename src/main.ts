@@ -64,7 +64,8 @@ async function run() {
             core.setFailed(result.error ?? "unknown error");
             return;
         }
-        core.setOutput("response", result);
+        core.info(JSON.stringify(result));
+        core.setOutput("response", JSON.stringify(result));
     } catch (error) {
         core.setFailed(error.message);
     }
