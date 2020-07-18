@@ -1646,7 +1646,6 @@ function run() {
                         core.setFailed((_a = result.error) !== null && _a !== void 0 ? _a : "unknown error");
                         return [2 /*return*/];
                     }
-                    core.info(JSON.stringify(result));
                     core.setOutput("response", JSON.stringify(result));
                     return [3 /*break*/, 3];
                 case 2:
