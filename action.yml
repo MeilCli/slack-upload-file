@@ -23,7 +23,7 @@ inputs:
   initial_comment:
     description: 'The message text introducing the file in specified channels.'
   thread_ts:
-    description: 'Provide another message's ts value to upload this file as a reply. Never use a reply's ts value; use its parent instead.'
+    description: 'Provide another message`s ts value to upload this file as a reply. Never use a reply`s ts value; use its parent instead.'
   title:
     description: 'Title of file.'
 outputs:
