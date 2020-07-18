@@ -2,10 +2,11 @@ name: Debug
 
 on:
   workflow_dispatch:
-    message: 
-      description: 'post message as text file to slack'
-      required: true
-      default: 'Hello World!'
+    inputs:
+      message: 
+        description: 'post message as text file to slack'
+        required: true
+        default: 'Hello World!'
 
 jobs:
   build:
