@@ -9,7 +9,7 @@ on:
         default: 'Hello World!'
 
 jobs:
-  build:
+  post:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -18,7 +18,7 @@ jobs:
         id: upload_file
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
-          channels: $${{ secrets.SLACK_CHANNELS }}
+          channels: ${{ secrets.SLACK_CHANNELS }}
           file_path: 'test.txt'
           file_name: 'message.txt'
           file_type: 'text'
