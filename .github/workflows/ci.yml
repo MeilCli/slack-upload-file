@@ -6,6 +6,9 @@ on:
   push:
     branches: 
       - master
+  pull_request:
+    branches: 
+      - master
 
 jobs:
   build:
@@ -18,7 +21,9 @@ jobs:
       - run: npm install
       - run: npm run build
       - run: npm run pack
+        if: github.event_name != 'pull_request'
       - name: Create Pull Request
+        if: github.event_name != 'pull_request'
         uses: peter-evans/create-pull-request@v2
         with:
           commit-message: "update actions"
