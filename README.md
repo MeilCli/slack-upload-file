@@ -1,4 +1,5 @@
 # slack-upload-file
+![CI](https://github.com/MeilCli/slack-upload-file/workflows/CI/badge.svg)  
 upload file to slack action
 
 ## Example
