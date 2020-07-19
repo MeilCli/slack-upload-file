@@ -6,10 +6,10 @@ branding:
   color: blue
 inputs:
   slack_token:
-    description: 'slack token, must has files:write permission'
+    description: 'Slack token, must has files:write permission'
     required: true
   slack_api_url:
-    description: 'custom slack api url'
+    description: 'Custom slack api url'
   channels:
     description: 'Comma-separated list of channel names or IDs where the file will be shared.'
   content:
