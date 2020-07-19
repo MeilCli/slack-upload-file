@@ -4,3 +4,6 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    reviewers:
+      - "MeilCli"
+    open-pull-requests-limit: 20
