@@ -3,7 +3,7 @@ name: Debug
 on:
   workflow_dispatch:
     inputs:
-      message: 
+      message:
         description: 'post message as text file to slack'
         required: true
         default: 'Hello World!'

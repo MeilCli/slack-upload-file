@@ -1,13 +1,12 @@
-
 name: CI
 
 on:
   workflow_dispatch:
   push:
-    branches: 
+    branches:
       - master
   pull_request:
-    branches: 
+    branches:
       - master
 
 jobs:
@@ -26,9 +25,9 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: peter-evans/create-pull-request@v2
         with:
-          commit-message: "update actions"
-          title: "update actions"
-          labels: "action"
-          assignees: "MeilCli"
-          reviewers: "MeilCli"
-          branch: "update/action"
+          commit-message: 'update actions'
+          title: 'update actions'
+          labels: 'Action'
+          assignees: 'MeilCli'
+          reviewers: 'MeilCli'
+          branch: 'update/action'
