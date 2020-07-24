@@ -6,7 +6,6 @@
     "scripts": {
         "build": "tsc",
         "pack": "ncc build",
-        "test": "jest",
         "lint": "eslint src/**/*.ts"
     },
     "keywords": [],
