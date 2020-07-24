@@ -49,6 +49,16 @@ module.exports =
 /************************************************************************/
 /******/ ({
 
+/***/ 21:
+/***/ (function(__unusedmodule, exports) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+
 /***/ 25:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -669,7 +679,7 @@ module.exports = __webpack_require__(352);
 /***/ 59:
 /***/ (function(module) {
 
-module.exports = {"_args":[["@slack/web-api@5.10.0","/home/runner/work/slack-upload-file/slack-upload-file"]],"_from":"@slack/web-api@5.10.0","_id":"@slack/web-api@5.10.0","_inBundle":false,"_integrity":"sha512-t8c2lcSrdX8LIUOS1RvslbBBKvuNaTtbEcrWai4yDGkiNIxzhk+dHPcJzd7A4A0DkAgiEwXeezR7RCELuG8WgQ==","_location":"/@slack/web-api","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"@slack/web-api@5.10.0","name":"@slack/web-api","escapedName":"@slack%2fweb-api","scope":"@slack","rawSpec":"5.10.0","saveSpec":null,"fetchSpec":"5.10.0"},"_requiredBy":["/"],"_resolved":"https://registry.npmjs.org/@slack/web-api/-/web-api-5.10.0.tgz","_spec":"5.10.0","_where":"/home/runner/work/slack-upload-file/slack-upload-file","author":{"name":"Slack Technologies, Inc."},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"dependencies":{"@slack/logger":">=1.0.0 <3.0.0","@slack/types":"^1.7.0","@types/is-stream":"^1.1.0","@types/node":">=8.9.0","@types/p-queue":"^2.3.2","axios":"^0.19.0","eventemitter3":"^3.1.0","form-data":"^2.5.0","is-stream":"^1.1.0","p-queue":"^2.4.2","p-retry":"^4.0.0"},"description":"Official library for using the Slack Platform's Web API","devDependencies":{"@aoberoi/capture-console":"^1.1.0","@types/chai":"^4.1.7","@types/mocha":"^5.2.6","busboy":"^0.3.0","chai":"^4.2.0","codecov":"^3.2.0","mocha":"^6.0.2","nock":"^10.0.6","nyc":"^14.1.1","shelljs":"^0.8.3","shx":"^0.3.2","sinon":"^7.2.7","source-map-support":"^0.5.10","ts-node":"^8.0.3","tslint":"^5.13.1","tslint-config-airbnb":"^5.11.1","typescript":"^3.3.3333"},"engines":{"node":">= 8.9.0","npm":">= 5.5.1"},"files":["dist/**/*"],"homepage":"https://slack.dev/node-slack-sdk/web-api","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"license":"MIT","main":"dist/index.js","name":"@slack/web-api","publishConfig":{"access":"public"},"repository":{"type":"git","url":"git+https://github.com/slackapi/node-slack-sdk.git"},"scripts":{"build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist ./coverage ./.nyc_output","coverage":"codecov -F webapi --root=$PWD","lint":"tslint --project .","prepare":"npm run build","test":"npm run build && nyc mocha --config .mocharc.json src/*.spec.js"},"types":"./dist/index.d.ts","version":"5.10.0"};
+module.exports = {"_args":[["@slack/web-api@5.11.0","/home/runner/work/slack-upload-file/slack-upload-file"]],"_from":"@slack/web-api@5.11.0","_id":"@slack/web-api@5.11.0","_inBundle":false,"_integrity":"sha512-4a/uj7IZjFLu7Qmq0nH74ecLqk1iI/9x3yRS/v6M5vXDyc5lEruRFp4d5/bz4eN5Bathlq4Bws0wioY516fPag==","_location":"/@slack/web-api","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"@slack/web-api@5.11.0","name":"@slack/web-api","escapedName":"@slack%2fweb-api","scope":"@slack","rawSpec":"5.11.0","saveSpec":null,"fetchSpec":"5.11.0"},"_requiredBy":["/"],"_resolved":"https://registry.npmjs.org/@slack/web-api/-/web-api-5.11.0.tgz","_spec":"5.11.0","_where":"/home/runner/work/slack-upload-file/slack-upload-file","author":{"name":"Slack Technologies, Inc."},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"dependencies":{"@slack/logger":">=1.0.0 <3.0.0","@slack/types":"^1.7.0","@types/is-stream":"^1.1.0","@types/node":">=8.9.0","@types/p-queue":"^2.3.2","axios":"^0.19.0","eventemitter3":"^3.1.0","form-data":"^2.5.0","is-stream":"^1.1.0","p-queue":"^2.4.2","p-retry":"^4.0.0"},"description":"Official library for using the Slack Platform's Web API","devDependencies":{"@aoberoi/capture-console":"^1.1.0","@types/chai":"^4.1.7","@types/mocha":"^5.2.6","busboy":"^0.3.0","chai":"^4.2.0","codecov":"^3.2.0","mocha":"^6.0.2","nock":"^10.0.6","nyc":"^14.1.1","shelljs":"^0.8.3","shx":"^0.3.2","sinon":"^7.2.7","source-map-support":"^0.5.10","ts-node":"^8.0.3","tslint":"^5.13.1","tslint-config-airbnb":"^5.11.1","typescript":"^3.3.3333"},"engines":{"node":">= 8.9.0","npm":">= 5.5.1"},"files":["dist/**/*"],"homepage":"https://slack.dev/node-slack-sdk/web-api","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"license":"MIT","main":"dist/index.js","name":"@slack/web-api","publishConfig":{"access":"public"},"repository":{"type":"git","url":"git+https://github.com/slackapi/node-slack-sdk.git"},"scripts":{"build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist ./coverage ./.nyc_output","coverage":"codecov -F webapi --root=$PWD","lint":"tslint --project .","prepare":"npm run build","test":"npm run build && nyc mocha --config .mocharc.json src/*.spec.js"},"types":"./dist/index.d.ts","version":"5.11.0"};
 
 /***/ }),
 
@@ -920,22 +930,29 @@ function serial(list, iterator, callback)
 "use strict";
 
 /// <reference lib="es2017" />
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var WebClient_1 = __webpack_require__(963);
-exports.WebClient = WebClient_1.WebClient;
-exports.WebClientEvent = WebClient_1.WebClientEvent;
+Object.defineProperty(exports, "WebClient", { enumerable: true, get: function () { return WebClient_1.WebClient; } });
+Object.defineProperty(exports, "WebClientEvent", { enumerable: true, get: function () { return WebClient_1.WebClientEvent; } });
 var logger_1 = __webpack_require__(847);
-exports.LogLevel = logger_1.LogLevel;
+Object.defineProperty(exports, "LogLevel", { enumerable: true, get: function () { return logger_1.LogLevel; } });
 var errors_1 = __webpack_require__(625);
-exports.ErrorCode = errors_1.ErrorCode;
+Object.defineProperty(exports, "ErrorCode", { enumerable: true, get: function () { return errors_1.ErrorCode; } });
 var retry_policies_1 = __webpack_require__(264);
-exports.retryPolicies = retry_policies_1.default;
+Object.defineProperty(exports, "retryPolicies", { enumerable: true, get: function () { return retry_policies_1.default; } });
 var instrument_1 = __webpack_require__(616);
-exports.addAppMetadata = instrument_1.addAppMetadata;
-__export(__webpack_require__(701));
+Object.defineProperty(exports, "addAppMetadata", { enumerable: true, get: function () { return instrument_1.addAppMetadata; } });
+__exportStar(__webpack_require__(701), exports);
 //# sourceMappingURL=index.js.map
 
 /***/ }),
@@ -2002,6 +2019,7 @@ module.exports = {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.rapidRetryPolicy = exports.fiveRetriesInFiveMinutes = exports.tenRetriesInAboutThirtyMinutes = void 0;
 /**
  * The default retry policy. Retry up to 10 times, over the span of about 30 minutes. It's not exact because
  * randomization has been added to prevent a stampeding herd problem (if all instances in your application are retrying
@@ -2926,6 +2944,7 @@ function defer(fn)
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.delay = void 0;
 /**
  * Build a Promise that will resolve after the specified number of milliseconds.
  * @param ms milliseconds to wait
@@ -3919,14 +3938,27 @@ module.exports = require("http");
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getUserAgent = exports.addAppMetadata = void 0;
 const os = __importStar(__webpack_require__(87));
 const packageJson = __webpack_require__(59); // tslint:disable-line:no-require-imports no-var-requires
 /**
@@ -3974,6 +4006,7 @@ module.exports = require("path");
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.rateLimitedErrorWithDelay = exports.platformErrorFromResult = exports.httpErrorFromResponse = exports.requestErrorWithOriginal = exports.ErrorCode = void 0;
 /**
  * A dictionary of codes for errors produced by this package
  */
@@ -4472,11 +4505,343 @@ module.exports = (
 /***/ }),
 
 /***/ 701:
-/***/ (function(__unusedmodule, exports) {
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.cursorPaginationEnabledMethods = exports.Methods = void 0;
+const WebClient_1 = __webpack_require__(963);
+const eventemitter3_1 = __webpack_require__(842);
+// NOTE: could create a named type alias like data types like `SlackUserID: string`
+/**
+ * Binds a certain `method` and its arguments and result types to the `apiCall` method in `WebClient`.
+ */
+function bindApiCall(self, method) {
+    // We have to "assert" that the bound method does indeed return the more specific `Result` type instead of just
+    // `WebAPICallResult`
+    return self.apiCall.bind(self, method);
+}
+/**
+ * A class that defines all Web API methods, their arguments type, their response type, and binds those methods to the
+ * `apiCall` class method.
+ */
+class Methods extends eventemitter3_1.EventEmitter {
+    // TODO: As of writing, `WebClient` already extends EventEmitter...
+    // and I want WebClient to extend this class...
+    // and multiple inheritance in JS is cursed...
+    // so I'm just making this class extend EventEmitter.
+    //
+    // It shouldn't be here, indeed. Nothing here uses it, indeed. But it must be here for the sake of sanity.
+    constructor() {
+        super();
+        this.admin = {
+            apps: {
+                approve: bindApiCall(this, 'admin.apps.approve'),
+                approved: {
+                    list: bindApiCall(this, 'admin.apps.approved.list'),
+                },
+                requests: {
+                    list: bindApiCall(this, 'admin.apps.requests.list'),
+                },
+                restrict: bindApiCall(this, 'admin.apps.restrict'),
+                restricted: {
+                    list: bindApiCall(this, 'admin.apps.restricted.list'),
+                },
+            },
+            conversations: {
+                setTeams: bindApiCall(this, 'admin.conversations.setTeams'),
+                restrictAccess: {
+                    addGroup: bindApiCall(this, 'admin.conversations.restrictAccess.addGroup'),
+                    listGroups: bindApiCall(this, 'admin.conversations.restrictAccess.listGroups'),
+                    removeGroup: bindApiCall(this, 'admin.conversations.restrictAccess.removeGroup'),
+                },
+            },
+            inviteRequests: {
+                approve: bindApiCall(this, 'admin.inviteRequests.approve'),
+                deny: bindApiCall(this, 'admin.inviteRequests.deny'),
+                list: bindApiCall(this, 'admin.inviteRequests.list'),
+                approved: {
+                    list: bindApiCall(this, 'admin.inviteRequests.approved.list'),
+                },
+                denied: {
+                    list: bindApiCall(this, 'admin.inviteRequests.denied.list'),
+                },
+            },
+            teams: {
+                admins: {
+                    list: bindApiCall(this, 'admin.teams.admins.list'),
+                },
+                create: bindApiCall(this, 'admin.teams.create'),
+                list: bindApiCall(this, 'admin.teams.list'),
+                owners: {
+                    list: bindApiCall(this, 'admin.teams.owners.list'),
+                },
+                settings: {
+                    info: bindApiCall(this, 'admin.teams.settings.info'),
+                    setDefaultChannels: bindApiCall(this, 'admin.teams.settings.setDefaultChannels'),
+                    setDescription: bindApiCall(this, 'admin.teams.settings.setDescription'),
+                    setDiscoverability: bindApiCall(this, 'admin.teams.settings.setDiscoverability'),
+                    setIcon: bindApiCall(this, 'admin.teams.settings.setIcon'),
+                    setName: bindApiCall(this, 'admin.teams.settings.setName'),
+                },
+            },
+            usergroups: {
+                addChannels: bindApiCall(this, 'admin.usergroups.addChannels'),
+                addTeams: bindApiCall(this, 'admin.usergroups.addTeams'),
+                listChannels: bindApiCall(this, 'admin.usergroups.listChannels'),
+                removeChannels: bindApiCall(this, 'admin.usergroups.removeChannels'),
+            },
+            users: {
+                session: {
+                    reset: bindApiCall(this, 'admin.users.session.reset'),
+                },
+                assign: bindApiCall(this, 'admin.users.assign'),
+                invite: bindApiCall(this, 'admin.users.invite'),
+                list: bindApiCall(this, 'admin.users.list'),
+                remove: bindApiCall(this, 'admin.users.remove'),
+                setAdmin: bindApiCall(this, 'admin.users.setAdmin'),
+                setExpiration: bindApiCall(this, 'admin.users.setExpiration'),
+                setOwner: bindApiCall(this, 'admin.users.setOwner'),
+                setRegular: bindApiCall(this, 'admin.users.setRegular'),
+            },
+        };
+        this.api = {
+            test: bindApiCall(this, 'api.test'),
+        };
+        this.auth = {
+            revoke: bindApiCall(this, 'auth.revoke'),
+            test: bindApiCall(this, 'auth.test'),
+        };
+        this.bots = {
+            info: bindApiCall(this, 'bots.info'),
+        };
+        this.calls = {
+            add: bindApiCall(this, 'calls.add'),
+            end: bindApiCall(this, 'calls.end'),
+            info: bindApiCall(this, 'calls.info'),
+            update: bindApiCall(this, 'calls.update'),
+            participants: {
+                add: bindApiCall(this, 'calls.participants.add'),
+                remove: bindApiCall(this, 'calls.participants.remove'),
+            },
+        };
+        this.channels = {
+            archive: bindApiCall(this, 'channels.archive'),
+            create: bindApiCall(this, 'channels.create'),
+            history: bindApiCall(this, 'channels.history'),
+            info: bindApiCall(this, 'channels.info'),
+            invite: bindApiCall(this, 'channels.invite'),
+            join: bindApiCall(this, 'channels.join'),
+            kick: bindApiCall(this, 'channels.kick'),
+            leave: bindApiCall(this, 'channels.leave'),
+            list: bindApiCall(this, 'channels.list'),
+            mark: bindApiCall(this, 'channels.mark'),
+            rename: bindApiCall(this, 'channels.rename'),
+            replies: bindApiCall(this, 'channels.replies'),
+            setPurpose: bindApiCall(this, 'channels.setPurpose'),
+            setTopic: bindApiCall(this, 'channels.setTopic'),
+            unarchive: bindApiCall(this, 'channels.unarchive'),
+        };
+        this.chat = {
+            delete: bindApiCall(this, 'chat.delete'),
+            deleteScheduledMessage: bindApiCall(this, 'chat.deleteScheduledMessage'),
+            getPermalink: bindApiCall(this, 'chat.getPermalink'),
+            meMessage: bindApiCall(this, 'chat.meMessage'),
+            postEphemeral: bindApiCall(this, 'chat.postEphemeral'),
+            postMessage: bindApiCall(this, 'chat.postMessage'),
+            scheduleMessage: bindApiCall(this, 'chat.scheduleMessage'),
+            scheduledMessages: {
+                list: bindApiCall(this, 'chat.scheduledMessages.list'),
+            },
+            unfurl: bindApiCall(this, 'chat.unfurl'),
+            update: bindApiCall(this, 'chat.update'),
+        };
+        this.conversations = {
+            archive: bindApiCall(this, 'conversations.archive'),
+            close: bindApiCall(this, 'conversations.close'),
+            create: bindApiCall(this, 'conversations.create'),
+            history: bindApiCall(this, 'conversations.history'),
+            info: bindApiCall(this, 'conversations.info'),
+            invite: bindApiCall(this, 'conversations.invite'),
+            join: bindApiCall(this, 'conversations.join'),
+            kick: bindApiCall(this, 'conversations.kick'),
+            leave: bindApiCall(this, 'conversations.leave'),
+            list: bindApiCall(this, 'conversations.list'),
+            mark: bindApiCall(this, 'conversations.mark'),
+            members: bindApiCall(this, 'conversations.members'),
+            open: bindApiCall(this, 'conversations.open'),
+            rename: bindApiCall(this, 'conversations.rename'),
+            replies: bindApiCall(this, 'conversations.replies'),
+            setPurpose: bindApiCall(this, 'conversations.setPurpose'),
+            setTopic: bindApiCall(this, 'conversations.setTopic'),
+            unarchive: bindApiCall(this, 'conversations.unarchive'),
+        };
+        this.views = {
+            open: bindApiCall(this, 'views.open'),
+            publish: bindApiCall(this, 'views.publish'),
+            push: bindApiCall(this, 'views.push'),
+            update: bindApiCall(this, 'views.update'),
+        };
+        this.dialog = {
+            open: bindApiCall(this, 'dialog.open'),
+        };
+        this.dnd = {
+            endDnd: bindApiCall(this, 'dnd.endDnd'),
+            endSnooze: bindApiCall(this, 'dnd.endSnooze'),
+            info: bindApiCall(this, 'dnd.info'),
+            setSnooze: bindApiCall(this, 'dnd.setSnooze'),
+            teamInfo: bindApiCall(this, 'dnd.teamInfo'),
+        };
+        this.emoji = {
+            list: bindApiCall(this, 'emoji.list'),
+        };
+        this.files = {
+            delete: bindApiCall(this, 'files.delete'),
+            info: bindApiCall(this, 'files.info'),
+            list: bindApiCall(this, 'files.list'),
+            revokePublicURL: bindApiCall(this, 'files.revokePublicURL'),
+            sharedPublicURL: bindApiCall(this, 'files.sharedPublicURL'),
+            upload: bindApiCall(this, 'files.upload'),
+            comments: {
+                delete: bindApiCall(this, 'files.comments.delete'),
+            },
+            remote: {
+                info: bindApiCall(this, 'files.remote.info'),
+                list: bindApiCall(this, 'files.remote.list'),
+                add: bindApiCall(this, 'files.remote.add'),
+                update: bindApiCall(this, 'files.remote.update'),
+                remove: bindApiCall(this, 'files.remote.remove'),
+                share: bindApiCall(this, 'files.remote.share'),
+            },
+        };
+        this.groups = {
+            archive: bindApiCall(this, 'groups.archive'),
+            create: bindApiCall(this, 'groups.create'),
+            createChild: bindApiCall(this, 'groups.createChild'),
+            history: bindApiCall(this, 'groups.history'),
+            info: bindApiCall(this, 'groups.info'),
+            invite: bindApiCall(this, 'groups.invite'),
+            kick: bindApiCall(this, 'groups.kick'),
+            leave: bindApiCall(this, 'groups.leave'),
+            list: bindApiCall(this, 'groups.list'),
+            mark: bindApiCall(this, 'groups.mark'),
+            open: bindApiCall(this, 'groups.open'),
+            rename: bindApiCall(this, 'groups.rename'),
+            replies: bindApiCall(this, 'groups.replies'),
+            setPurpose: bindApiCall(this, 'groups.setPurpose'),
+            setTopic: bindApiCall(this, 'groups.setTopic'),
+            unarchive: bindApiCall(this, 'groups.unarchive'),
+        };
+        this.im = {
+            close: bindApiCall(this, 'im.close'),
+            history: bindApiCall(this, 'im.history'),
+            list: bindApiCall(this, 'im.list'),
+            mark: bindApiCall(this, 'im.mark'),
+            open: bindApiCall(this, 'im.open'),
+            replies: bindApiCall(this, 'im.replies'),
+        };
+        this.migration = {
+            exchange: bindApiCall(this, 'migration.exchange'),
+        };
+        this.mpim = {
+            close: bindApiCall(this, 'mpim.close'),
+            history: bindApiCall(this, 'mpim.history'),
+            list: bindApiCall(this, 'mpim.list'),
+            mark: bindApiCall(this, 'mpim.mark'),
+            open: bindApiCall(this, 'mpim.open'),
+            replies: bindApiCall(this, 'mpim.replies'),
+        };
+        this.oauth = {
+            access: bindApiCall(this, 'oauth.access'),
+            v2: {
+                access: bindApiCall(this, 'oauth.v2.access'),
+            },
+        };
+        this.pins = {
+            add: bindApiCall(this, 'pins.add'),
+            list: bindApiCall(this, 'pins.list'),
+            remove: bindApiCall(this, 'pins.remove'),
+        };
+        this.reactions = {
+            add: bindApiCall(this, 'reactions.add'),
+            get: bindApiCall(this, 'reactions.get'),
+            list: bindApiCall(this, 'reactions.list'),
+            remove: bindApiCall(this, 'reactions.remove'),
+        };
+        this.reminders = {
+            add: bindApiCall(this, 'reminders.add'),
+            complete: bindApiCall(this, 'reminders.complete'),
+            delete: bindApiCall(this, 'reminders.delete'),
+            info: bindApiCall(this, 'reminders.info'),
+            list: bindApiCall(this, 'reminders.list'),
+        };
+        this.rtm = {
+            connect: bindApiCall(this, 'rtm.connect'),
+            start: bindApiCall(this, 'rtm.start'),
+        };
+        this.search = {
+            all: bindApiCall(this, 'search.all'),
+            files: bindApiCall(this, 'search.files'),
+            messages: bindApiCall(this, 'search.messages'),
+        };
+        this.stars = {
+            add: bindApiCall(this, 'stars.add'),
+            list: bindApiCall(this, 'stars.list'),
+            remove: bindApiCall(this, 'stars.remove'),
+        };
+        this.team = {
+            accessLogs: bindApiCall(this, 'team.accessLogs'),
+            billableInfo: bindApiCall(this, 'team.billableInfo'),
+            info: bindApiCall(this, 'team.info'),
+            integrationLogs: bindApiCall(this, 'team.integrationLogs'),
+            profile: {
+                get: bindApiCall(this, 'team.profile.get'),
+            },
+        };
+        this.usergroups = {
+            create: bindApiCall(this, 'usergroups.create'),
+            disable: bindApiCall(this, 'usergroups.disable'),
+            enable: bindApiCall(this, 'usergroups.enable'),
+            list: bindApiCall(this, 'usergroups.list'),
+            update: bindApiCall(this, 'usergroups.update'),
+            users: {
+                list: bindApiCall(this, 'usergroups.users.list'),
+                update: bindApiCall(this, 'usergroups.users.update'),
+            },
+        };
+        this.users = {
+            conversations: bindApiCall(this, 'users.conversations'),
+            deletePhoto: bindApiCall(this, 'users.deletePhoto'),
+            getPresence: bindApiCall(this, 'users.getPresence'),
+            identity: bindApiCall(this, 'users.identity'),
+            info: bindApiCall(this, 'users.info'),
+            list: bindApiCall(this, 'users.list'),
+            lookupByEmail: bindApiCall(this, 'users.lookupByEmail'),
+            setPhoto: bindApiCall(this, 'users.setPhoto'),
+            setPresence: bindApiCall(this, 'users.setPresence'),
+            profile: {
+                get: bindApiCall(this, 'users.profile.get'),
+                set: bindApiCall(this, 'users.profile.set'),
+            },
+        };
+        // Check that the class being created extends from `WebClient` rather than this class
+        if (new.target !== WebClient_1.WebClient && !(new.target.prototype instanceof WebClient_1.WebClient)) {
+            throw new Error('Attempt to inherit from WebClient methods without inheriting from WebClient');
+        }
+    }
+}
+exports.Methods = Methods;
 // A set of method names is initialized here and added to each time an argument type extends the CursorPaginationEnabled
 // interface, so that methods are checked against this set when using the pagination helper. If the method name is not
 // found, a warning is emitted to guide the developer to using the method correctly.
@@ -4506,6 +4871,7 @@ exports.cursorPaginationEnabledMethods.add('reactions.list');
 exports.cursorPaginationEnabledMethods.add('stars.list');
 exports.cursorPaginationEnabledMethods.add('users.conversations');
 exports.cursorPaginationEnabledMethods.add('users.list');
+__exportStar(__webpack_require__(21), exports);
 //# sourceMappingURL=methods.js.map
 
 /***/ }),
@@ -5633,9 +5999,10 @@ if (true) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getLogger = void 0;
 const logger_1 = __webpack_require__(816);
 var logger_2 = __webpack_require__(816);
-exports.LogLevel = logger_2.LogLevel;
+Object.defineProperty(exports, "LogLevel", { enumerable: true, get: function () { return logger_2.LogLevel; } });
 let instanceCount = 0;
 /**
  * INTERNAL interface for getting or creating a named Logger.
@@ -6541,6 +6908,25 @@ module.exports = function buildFullPath(baseURL, requestedURL) {
 "use strict";
 
 /// <reference lib="esnext.asynciterable" />
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __await = (this && this.__await) || function (v) { return this instanceof __await ? (this.v = v, this) : new __await(v); }
 var __asyncGenerator = (this && this.__asyncGenerator) || function (thisArg, _arguments, generator) {
     if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
@@ -6563,14 +6949,8 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.WebClientEvent = exports.WebClient = void 0;
 // polyfill for async iterable. see: https://stackoverflow.com/a/43694282/305340
 // can be removed once node v10 is the minimum target (node v8 and v9 require --harmony_async_iteration flag)
 if (Symbol['asyncIterator'] === undefined) {
@@ -6579,12 +6959,11 @@ if (Symbol['asyncIterator'] === undefined) {
 const querystring_1 = __webpack_require__(191);
 const path_1 = __webpack_require__(622);
 const is_stream_1 = __importDefault(__webpack_require__(323));
-const eventemitter3_1 = __webpack_require__(842);
 const p_queue_1 = __importDefault(__webpack_require__(169)); // tslint:disable-line:import-name
 const p_retry_1 = __importStar(__webpack_require__(604));
 const axios_1 = __importDefault(__webpack_require__(53));
 const form_data_1 = __importDefault(__webpack_require__(928)); // tslint:disable-line:import-name
-const methods = __importStar(__webpack_require__(701)); // tslint:disable-line:import-name
+const methods_1 = __webpack_require__(701);
 const instrument_1 = __webpack_require__(616);
 const errors_1 = __webpack_require__(625);
 const logger_1 = __webpack_require__(847);
@@ -6596,375 +6975,12 @@ const helpers_1 = __webpack_require__(501);
  * This client provides an alias for each {@link https://api.slack.com/methods|Web API method}. Each method is
  * a convenience wrapper for calling the {@link WebClient#apiCall} method using the method name as the first parameter.
  */
-class WebClient extends eventemitter3_1.EventEmitter {
+class WebClient extends methods_1.Methods {
     /**
      * @param token - An API token to authenticate/authorize with Slack (usually start with `xoxp`, `xoxb`)
      */
     constructor(token, { slackApiUrl = 'https://slack.com/api/', logger = undefined, logLevel = logger_1.LogLevel.INFO, maxRequestConcurrency = 3, retryConfig = retry_policies_1.default.tenRetriesInAboutThirtyMinutes, agent = undefined, tls = undefined, rejectRateLimitedCalls = false, headers = {}, } = {}) {
         super();
-        /**
-         * admin method family
-         */
-        this.admin = {
-            apps: {
-                approve: (this.apiCall.bind(this, 'admin.apps.approve')),
-                approved: {
-                    list: (this.apiCall.bind(this, 'admin.apps.approved.list')),
-                },
-                requests: {
-                    list: (this.apiCall.bind(this, 'admin.apps.requests.list')),
-                },
-                restrict: (this.apiCall.bind(this, 'admin.apps.restrict')),
-                restricted: {
-                    list: (this.apiCall.bind(this, 'admin.apps.restricted.list')),
-                },
-            },
-            conversations: {
-                setTeams: (this.apiCall.bind(this, 'admin.conversations.setTeams')),
-            },
-            inviteRequests: {
-                approve: (this.apiCall.bind(this, 'admin.inviteRequests.approve')),
-                deny: (this.apiCall.bind(this, 'admin.inviteRequests.deny')),
-                list: (this.apiCall.bind(this, 'admin.inviteRequests.list')),
-                approved: {
-                    list: (this.apiCall.bind(this, 'admin.inviteRequests.approved.list')),
-                },
-                denied: {
-                    list: (this.apiCall.bind(this, 'admin.inviteRequests.denied.list')),
-                },
-            },
-            teams: {
-                admins: {
-                    list: (this.apiCall.bind(this, 'admin.teams.admins.list')),
-                },
-                create: (this.apiCall.bind(this, 'admin.teams.create')),
-                list: (this.apiCall.bind(this, 'admin.teams.list')),
-                owners: {
-                    list: (this.apiCall.bind(this, 'admin.teams.owners.list')),
-                },
-                settings: {
-                    info: (this.apiCall.bind(this, 'admin.teams.settings.info')),
-                    setDefaultChannels: (this.apiCall.bind(this, 'admin.teams.settings.setDefaultChannels')),
-                    setDescription: (this.apiCall.bind(this, 'admin.teams.settings.setDescription')),
-                    setDiscoverability: (this.apiCall.bind(this, 'admin.teams.settings.setDiscoverability')),
-                    setIcon: (this.apiCall.bind(this, 'admin.teams.settings.setIcon')),
-                    setName: (this.apiCall.bind(this, 'admin.teams.settings.setName')),
-                },
-            },
-            usergroups: {
-                addChannels: (this.apiCall.bind(this, 'admin.usergroups.addChannels')),
-                listChannels: (this.apiCall.bind(this, 'admin.usergroups.listChannels')),
-                removeChannels: (this.apiCall.bind(this, 'admin.usergroups.removeChannels')),
-            },
-            users: {
-                session: {
-                    reset: (this.apiCall.bind(this, 'admin.users.session.reset')),
-                },
-                assign: (this.apiCall.bind(this, 'admin.users.assign')),
-                invite: (this.apiCall.bind(this, 'admin.users.invite')),
-                list: (this.apiCall.bind(this, 'admin.users.list')),
-                remove: (this.apiCall.bind(this, 'admin.users.remove')),
-                setAdmin: (this.apiCall.bind(this, 'admin.users.setAdmin')),
-                setExpiration: (this.apiCall.bind(this, 'admin.users.setExpiration')),
-                setOwner: (this.apiCall.bind(this, 'admin.users.setOwner')),
-                setRegular: (this.apiCall.bind(this, 'admin.users.setRegular')),
-            },
-        };
-        /**
-         * api method family
-         */
-        this.api = {
-            test: (this.apiCall.bind(this, 'api.test')),
-        };
-        /**
-         * auth method family
-         */
-        this.auth = {
-            revoke: (this.apiCall.bind(this, 'auth.revoke')),
-            test: (this.apiCall.bind(this, 'auth.test')),
-        };
-        /**
-         * bots method family
-         */
-        this.bots = {
-            info: (this.apiCall.bind(this, 'bots.info')),
-        };
-        /**
-         * calls method family
-         */
-        this.calls = {
-            add: (this.apiCall.bind(this, 'calls.add')),
-            end: (this.apiCall.bind(this, 'calls.end')),
-            info: (this.apiCall.bind(this, 'calls.info')),
-            update: (this.apiCall.bind(this, 'calls.update')),
-            participants: {
-                add: (this.apiCall.bind(this, 'calls.participants.add')),
-            },
-        };
-        /**
-         * channels method family
-         */
-        this.channels = {
-            archive: (this.apiCall.bind(this, 'channels.archive')),
-            create: (this.apiCall.bind(this, 'channels.create')),
-            history: (this.apiCall.bind(this, 'channels.history')),
-            info: (this.apiCall.bind(this, 'channels.info')),
-            invite: (this.apiCall.bind(this, 'channels.invite')),
-            join: (this.apiCall.bind(this, 'channels.join')),
-            kick: (this.apiCall.bind(this, 'channels.kick')),
-            leave: (this.apiCall.bind(this, 'channels.leave')),
-            list: (this.apiCall.bind(this, 'channels.list')),
-            mark: (this.apiCall.bind(this, 'channels.mark')),
-            rename: (this.apiCall.bind(this, 'channels.rename')),
-            replies: (this.apiCall.bind(this, 'channels.replies')),
-            setPurpose: (this.apiCall.bind(this, 'channels.setPurpose')),
-            setTopic: (this.apiCall.bind(this, 'channels.setTopic')),
-            unarchive: (this.apiCall.bind(this, 'channels.unarchive')),
-        };
-        /**
-         * chat method family
-         */
-        this.chat = {
-            delete: (this.apiCall.bind(this, 'chat.delete')),
-            deleteScheduledMessage: (this.apiCall.bind(this, 'chat.deleteScheduledMessage')),
-            getPermalink: (this.apiCall.bind(this, 'chat.getPermalink')),
-            meMessage: (this.apiCall.bind(this, 'chat.meMessage')),
-            postEphemeral: (this.apiCall.bind(this, 'chat.postEphemeral')),
-            postMessage: (this.apiCall.bind(this, 'chat.postMessage')),
-            scheduleMessage: (this.apiCall.bind(this, 'chat.scheduleMessage')),
-            scheduledMessages: {
-                list: (this.apiCall.bind(this, 'chat.scheduledMessages.list')),
-            },
-            unfurl: (this.apiCall.bind(this, 'chat.unfurl')),
-            update: (this.apiCall.bind(this, 'chat.update')),
-        };
-        /**
-         * conversations method family
-         */
-        this.conversations = {
-            archive: (this.apiCall.bind(this, 'conversations.archive')),
-            close: (this.apiCall.bind(this, 'conversations.close')),
-            create: (this.apiCall.bind(this, 'conversations.create')),
-            history: (this.apiCall.bind(this, 'conversations.history')),
-            info: (this.apiCall.bind(this, 'conversations.info')),
-            invite: (this.apiCall.bind(this, 'conversations.invite')),
-            join: (this.apiCall.bind(this, 'conversations.join')),
-            kick: (this.apiCall.bind(this, 'conversations.kick')),
-            leave: (this.apiCall.bind(this, 'conversations.leave')),
-            list: (this.apiCall.bind(this, 'conversations.list')),
-            members: (this.apiCall.bind(this, 'conversations.members')),
-            open: (this.apiCall.bind(this, 'conversations.open')),
-            rename: (this.apiCall.bind(this, 'conversations.rename')),
-            replies: (this.apiCall.bind(this, 'conversations.replies')),
-            setPurpose: (this.apiCall.bind(this, 'conversations.setPurpose')),
-            setTopic: (this.apiCall.bind(this, 'conversations.setTopic')),
-            unarchive: (this.apiCall.bind(this, 'conversations.unarchive')),
-        };
-        /**
-         * view method family
-         */
-        this.views = {
-            open: (this.apiCall.bind(this, 'views.open')),
-            publish: (this.apiCall.bind(this, 'views.publish')),
-            push: (this.apiCall.bind(this, 'views.push')),
-            update: (this.apiCall.bind(this, 'views.update')),
-        };
-        /**
-         * dialog method family
-         */
-        this.dialog = {
-            open: (this.apiCall.bind(this, 'dialog.open')),
-        };
-        /**
-         * dnd method family
-         */
-        this.dnd = {
-            endDnd: (this.apiCall.bind(this, 'dnd.endDnd')),
-            endSnooze: (this.apiCall.bind(this, 'dnd.endSnooze')),
-            info: (this.apiCall.bind(this, 'dnd.info')),
-            setSnooze: (this.apiCall.bind(this, 'dnd.setSnooze')),
-            teamInfo: (this.apiCall.bind(this, 'dnd.teamInfo')),
-        };
-        /**
-         * emoji method family
-         */
-        this.emoji = {
-            list: (this.apiCall.bind(this, 'emoji.list')),
-        };
-        /**
-         * files method family
-         */
-        this.files = {
-            delete: (this.apiCall.bind(this, 'files.delete')),
-            info: (this.apiCall.bind(this, 'files.info')),
-            list: (this.apiCall.bind(this, 'files.list')),
-            revokePublicURL: (this.apiCall.bind(this, 'files.revokePublicURL')),
-            sharedPublicURL: (this.apiCall.bind(this, 'files.sharedPublicURL')),
-            upload: (this.apiCall.bind(this, 'files.upload')),
-            comments: {
-                delete: (this.apiCall.bind(this, 'files.comments.delete')),
-            },
-            remote: {
-                info: (this.apiCall.bind(this, 'files.remote.info')),
-                list: (this.apiCall.bind(this, 'files.remote.list')),
-                add: (this.apiCall.bind(this, 'files.remote.add')),
-                update: (this.apiCall.bind(this, 'files.remote.update')),
-                remove: (this.apiCall.bind(this, 'files.remote.remove')),
-                share: (this.apiCall.bind(this, 'files.remote.share')),
-            },
-        };
-        /**
-         * groups method family
-         */
-        this.groups = {
-            archive: (this.apiCall.bind(this, 'groups.archive')),
-            create: (this.apiCall.bind(this, 'groups.create')),
-            createChild: (this.apiCall.bind(this, 'groups.createChild')),
-            history: (this.apiCall.bind(this, 'groups.history')),
-            info: (this.apiCall.bind(this, 'groups.info')),
-            invite: (this.apiCall.bind(this, 'groups.invite')),
-            kick: (this.apiCall.bind(this, 'groups.kick')),
-            leave: (this.apiCall.bind(this, 'groups.leave')),
-            list: (this.apiCall.bind(this, 'groups.list')),
-            mark: (this.apiCall.bind(this, 'groups.mark')),
-            open: (this.apiCall.bind(this, 'groups.open')),
-            rename: (this.apiCall.bind(this, 'groups.rename')),
-            replies: (this.apiCall.bind(this, 'groups.replies')),
-            setPurpose: (this.apiCall.bind(this, 'groups.setPurpose')),
-            setTopic: (this.apiCall.bind(this, 'groups.setTopic')),
-            unarchive: (this.apiCall.bind(this, 'groups.unarchive')),
-        };
-        /**
-         * im method family
-         */
-        this.im = {
-            close: (this.apiCall.bind(this, 'im.close')),
-            history: (this.apiCall.bind(this, 'im.history')),
-            list: (this.apiCall.bind(this, 'im.list')),
-            mark: (this.apiCall.bind(this, 'im.mark')),
-            open: (this.apiCall.bind(this, 'im.open')),
-            replies: (this.apiCall.bind(this, 'im.replies')),
-        };
-        /**
-         * migration method family
-         */
-        this.migration = {
-            exchange: (this.apiCall.bind(this, 'migration.exchange')),
-        };
-        /**
-         * mpim method family
-         */
-        this.mpim = {
-            close: (this.apiCall.bind(this, 'mpim.close')),
-            history: (this.apiCall.bind(this, 'mpim.history')),
-            list: (this.apiCall.bind(this, 'mpim.list')),
-            mark: (this.apiCall.bind(this, 'mpim.mark')),
-            open: (this.apiCall.bind(this, 'mpim.open')),
-            replies: (this.apiCall.bind(this, 'mpim.replies')),
-        };
-        /**
-         * oauth method family
-         */
-        this.oauth = {
-            access: (this.apiCall.bind(this, 'oauth.access')),
-            v2: {
-                access: (this.apiCall.bind(this, 'oauth.v2.access')),
-            },
-        };
-        /**
-         * pins method family
-         */
-        this.pins = {
-            add: (this.apiCall.bind(this, 'pins.add')),
-            list: (this.apiCall.bind(this, 'pins.list')),
-            remove: (this.apiCall.bind(this, 'pins.remove')),
-        };
-        /**
-         * reactions method family
-         */
-        this.reactions = {
-            add: (this.apiCall.bind(this, 'reactions.add')),
-            get: (this.apiCall.bind(this, 'reactions.get')),
-            list: (this.apiCall.bind(this, 'reactions.list')),
-            remove: (this.apiCall.bind(this, 'reactions.remove')),
-        };
-        /**
-         * reminders method family
-         */
-        this.reminders = {
-            add: (this.apiCall.bind(this, 'reminders.add')),
-            complete: (this.apiCall.bind(this, 'reminders.complete')),
-            delete: (this.apiCall.bind(this, 'reminders.delete')),
-            info: (this.apiCall.bind(this, 'reminders.info')),
-            list: (this.apiCall.bind(this, 'reminders.list')),
-        };
-        /**
-         * rtm method family
-         */
-        this.rtm = {
-            connect: (this.apiCall.bind(this, 'rtm.connect')),
-            start: (this.apiCall.bind(this, 'rtm.start')),
-        };
-        /**
-         * search method family
-         */
-        this.search = {
-            all: (this.apiCall.bind(this, 'search.all')),
-            files: (this.apiCall.bind(this, 'search.files')),
-            messages: (this.apiCall.bind(this, 'search.messages')),
-        };
-        /**
-         * stars method family
-         */
-        this.stars = {
-            add: (this.apiCall.bind(this, 'stars.add')),
-            list: (this.apiCall.bind(this, 'stars.list')),
-            remove: (this.apiCall.bind(this, 'stars.remove')),
-        };
-        /**
-         * team method family
-         */
-        this.team = {
-            accessLogs: (this.apiCall.bind(this, 'team.accessLogs')),
-            billableInfo: (this.apiCall.bind(this, 'team.billableInfo')),
-            info: (this.apiCall.bind(this, 'team.info')),
-            integrationLogs: (this.apiCall.bind(this, 'team.integrationLogs')),
-            profile: {
-                get: (this.apiCall.bind(this, 'team.profile.get')),
-            },
-        };
-        /**
-         * usergroups method family
-         */
-        this.usergroups = {
-            create: (this.apiCall.bind(this, 'usergroups.create')),
-            disable: (this.apiCall.bind(this, 'usergroups.disable')),
-            enable: (this.apiCall.bind(this, 'usergroups.enable')),
-            list: (this.apiCall.bind(this, 'usergroups.list')),
-            update: (this.apiCall.bind(this, 'usergroups.update')),
-            users: {
-                list: (this.apiCall.bind(this, 'usergroups.users.list')),
-                update: (this.apiCall.bind(this, 'usergroups.users.update')),
-            },
-        };
-        /**
-         * users method family
-         */
-        this.users = {
-            conversations: (this.apiCall.bind(this, 'users.conversations')),
-            deletePhoto: (this.apiCall.bind(this, 'users.deletePhoto')),
-            getPresence: (this.apiCall.bind(this, 'users.getPresence')),
-            identity: (this.apiCall.bind(this, 'users.identity')),
-            info: (this.apiCall.bind(this, 'users.info')),
-            list: (this.apiCall.bind(this, 'users.list')),
-            lookupByEmail: (this.apiCall.bind(this, 'users.lookupByEmail')),
-            setPhoto: (this.apiCall.bind(this, 'users.setPhoto')),
-            setPresence: (this.apiCall.bind(this, 'users.setPresence')),
-            profile: {
-                get: (this.apiCall.bind(this, 'users.profile.get')),
-                set: (this.apiCall.bind(this, 'users.profile.set')),
-            },
-        };
         this.token = token;
         this.slackApiUrl = slackApiUrl;
         this.retryConfig = retryConfig;
@@ -7046,7 +7062,7 @@ class WebClient extends eventemitter3_1.EventEmitter {
         return result;
     }
     paginate(method, options, shouldStop, reduce) {
-        if (!methods.cursorPaginationEnabledMethods.has(method)) {
+        if (!methods_1.cursorPaginationEnabledMethods.has(method)) {
             this.logger.warn(`paginate() called with method ${method}, which is not known to be cursor pagination enabled.`);
         }
         const pageSize = (() => {
@@ -7324,13 +7340,21 @@ function parseRetryHeaders(response) {
  * @param logger instance of web clients logger
  */
 function warnDeprecations(method, logger) {
-    const deprecatedMethods = ['channels.', 'groups.', 'im.', 'mpim.'];
+    const deprecatedConversationsMethods = ['channels.', 'groups.', 'im.', 'mpim.'];
+    const deprecatedMethods = ['admin.conversations.whitelist.'];
+    const isDeprecatedConversations = deprecatedConversationsMethods.some((depMethod) => {
+        const re = new RegExp(`^${depMethod}`);
+        return re.test(method);
+    });
     const isDeprecated = deprecatedMethods.some((depMethod) => {
         const re = new RegExp(`^${depMethod}`);
         return re.test(method);
     });
-    if (isDeprecated) {
+    if (isDeprecatedConversations) {
         logger.warn(`${method} is deprecated. Please use the Conversations API instead. For more info, go to https://api.slack.com/changelog/2020-01-deprecating-antecedents-to-the-conversations-api`);
+    }
+    else if (isDeprecated) {
+        logger.warn(`${method} is deprecated. Please check on https://api.slack.com/methods for an alternative.`);
     }
 }
 //# sourceMappingURL=WebClient.js.map
