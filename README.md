@@ -82,6 +82,9 @@ jobs:
       - run: 'echo ${{ fromJson(steps.message.outputs.response).file.permalink }}'
 ```
 
+## Contributing
+see [Contributing.md](./.github/CONTRIBUTING.md)
+
 ## License
 MIT License
 
