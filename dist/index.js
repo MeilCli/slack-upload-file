@@ -623,9 +623,13 @@ var __createBinding = (this && this.__createBinding) || (Object.create ? (functi
     o[k2] = m[k];
 }));
 var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.addAppMetadata = exports.retryPolicies = exports.ErrorCode = exports.LogLevel = exports.WebClientEvent = exports.WebClient = void 0;
 var WebClient_1 = __webpack_require__(963);
 Object.defineProperty(exports, "WebClient", { enumerable: true, get: function () { return WebClient_1.WebClient; } });
 Object.defineProperty(exports, "WebClientEvent", { enumerable: true, get: function () { return WebClient_1.WebClientEvent; } });
@@ -634,7 +638,7 @@ Object.defineProperty(exports, "LogLevel", { enumerable: true, get: function () 
 var errors_1 = __webpack_require__(625);
 Object.defineProperty(exports, "ErrorCode", { enumerable: true, get: function () { return errors_1.ErrorCode; } });
 var retry_policies_1 = __webpack_require__(264);
-Object.defineProperty(exports, "retryPolicies", { enumerable: true, get: function () { return retry_policies_1.default; } });
+Object.defineProperty(exports, "retryPolicies", { enumerable: true, get: function () { return __importDefault(retry_policies_1).default; } });
 var instrument_1 = __webpack_require__(616);
 Object.defineProperty(exports, "addAppMetadata", { enumerable: true, get: function () { return instrument_1.addAppMetadata; } });
 __exportStar(__webpack_require__(701), exports);
@@ -1681,7 +1685,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 /***/ 394:
 /***/ (function(module) {
 
-module.exports = {"_args":[["@slack/web-api@5.15.0","/home/runner/work/slack-upload-file/slack-upload-file"]],"_from":"@slack/web-api@5.15.0","_id":"@slack/web-api@5.15.0","_inBundle":false,"_integrity":"sha512-tjQ8Zqv/Fmj9SOL9yIEd7IpTiKfKHi9DKAkfRVeotoX0clMr3SqQtBqO+KZMX27gm7dmgJsQaDKlILyzdCO+IA==","_location":"/@slack/web-api","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"@slack/web-api@5.15.0","name":"@slack/web-api","escapedName":"@slack%2fweb-api","scope":"@slack","rawSpec":"5.15.0","saveSpec":null,"fetchSpec":"5.15.0"},"_requiredBy":["/"],"_resolved":"https://registry.npmjs.org/@slack/web-api/-/web-api-5.15.0.tgz","_spec":"5.15.0","_where":"/home/runner/work/slack-upload-file/slack-upload-file","author":{"name":"Slack Technologies, Inc."},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"dependencies":{"@slack/logger":">=1.0.0 <3.0.0","@slack/types":"^1.7.0","@types/is-stream":"^1.1.0","@types/node":">=8.9.0","axios":"^0.21.1","eventemitter3":"^3.1.0","form-data":"^2.5.0","is-stream":"^1.1.0","p-queue":"^6.6.1","p-retry":"^4.0.0"},"description":"Official library for using the Slack Platform's Web API","devDependencies":{"@aoberoi/capture-console":"^1.1.0","@microsoft/api-extractor":"^7.3.4","@types/chai":"^4.1.7","@types/mocha":"^5.2.6","busboy":"^0.3.0","chai":"^4.2.0","codecov":"^3.2.0","mocha":"^6.0.2","nock":"^10.0.6","nyc":"^14.1.1","shelljs":"^0.8.3","shx":"^0.3.2","sinon":"^7.2.7","source-map-support":"^0.5.10","ts-node":"^8.0.3","tsd":"^0.13.1","tslint":"^5.13.1","tslint-config-airbnb":"^5.11.1","typescript":"^3.3.3333"},"engines":{"node":">= 8.9.0","npm":">= 5.5.1"},"files":["dist/**/*"],"homepage":"https://slack.dev/node-slack-sdk/web-api","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"license":"MIT","main":"dist/index.js","name":"@slack/web-api","publishConfig":{"access":"public"},"repository":{"type":"git","url":"git+https://github.com/slackapi/node-slack-sdk.git"},"scripts":{"build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist ./coverage ./.nyc_output","coverage":"codecov -F webapi --root=$PWD","lint":"tslint --project .","prepare":"npm run build","ref-docs:model":"api-extractor run","test":"npm run build && npm run test:mocha && npm run test:types","test:mocha":"nyc mocha --config .mocharc.json src/*.spec.js","test:types":"tsd","watch":"npx nodemon --watch 'src' --ext 'ts' --exec npm run build"},"tsd":{"directory":"test/types"},"types":"./dist/index.d.ts","version":"5.15.0"};
+module.exports = {"_args":[["@slack/web-api@6.0.0","/home/runner/work/slack-upload-file/slack-upload-file"]],"_from":"@slack/web-api@6.0.0","_id":"@slack/web-api@6.0.0","_inBundle":false,"_integrity":"sha512-YD1wqWuzrYPf4RQyD7OnYS5lImUmNWn+G5V6Qt0N97fPYxqhT72YJtRdSnsTc3VkH5R5imKOhYxb+wqI9hiHnA==","_location":"/@slack/web-api","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"@slack/web-api@6.0.0","name":"@slack/web-api","escapedName":"@slack%2fweb-api","scope":"@slack","rawSpec":"6.0.0","saveSpec":null,"fetchSpec":"6.0.0"},"_requiredBy":["/"],"_resolved":"https://registry.npmjs.org/@slack/web-api/-/web-api-6.0.0.tgz","_spec":"6.0.0","_where":"/home/runner/work/slack-upload-file/slack-upload-file","author":{"name":"Slack Technologies, Inc."},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"dependencies":{"@slack/logger":">=1.0.0 <3.0.0","@slack/types":"^1.7.0","@types/is-stream":"^1.1.0","@types/node":">=12.0.0","axios":"^0.21.1","eventemitter3":"^3.1.0","form-data":"^2.5.0","is-stream":"^1.1.0","p-queue":"^6.6.1","p-retry":"^4.0.0"},"description":"Official library for using the Slack Platform's Web API","devDependencies":{"@aoberoi/capture-console":"^1.1.0","@microsoft/api-extractor":"^7.3.4","@types/chai":"^4.1.7","@types/mocha":"^5.2.6","busboy":"^0.3.0","chai":"^4.2.0","codecov":"^3.2.0","mocha":"^6.0.2","nock":"^10.0.6","nyc":"^14.1.1","shelljs":"^0.8.3","shx":"^0.3.2","sinon":"^7.2.7","source-map-support":"^0.5.10","ts-node":"^9.0.0","tsd":"^0.13.1","tslint":"^5.13.1","tslint-config-airbnb":"^5.11.1","typescript":"^4.1"},"engines":{"node":">= 12.13.0","npm":">= 6.12.0"},"files":["dist/**/*"],"homepage":"https://slack.dev/node-slack-sdk/web-api","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"license":"MIT","main":"dist/index.js","name":"@slack/web-api","publishConfig":{"access":"public"},"repository":{"type":"git","url":"git+https://github.com/slackapi/node-slack-sdk.git"},"scripts":{"build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist ./coverage ./.nyc_output","coverage":"codecov -F webapi --root=$PWD","lint":"tslint --project .","prepare":"npm run build","ref-docs:model":"api-extractor run","test":"npm run build && npm run test:mocha && npm run test:types","test:mocha":"nyc mocha --config .mocharc.json src/*.spec.js","test:types":"tsd","watch":"npx nodemon --watch 'src' --ext 'ts' --exec npm run build"},"tsd":{"directory":"test/types"},"types":"./dist/index.d.ts","version":"6.0.0"};
 
 /***/ }),
 
@@ -2350,9 +2354,9 @@ exports.delay = void 0;
  * @param ms milliseconds to wait
  * @param value value for eventual resolution
  */
-function delay(ms, value) {
+function delay(ms) {
     return new Promise((resolve) => {
-        setTimeout(() => resolve(value), ms);
+        setTimeout(() => resolve(), ms);
     });
 }
 exports.delay = delay;
@@ -3536,7 +3540,7 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
 };
@@ -4212,7 +4216,7 @@ var __createBinding = (this && this.__createBinding) || (Object.create ? (functi
     o[k2] = m[k];
 }));
 var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.cursorPaginationEnabledMethods = exports.Methods = void 0;
@@ -4345,6 +4349,9 @@ class Methods extends eventemitter3_1.EventEmitter {
             test: bindApiCall(this, 'api.test'),
         };
         this.apps = {
+            connections: {
+                open: bindApiCall(this, 'apps.connections.open'),
+            },
             event: {
                 authorizations: {
                     list: bindApiCall(this, 'apps.event.authorizations.list'),
@@ -5392,7 +5399,7 @@ if (true) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getLogger = void 0;
+exports.getLogger = exports.LogLevel = void 0;
 const logger_1 = __webpack_require__(816);
 var logger_2 = __webpack_require__(816);
 Object.defineProperty(exports, "LogLevel", { enumerable: true, get: function () { return logger_2.LogLevel; } });
@@ -6654,7 +6661,7 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
 };
