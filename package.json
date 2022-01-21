@@ -14,7 +14,7 @@
     "license": "MIT",
     "dependencies": {
         "@actions/core": "^1.6.0",
-        "@slack/web-api": "^6.5.1"
+        "@slack/web-api": "^6.6.0"
     },
     "devDependencies": {
         "@types/node": "^17.0.10",
