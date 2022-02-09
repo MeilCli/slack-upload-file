@@ -65,6 +65,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 var core = __importStar(__nccwpck_require__(2186));
 var slack = __importStar(__nccwpck_require__(431));
 var fs = __importStar(__nccwpck_require__(7147));
+var defaultMaxRetryCount = 3;
 function getInput(key) {
     return core.getInput(key, { required: true });
 }
@@ -74,6 +75,13 @@ function getInputOrUndefined(key) {
         return undefined;
     }
     return result;
+}
+function getInputNumberOrUndefined(key) {
+    var value = getInputOrUndefined(key);
+    if (value == undefined) {
+        return undefined;
+    }
+    return parseInt(value);
 }
 function readOption() {
     return {
@@ -87,18 +95,22 @@ function readOption() {
         initialComment: getInputOrUndefined("initial_comment"),
         threadTs: getInputOrUndefined("thread_ts"),
         title: getInputOrUndefined("title"),
+        retries: getInputNumberOrUndefined("retries"),
     };
 }
 function run() {
-    var _a;
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function () {
         var option, client, file, result, error_1;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+        return __generator(this, function (_c) {
+            switch (_c.label) {
                 case 0:
-                    _b.trys.push([0, 2, , 3]);
+                    _c.trys.push([0, 2, , 3]);
                     option = readOption();
-                    client = new slack.WebClient(option.slackToken, { slackApiUrl: option.slackApiUrl });
+                    client = new slack.WebClient(option.slackToken, {
+                        slackApiUrl: option.slackApiUrl,
+                        retryConfig: { retries: (_a = option.retries) !== null && _a !== void 0 ? _a : defaultMaxRetryCount },
+                    });
                     file = void 0;
                     if (option.filePath) {
                         file = fs.readFileSync(option.filePath);
@@ -114,15 +126,15 @@ function run() {
                             title: option.title,
                         })];
                 case 1:
-                    result = _b.sent();
+                    result = _c.sent();
                     if (result.ok == false) {
-                        core.setFailed((_a = result.error) !== null && _a !== void 0 ? _a : "unknown error");
+                        core.setFailed((_b = result.error) !== null && _b !== void 0 ? _b : "unknown error");
                         return [2 /*return*/];
                     }
                     core.setOutput("response", JSON.stringify(result));
                     return [3 /*break*/, 3];
                 case 2:
-                    error_1 = _b.sent();
+                    error_1 = _c.sent();
                     if (error_1 instanceof Error) {
                         core.setFailed(error_1.message);
                     }
