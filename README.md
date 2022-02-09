@@ -58,6 +58,8 @@ You can also pin to a [specific release](https://github.com/MeilCli/slack-upload
   - Provide another message's ts value to upload this file as a reply. Never use a reply's ts value; use its parent instead.
 - `title`
   - Title of file.
+- `retries`
+  - max API retry count. default retries is 3.
 
 ## Output
 - `response`
