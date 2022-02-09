@@ -2,6 +2,8 @@ import * as core from "@actions/core";
 import * as slack from "@slack/web-api";
 import * as fs from "fs";
 
+const defaultMaxRetryCount = 3;
+
 interface Option {
     slackToken: string;
     slackApiUrl: string | undefined;
@@ -13,6 +15,7 @@ interface Option {
     initialComment: string | undefined;
     threadTs: string | undefined;
     title: string | undefined;
+    retries: number | undefined;
 }
 
 function getInput(key: string): string {
@@ -27,6 +30,14 @@ function getInputOrUndefined(key: string): string | undefined {
     return result;
 }
 
+function getInputNumberOrUndefined(key: string): number | undefined {
+    const value = getInputOrUndefined(key);
+    if (value == undefined) {
+        return undefined;
+    }
+    return parseInt(value);
+}
+
 function readOption(): Option {
     return {
         slackToken: getInput("slack_token"),
@@ -39,13 +50,17 @@ function readOption(): Option {
         initialComment: getInputOrUndefined("initial_comment"),
         threadTs: getInputOrUndefined("thread_ts"),
         title: getInputOrUndefined("title"),
+        retries: getInputNumberOrUndefined("retries"),
     };
 }
 
 async function run() {
     try {
         const option = readOption();
-        const client = new slack.WebClient(option.slackToken, { slackApiUrl: option.slackApiUrl });
+        const client = new slack.WebClient(option.slackToken, {
+            slackApiUrl: option.slackApiUrl,
+            retryConfig: { retries: option.retries ?? defaultMaxRetryCount },
+        });
         let file: Buffer | undefined;
         if (option.filePath) {
             file = fs.readFileSync(option.filePath);

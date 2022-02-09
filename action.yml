@@ -26,6 +26,8 @@ inputs:
     description: 'Provide another message`s ts value to upload this file as a reply. Never use a reply`s ts value; use its parent instead.'
   title:
     description: 'Title of file.'
+  retries:
+    description: 'max API retry count. default retries is 3'
 outputs:
   response:
     description: 'the api response'
