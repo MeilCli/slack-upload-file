@@ -13,7 +13,7 @@
     "author": "",
     "license": "MIT",
     "dependencies": {
-        "@actions/core": "^1.6.0",
+        "@actions/core": "^1.7.0",
         "@slack/web-api": "^6.7.1"
     },
     "devDependencies": {
