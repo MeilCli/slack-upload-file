@@ -13,13 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: 'echo ${{ github.event.inputs.message }} > test.txt'
+      - run: 'echo ${{ github.event.inputs.message }} > test1.txt'
+      - run: 'echo ${{ github.event.inputs.message }} > test2.txt'
       - uses: ./
         id: upload_file
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channels: ${{ secrets.SLACK_CHANNELS }}
-          file_path: 'test.txt'
-          file_name: 'message.txt'
-          file_type: 'text'
+          file_path: 'test*.txt'
           initial_comment: 'post by slack-upload-file'

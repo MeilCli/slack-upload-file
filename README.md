@@ -19,19 +19,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: 'echo ${{ github.event.inputs.message }} > message.txt'
-      - uses: MeilCli/slack-upload-file@v1
+      - uses: MeilCli/slack-upload-file@v2
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channels: ${{ secrets.SLACK_CHANNELS }}
           file_path: 'message.txt'
-          file_name: 'message.txt'
           file_type: 'text'
           initial_comment: 'post by slack-upload-file'
 ```
-You can also pin to a [specific release](https://github.com/MeilCli/slack-upload-file/releases) version in the format `@v1.x.x`
+You can also pin to a [specific release](https://github.com/MeilCli/slack-upload-file/releases) version in the format `@v2.x.x`
 
 ## Information
-- This action execute simply [files.upload](https://api.slack.com/methods/files.upload)
+- This action execute simply [files.upload](https://api.slack.com/methods/files.upload), and can upload multiple files by [glob pattern](https://github.com/actions/toolkit/tree/main/packages/glob#patterns)
 - How get slack token? see [Basic app setup](https://api.slack.com/authentication/basics)
 - How choose Oauth Scope? This action require only `files:write`. In simply case, you do choose `files:write` Bot Token Scope.
 
@@ -44,11 +43,17 @@ You can also pin to a [specific release](https://github.com/MeilCli/slack-upload
 - `channels`
   - Comma-separated list of channel names or IDs where the file will be shared.
 - `content`
-  - File contents via a POST variable. If omitting this parameter, you must provide a file.
+  - File contents via a POST variable. If omitting this parameter, you must provide a `file`.
 - `file_path`
-  - File contents via multipart/form-data. If omitting this parameter, you must submit content.
+  - File contents via multipart/form-data. If omitting this parameter, you must submit `content`.
+  - You can use [glob pattern](https://github.com/actions/toolkit/tree/main/packages/glob#patterns)
+- `file_path_follow_symbolic_links`
+  - Indicates whether to follow symbolic links
+  - This parameter only use glob pattern
+  - default: true
 - `file_name`
   - Filename of file.
+  - This parameter can only use providing `content`
 - `file_type`
   - A file type identifier.
   - ref: [https://api.slack.com/types/file#file_types](https://api.slack.com/types/file#file_types)
@@ -72,13 +77,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: 'echo ${{ github.event.inputs.message }} > message.txt'
-      - uses: MeilCli/slack-upload-file@v1
+      - uses: MeilCli/slack-upload-file@v2
         id: message
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channels: ${{ secrets.SLACK_CHANNELS }}
           file_path: 'message.txt'
-          file_name: 'message.txt'
           file_type: 'text'
           initial_comment: 'post by slack-upload-file'
       - run: 'echo ${{ fromJson(steps.message.outputs.response).file.permalink }}'

@@ -1,6 +1,8 @@
 import * as core from "@actions/core";
+import * as glob from "@actions/glob";
 import * as slack from "@slack/web-api";
 import * as fs from "fs";
+import * as path from "path";
 
 const defaultMaxRetryCount = 3;
 
@@ -10,6 +12,7 @@ interface Option {
     channels: string | undefined;
     content: string | undefined;
     filePath: string | undefined;
+    filePathFollowSymbolicLinks: boolean;
     fileName: string | undefined;
     fileType: string | undefined;
     initialComment: string | undefined;
@@ -45,6 +48,7 @@ function readOption(): Option {
         channels: getInputOrUndefined("channels"),
         content: getInputOrUndefined("content"),
         filePath: getInputOrUndefined("file_path"),
+        filePathFollowSymbolicLinks: getInput("file_path_follow_symbolic_links") == "true",
         fileName: getInputOrUndefined("file_name"),
         fileType: getInputOrUndefined("file_type"),
         initialComment: getInputOrUndefined("initial_comment"),
@@ -54,6 +58,78 @@ function readOption(): Option {
     };
 }
 
+async function postByContent(client: slack.WebClient, option: Option): Promise<slack.FilesUploadResponse> {
+    return await client.files.upload({
+        channels: option.channels,
+        content: option.content,
+        filename: option.fileName,
+        filetype: option.fileType,
+        initial_comment: option.initialComment,
+        thread_ts: option.threadTs,
+        title: option.title,
+    });
+}
+
+async function postByFile(client: slack.WebClient, option: Option): Promise<slack.FilesUploadResponse> {
+    if (option.filePath == undefined) {
+        throw Error("illegal state");
+    }
+    const globber = await glob.create(option.filePath, { followSymbolicLinks: option.filePathFollowSymbolicLinks });
+    const filePaths = await globber.glob();
+    if (filePaths.length == 0) {
+        throw Error("not found files");
+    } else if (filePaths.length == 1) {
+        const file = fs.readFileSync(filePaths[0]);
+        return await client.files.upload({
+            channels: option.channels,
+            file: file,
+            filename: path.basename(filePaths[0]),
+            filetype: option.fileType,
+            initial_comment: option.initialComment,
+            thread_ts: option.threadTs,
+            title: option.title,
+        });
+    } else {
+        const permalinks: string[] = [];
+        for (const filePath of filePaths.slice(1)) {
+            const file = fs.readFileSync(filePath);
+            const result = await client.files.upload({
+                file: file,
+                filename: path.basename(filePath),
+                filetype: option.filePath,
+            });
+            if (result.ok && result.file?.permalink) {
+                permalinks.push(result.file.permalink);
+            } else {
+                throw Error("cannot upload files");
+            }
+        }
+        {
+            const filePath = filePaths[0];
+            const file = fs.readFileSync(filePath);
+            let initalComment: string | undefined;
+            if (option.channels == undefined) {
+                initalComment = undefined;
+            } else if (option.initialComment == undefined) {
+                initalComment = permalinks.map((x) => `<${x}| >`).join();
+            } else {
+                const postfix = permalinks.map((x) => `<${x}| >`).join();
+                initalComment = `${option.initialComment} ${postfix}`;
+            }
+            return await client.files.upload({
+                channels: option.channels,
+                content: option.content,
+                file: file,
+                filename: path.basename(filePath),
+                filetype: option.fileType,
+                initial_comment: initalComment,
+                thread_ts: option.threadTs,
+                title: option.title,
+            });
+        }
+    }
+}
+
 async function run() {
     try {
         const option = readOption();
@@ -61,20 +137,8 @@ async function run() {
             slackApiUrl: option.slackApiUrl,
             retryConfig: { retries: option.retries ?? defaultMaxRetryCount },
         });
-        let file: Buffer | undefined;
-        if (option.filePath) {
-            file = fs.readFileSync(option.filePath);
-        }
-        const result = await client.files.upload({
-            channels: option.channels,
-            content: option.content,
-            file: file,
-            filename: option.fileName,
-            filetype: option.fileType,
-            initial_comment: option.initialComment,
-            thread_ts: option.threadTs,
-            title: option.title,
-        });
+        const result =
+            option.filePath == undefined ? await postByContent(client, option) : await postByFile(client, option);
         if (result.ok == false) {
             core.setFailed(result.error ?? "unknown error");
             return;
