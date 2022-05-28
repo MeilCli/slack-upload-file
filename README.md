@@ -88,11 +88,14 @@ jobs:
       - run: 'echo ${{ fromJson(steps.message.outputs.response).file.permalink }}'
 ```
 
-## Contributing
+## Contributes
+[<img src="https://gist.github.com/MeilCli/9851a2980ae568e93042315ec2b43588/raw/859ead0ea54e1a8e943b575937bdc0e3c54bf0ac/metrics_contributors.svg">](https://github.com/MeilCli/slack-upload-file/graphs/contributors)
+
+### Could you want to contribute?
 see [Contributing.md](./.github/CONTRIBUTING.md)
 
 ## License
-MIT License
+[<img src="https://gist.github.com/MeilCli/9851a2980ae568e93042315ec2b43588/raw/859ead0ea54e1a8e943b575937bdc0e3c54bf0ac/metrics_licenses.svg">](LICENSE.txt)
 
 ### Using
 - [actions/toolkit](https://github.com/actions/toolkit), published by [MIT License](https://github.com/actions/toolkit/blob/master/LICENSE.md)
