@@ -5,7 +5,7 @@
     "main": "lib/main.js",
     "scripts": {
         "build": "tsc",
-        "pack": "ncc build",
+        "package": "ncc build lib/main.js -o dist",
         "lint": "eslint src/**/*.ts",
         "lint:report": "eslint --output-file eslint_report.json --format json src/**/*.ts"
     },

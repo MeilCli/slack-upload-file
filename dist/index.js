@@ -35,7 +35,7 @@ const glob = __importStar(__nccwpck_require__(8090));
 const slack = __importStar(__nccwpck_require__(431));
 const fs = __importStar(__nccwpck_require__(7147));
 const path = __importStar(__nccwpck_require__(1017));
-const defaultMaxRetryCount = 3;
+const defaultMaxRetryCount = 0;
 function getInput(key) {
     return core.getInput(key, { required: true });
 }

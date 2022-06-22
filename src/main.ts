@@ -4,7 +4,7 @@ import * as slack from "@slack/web-api";
 import * as fs from "fs";
 import * as path from "path";
 
-const defaultMaxRetryCount = 3;
+const defaultMaxRetryCount = 0;
 
 interface Option {
     slackToken: string;
