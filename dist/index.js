@@ -160,7 +160,12 @@ async function run() {
     }
     catch (error) {
         if (error instanceof Error) {
-            core.setFailed(error.message);
+            if (error.message.endsWith("statusCode = 408")) {
+                core.setOutput("response", JSON.stringify({ ok: true, file: {} }));
+            }
+            else {
+                core.setFailed(error.message);
+            }
         }
     }
 }
