@@ -9,7 +9,7 @@ on:
         default: 'Hello World!'
 
 jobs:
-  post:
+  post1:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -22,3 +22,17 @@ jobs:
           channels: ${{ secrets.SLACK_CHANNELS }}
           file_path: 'test*.txt'
           initial_comment: 'post by slack-upload-file'
+  # test for issue 529
+  post2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: 'echo ${{ github.event.inputs.message }} > src/main/test1.txt'
+      - run: 'echo ${{ github.event.inputs.message }} > src/main/test2.txt'
+      - uses: MeilCli/slack-upload-file@v2
+        with:
+          slack_token: ${{ secrets.SLACK_TOKEN }}
+          channels: ${{ secrets.SLACK_CHANNELS }}
+          file_path: 'src/main/test*.txt'
+          file_type: 'text'
+          initial_comment: 'post by slack-upload-file for testing issue 529'
