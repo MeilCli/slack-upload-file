@@ -18,7 +18,7 @@
         "@slack/web-api": "^6.7.2"
     },
     "devDependencies": {
-        "@types/node": "^18.7.13",
+        "@types/node": "^18.7.14",
         "@typescript-eslint/eslint-plugin": "^5.35.1",
         "@typescript-eslint/parser": "^5.36.0",
         "@vercel/ncc": "^0.34.0",
