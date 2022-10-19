@@ -7,6 +7,10 @@ on:
         description: 'post message as text file to slack'
         required: true
         default: 'Hello World!'
+      delete_file_id_before_upload:
+        description: 'for post3 job argument'
+        required: false
+        default: ''
 
 jobs:
   post1:
@@ -36,3 +40,14 @@ jobs:
           file_path: 'src/main/test*.txt'
           file_type: 'text'
           initial_comment: 'post by slack-upload-file for testing issue 529'
+  post3:
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo ${{ github.event.inputs.message }}${{ env.GITHUB_RUN_NUMBER }} > replacement_test.txt'
+      - uses: MeilCli/slack-upload-file@v2
+        with:
+          slack_token: ${{ secrets.SLACK_TOKEN }}
+          channels: ${{ secrets.SLACK_CHANNELS }}
+          file_path: 'replacement_test.txt'
+          file_type: 'text'
+          delete_file_id_before_upload: ${{ github.event.inputs.delete_file_id_before_upload }}
