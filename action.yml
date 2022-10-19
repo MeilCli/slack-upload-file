@@ -34,6 +34,8 @@ inputs:
 outputs:
   response:
     description: 'the api response'
+  uploaded_file_id:
+    description: 'uploaded file id'
 runs:
   using: 'node16'
   main: 'dist/index.js'
