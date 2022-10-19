@@ -67,6 +67,7 @@ function readOption() {
         threadTs: getInputOrUndefined("thread_ts"),
         title: getInputOrUndefined("title"),
         retries: getInputNumberOrUndefined("retries"),
+        deleteFileIdBeforeUpload: getInputOrUndefined("delete_file_id_before_upload"),
     };
 }
 async function postByContent(client, option) {
@@ -144,6 +145,9 @@ async function postByFile(client, option) {
         }
     }
 }
+async function deleteFile(client, fileId) {
+    await client.files.delete({ file: fileId });
+}
 async function run() {
     try {
         const option = readOption();
@@ -151,12 +155,16 @@ async function run() {
             slackApiUrl: option.slackApiUrl,
             retryConfig: { retries: option.retries ?? defaultMaxRetryCount },
         });
+        if (option.deleteFileIdBeforeUpload != undefined) {
+            await deleteFile(client, option.deleteFileIdBeforeUpload);
+        }
         const result = option.filePath == undefined ? await postByContent(client, option) : await postByFile(client, option);
         if (result.ok == false) {
             core.setFailed(result.error ?? "unknown error");
             return;
         }
         core.setOutput("response", JSON.stringify(result));
+        core.setOutput("uploaded_file_id", result.file?.id ?? "");
     }
     catch (error) {
         if (error instanceof Error) {
