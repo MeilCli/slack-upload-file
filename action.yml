@@ -31,6 +31,8 @@ inputs:
     description: 'Title of file.'
   retries:
     description: 'max API retry count. default retries is 3'
+  delete_file_id_before_upload:
+    description: 'file deletion before upload. this argument is purpose for previous uploaded file replacement.'
 outputs:
   response:
     description: 'the api response'

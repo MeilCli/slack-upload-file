@@ -19,6 +19,7 @@ interface Option {
     threadTs: string | undefined;
     title: string | undefined;
     retries: number | undefined;
+    deleteFileIdBeforeUpload: string | undefined;
 }
 
 function getInput(key: string): string {
@@ -55,6 +56,7 @@ function readOption(): Option {
         threadTs: getInputOrUndefined("thread_ts"),
         title: getInputOrUndefined("title"),
         retries: getInputNumberOrUndefined("retries"),
+        deleteFileIdBeforeUpload: getInputOrUndefined("delete_file_id_before_upload"),
     };
 }
 
@@ -130,6 +132,10 @@ async function postByFile(client: slack.WebClient, option: Option): Promise<slac
     }
 }
 
+async function deleteFile(client: slack.WebClient, fileId: string): Promise<void> {
+    await client.files.delete({ file: fileId });
+}
+
 async function run() {
     try {
         const option = readOption();
@@ -137,6 +143,11 @@ async function run() {
             slackApiUrl: option.slackApiUrl,
             retryConfig: { retries: option.retries ?? defaultMaxRetryCount },
         });
+
+        if (option.deleteFileIdBeforeUpload != undefined) {
+            await deleteFile(client, option.deleteFileIdBeforeUpload);
+        }
+
         const result =
             option.filePath == undefined ? await postByContent(client, option) : await postByFile(client, option);
         if (result.ok == false) {
