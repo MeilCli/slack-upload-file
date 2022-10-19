@@ -43,6 +43,7 @@ jobs:
   post3:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - run: 'echo ${{ github.event.inputs.message }}${{ env.GITHUB_RUN_NUMBER }} > replacement_test.txt'
       - uses: ./
         with:
