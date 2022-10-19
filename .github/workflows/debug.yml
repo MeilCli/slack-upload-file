@@ -44,11 +44,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: 'echo ${{ github.event.inputs.message }}${{ env.GITHUB_RUN_NUMBER }} > replacement_test.txt'
+      - run: 'echo ${{ github.event.inputs.message }}${{ github.run_number }} > replacement_test.txt'
       - uses: ./
+        id: slack_upload
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channels: ${{ secrets.SLACK_CHANNELS }}
           file_path: 'replacement_test.txt'
           file_type: 'text'
           delete_file_id_before_upload: ${{ github.event.inputs.delete_file_id_before_upload }}
+      - run: 'echo ${{ steps.slack_upload.outputs.uploaded_file_id }}'
