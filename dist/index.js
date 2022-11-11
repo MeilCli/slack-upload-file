@@ -3286,7 +3286,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.WebClient = exports.WebClientEvent = void 0;
+exports.buildThreadTsWarningMessage = exports.WebClient = exports.WebClientEvent = void 0;
 const querystring_1 = __nccwpck_require__(3477);
 const path_1 = __nccwpck_require__(1017);
 const is_stream_1 = __importDefault(__nccwpck_require__(1554));
@@ -3295,12 +3295,15 @@ const p_retry_1 = __importStar(__nccwpck_require__(2548));
 const axios_1 = __importDefault(__nccwpck_require__(6545));
 const form_data_1 = __importDefault(__nccwpck_require__(4334));
 const is_electron_1 = __importDefault(__nccwpck_require__(4293));
+const zlib_1 = __importDefault(__nccwpck_require__(9796));
+const util_1 = __nccwpck_require__(3837);
 const methods_1 = __nccwpck_require__(1571);
 const instrument_1 = __nccwpck_require__(7763);
 const errors_1 = __nccwpck_require__(9781);
 const logger_1 = __nccwpck_require__(1336);
 const retry_policies_1 = __nccwpck_require__(2156);
 const helpers_1 = __importDefault(__nccwpck_require__(2500));
+const file_upload_1 = __nccwpck_require__(2482);
 /*
  * Helpers
  */
@@ -3379,11 +3382,15 @@ class WebClient extends methods_1.Methods {
         if (typeof options === 'string' || typeof options === 'number' || typeof options === 'boolean') {
             throw new TypeError(`Expected an options argument but instead received a ${typeof options}`);
         }
+        (0, file_upload_1.warnIfNotUsingFilesUploadV2)(method, this.logger);
+        if (method === 'files.uploadV2')
+            return this.filesUploadV2(options);
         const headers = {};
         if (options.token)
             headers.Authorization = `Bearer ${options.token}`;
         const response = await this.makeRequest(method, Object.assign({ team_id: this.teamId }, options), headers);
-        const result = this.buildResult(response);
+        const result = await this.buildResult(response);
+        this.logger.debug(`http request result: ${JSON.stringify(result)}`);
         // log warnings in response metadata
         if (result.response_metadata !== undefined && result.response_metadata.warnings !== undefined) {
             result.response_metadata.warnings.forEach(this.logger.warn.bind(this.logger));
@@ -3408,9 +3415,16 @@ class WebClient extends methods_1.Methods {
                 }
             });
         }
-        if (!result.ok) {
+        // If result's content is gzip, "ok" property is not returned with successful response
+        // TODO: look into simplifying this code block to only check for the second condition
+        // if an { ok: false } body applies for all API errors
+        if (!result.ok && (response.headers['content-type'] !== 'application/gzip')) {
             throw (0, errors_1.platformErrorFromResult)(result);
         }
+        else if ('ok' in result && result.ok === false) {
+            throw (0, errors_1.platformErrorFromResult)(result);
+        }
+        this.logger.debug(`apiCall('${method}') end`);
         return result;
     }
     paginate(method, options, shouldStop, reduce) {
@@ -3489,6 +3503,126 @@ class WebClient extends methods_1.Methods {
             return accumulator;
         })();
     }
+    /* eslint-disable no-trailing-spaces */
+    /**
+     * This wrapper method provides an easy way to upload files using the following endpoints:
+     *
+     * **#1**: For each file submitted with this method, submit filenames
+     * and file metadata to {@link https://api.slack.com/methods/files.getUploadURLExternal files.getUploadURLExternal} to request a URL to
+     * which to send the file data to and an id for the file
+     *
+     * **#2**: for each returned file `upload_url`, upload corresponding file to
+     * URLs returned from step 1 (e.g. https://files.slack.com/upload/v1/...\")
+     *
+     * **#3**: Complete uploads {@link https://api.slack.com/methods/files.completeUploadExternal files.completeUploadExternal}
+     *
+     * **#4**: Unless `request_file_info` set to false, call {@link https://api.slack.com/methods/files.info files.info} for
+     * each file uploaded and returns that data. Requires that your app have `files:read` scope.
+     * @param options
+     */
+    async filesUploadV2(options) {
+        var _a;
+        this.logger.debug('files.uploadV2() start');
+        // 1
+        const fileUploads = await this.getAllFileUploads(options);
+        const fileUploadsURLRes = await this.fetchAllUploadURLExternal(fileUploads);
+        // set the upload_url and file_id returned from Slack
+        fileUploadsURLRes.forEach((res, idx) => {
+            fileUploads[idx].upload_url = res.upload_url;
+            fileUploads[idx].file_id = res.file_id;
+        });
+        // 2
+        await this.postFileUploadsToExternalURL(fileUploads, options);
+        // 3
+        const completion = await this.completeFileUploads(fileUploads);
+        // 4 
+        let res = completion;
+        if ((_a = options.request_file_info) !== null && _a !== void 0 ? _a : true) {
+            res = await this.getFileInfo(fileUploads);
+        }
+        return { ok: true, files: res };
+    }
+    /**
+     * For each file submitted with this method, submits filenames
+     * and file metadata to files.getUploadURLExternal to request a URL to
+     * which to send the file data to and an id for the file
+     * @param fileUploads
+     */
+    async fetchAllUploadURLExternal(fileUploads) {
+        return Promise.all(fileUploads.map((upload) => {
+            /* eslint-disable @typescript-eslint/consistent-type-assertions */
+            const options = {
+                filename: upload.filename,
+                length: upload.length,
+                alt_text: upload.alt_text,
+                snippet_type: upload.snippet_type,
+            };
+            return this.files.getUploadURLExternal(options);
+        }));
+    }
+    /**
+     * Complete uploads.
+     * @param fileUploads
+     * @returns
+     */
+    async completeFileUploads(fileUploads) {
+        const toComplete = Object.values((0, file_upload_1.getAllFileUploadsToComplete)(fileUploads));
+        return Promise.all(toComplete.map((job) => this.files.completeUploadExternal(job)));
+    }
+    /**
+     * Call {@link https://api.slack.com/methods/files.info files.info} for
+     * each file uploaded and returns relevant data. Requires that your app have `files:read` scope, to
+     * turn off, set `request_file_info` set to false.
+     * @param fileUploads
+     * @returns
+     */
+    async getFileInfo(fileUploads) {
+        /* eslint-disable @typescript-eslint/no-non-null-assertion */
+        return Promise.all(fileUploads.map((job) => this.files.info({ file: job.file_id })));
+    }
+    /**
+     * for each returned file upload URL, upload corresponding file
+     * @param fileUploads
+     * @returns
+     */
+    async postFileUploadsToExternalURL(fileUploads, options) {
+        return Promise.all(fileUploads.map(async (upload) => {
+            const { upload_url, file_id, filename, data } = upload;
+            // either file or content will be defined
+            const body = data;
+            // try to post to external url
+            if (upload_url) {
+                const headers = {};
+                if (options.token)
+                    headers.Authorization = `Bearer ${options.token}`;
+                const uploadRes = await this.makeRequest(upload_url, {
+                    body,
+                }, headers);
+                if (uploadRes.status !== 200) {
+                    return Promise.reject(Error(`Failed to upload file (id:${file_id}, filename: ${filename})`));
+                }
+                const returnData = { ok: true, body: uploadRes.data };
+                return Promise.resolve(returnData);
+            }
+            return Promise.reject(Error(`No upload url found for file (id: ${file_id}, filename: ${filename}`));
+        }));
+    }
+    /**
+     * @param options All file uploads arguments
+     * @returns An array of file upload entries
+     */
+    async getAllFileUploads(options) {
+        let fileUploads = [];
+        // add single file data to uploads if file or content exists at the top level
+        if (options.file || options.content) {
+            fileUploads.push(await (0, file_upload_1.getFileUploadJob)(options, this.logger));
+        }
+        // add multiple files data when file_uploads is supplied
+        if (options.file_uploads) {
+            fileUploads = fileUploads.concat(await (0, file_upload_1.getMultipleFileUploadJobs)(options, this.logger));
+        }
+        return fileUploads;
+    }
     /**
      * Low-level function to make a single API request. handles queuing, retries, and http-level errors
      */
@@ -3496,9 +3630,19 @@ class WebClient extends methods_1.Methods {
     async makeRequest(url, body, headers = {}) {
         // TODO: better input types - remove any
         const task = () => this.requestQueue.add(async () => {
-            this.logger.debug('will perform http request');
+            const requestURL = (url.startsWith('https' || 0)) ? url : `${this.axios.getUri() + url}`;
+            this.logger.debug(`http request url: ${requestURL}`);
+            this.logger.debug(`http request body: ${JSON.stringify(redact(body))}`);
+            this.logger.debug(`http request headers: ${JSON.stringify(redact(headers))}`);
             try {
-                const response = await this.axios.post(url, body, Object.assign({ headers }, this.tlsConfig));
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const config = Object.assign({ headers }, this.tlsConfig);
+                // admin.analytics.getFile returns a binary response
+                // To be able to parse it, it should be read as an ArrayBuffer
+                if (url.endsWith('admin.analytics.getFile')) {
+                    config.responseType = 'arraybuffer';
+                }
+                const response = await this.axios.post(url, body, config);
                 this.logger.debug('http response received');
                 if (response.status === 429) {
                     const retrySec = parseRetryHeaders(response);
@@ -3578,7 +3722,7 @@ class WebClient extends methods_1.Methods {
         });
         // A body with binary content should be serialized as multipart/form-data
         if (containsBinaryData) {
-            this.logger.debug('request arguments contain binary data');
+            this.logger.debug('Request arguments contain binary data');
             const form = flattened.reduce((frm, [key, value]) => {
                 if (Buffer.isBuffer(value) || (0, is_stream_1.default)(value)) {
                     const opts = {};
@@ -3630,8 +3774,43 @@ class WebClient extends methods_1.Methods {
      * @param response - an http response
      */
     // eslint-disable-next-line class-methods-use-this
-    buildResult(response) {
+    async buildResult(response) {
         let { data } = response;
+        const isGzipResponse = response.headers['content-type'] === 'application/gzip';
+        // Check for GZIP response - if so, it is a successful response from admin.analytics.getFile
+        if (isGzipResponse) {
+            // admin.analytics.getFile will return a Buffer that can be unzipped
+            try {
+                const unzippedData = await new Promise((resolve, reject) => {
+                    zlib_1.default.unzip(data, (err, buf) => {
+                        if (err) {
+                            return reject(err);
+                        }
+                        return resolve(buf.toString().split('\n'));
+                    });
+                }).then((res) => res)
+                    .catch((err) => {
+                    throw err;
+                });
+                const fileData = [];
+                if (Array.isArray(unzippedData)) {
+                    unzippedData.forEach((dataset) => {
+                        if (dataset && dataset.length > 0) {
+                            fileData.push(JSON.parse(dataset));
+                        }
+                    });
+                }
+                data = { file_data: fileData };
+            }
+            catch (err) {
+                data = { ok: false, error: err };
+            }
+        }
+        else if (!isGzipResponse && response.request.path === '/api/admin.analytics.getFile') {
+            // if it isn't a Gzip response but is from the admin.analytics.getFile request,
+            // decode the ArrayBuffer to JSON read the error
+            data = JSON.parse(new util_1.TextDecoder().decode(data));
+        }
         if (typeof data === 'string') {
             // response.data can be a string, not an object for some reason
             try {
@@ -3728,6 +3907,7 @@ function warnDeprecations(method, logger) {
 function warnIfFallbackIsMissing(method, logger, options) {
     const targetMethods = ['chat.postEphemeral', 'chat.postMessage', 'chat.scheduleMessage', 'chat.update'];
     const isTargetMethod = targetMethods.includes(method);
+    const hasAttachments = (args) => Array.isArray(args.attachments) && args.attachments.length;
     const missingAttachmentFallbackDetected = (args) => Array.isArray(args.attachments) &&
         args.attachments.some((attachment) => !attachment.fallback || attachment.fallback.trim() === '');
     const isEmptyText = (args) => args.text === undefined || args.text === null || args.text === '';
@@ -3739,11 +3919,14 @@ function warnIfFallbackIsMissing(method, logger, options) {
         'To avoid this warning, it is recommended to always provide a top-level `text` argument when posting a message. ' +
         'Alternatively, you can provide an attachment-level `fallback` argument, though this is now considered a legacy field (see https://api.slack.com/reference/messaging/attachments#legacy_fields for more details).';
     if (isTargetMethod && typeof options === 'object') {
-        if (isEmptyText(options)) {
-            logger.warn(buildMissingTextWarning());
-            if (missingAttachmentFallbackDetected(options)) {
+        if (hasAttachments(options)) {
+            if (missingAttachmentFallbackDetected(options) && isEmptyText(options)) {
+                logger.warn(buildMissingTextWarning());
                 logger.warn(buildMissingFallbackWarning());
             }
+        }
+        else if (isEmptyText(options)) {
+            logger.warn(buildMissingTextWarning());
         }
     }
 }
@@ -3757,8 +3940,46 @@ function warnIfThreadTsIsNotString(method, logger, options) {
     const targetMethods = ['chat.postEphemeral', 'chat.postMessage', 'chat.scheduleMessage', 'files.upload'];
     const isTargetMethod = targetMethods.includes(method);
     if (isTargetMethod && (options === null || options === void 0 ? void 0 : options.thread_ts) !== undefined && typeof (options === null || options === void 0 ? void 0 : options.thread_ts) !== 'string') {
-        logger.warn(`The given thread_ts value in the request payload for a ${method} call is a float value. We highly recommend using a string value instead.`);
+        logger.warn(buildThreadTsWarningMessage(method));
     }
+}
+function buildThreadTsWarningMessage(method) {
+    return `The given thread_ts value in the request payload for a ${method} call is a float value. We highly recommend using a string value instead.`;
+}
+exports.buildThreadTsWarningMessage = buildThreadTsWarningMessage;
+/**
+ * Takes an object and redacts specific items
+ * @param body
+ * @returns
+ */
+function redact(body) {
+    const flattened = Object.entries(body).map(([key, value]) => {
+        // no value provided
+        if (value === undefined || value === null) {
+            return [];
+        }
+        let serializedValue = value;
+        // redact possible tokens
+        if (key.match(/.*token.*/) !== null || key.match(/[Aa]uthorization/)) {
+            serializedValue = '[[REDACTED]]';
+        }
+        // when value is buffer or stream we can avoid logging it
+        if (Buffer.isBuffer(value) || (0, is_stream_1.default)(value)) {
+            serializedValue = '[[BINARY VALUE OMITTED]]';
+        }
+        else if (typeof value !== 'string' && typeof value !== 'number' && typeof value !== 'boolean') {
+            serializedValue = JSON.stringify(value);
+        }
+        return [key, serializedValue];
+    });
+    // return as object 
+    const initialValue = {};
+    return flattened.reduce((accumulator, [key, value]) => {
+        if (key !== undefined && value !== undefined) {
+            accumulator[key] = value;
+        }
+        return accumulator;
+    }, initialValue);
 }
 //# sourceMappingURL=WebClient.js.map
 
@@ -3770,16 +3991,20 @@ function warnIfThreadTsIsNotString(method, logger, options) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.rateLimitedErrorWithDelay = exports.platformErrorFromResult = exports.httpErrorFromResponse = exports.requestErrorWithOriginal = exports.ErrorCode = void 0;
+exports.rateLimitedErrorWithDelay = exports.platformErrorFromResult = exports.httpErrorFromResponse = exports.requestErrorWithOriginal = exports.errorWithCode = exports.ErrorCode = void 0;
 /**
  * A dictionary of codes for errors produced by this package
  */
 var ErrorCode;
 (function (ErrorCode) {
+    // general error
     ErrorCode["RequestError"] = "slack_webapi_request_error";
     ErrorCode["HTTPError"] = "slack_webapi_http_error";
     ErrorCode["PlatformError"] = "slack_webapi_platform_error";
     ErrorCode["RateLimitedError"] = "slack_webapi_rate_limited_error";
+    // file uploads errors
+    ErrorCode["FileUploadInvalidArgumentsError"] = "slack_webapi_file_upload_invalid_args_error";
+    ErrorCode["FileUploadReadFileDataError"] = "slack_webapi_file_upload_read_file_data_error";
 })(ErrorCode = exports.ErrorCode || (exports.ErrorCode = {}));
 /**
  * Factory for producing a {@link CodedError} from a generic error
@@ -3790,6 +4015,7 @@ function errorWithCode(error, code) {
     codedError.code = code;
     return codedError;
 }
+exports.errorWithCode = errorWithCode;
 /**
  * A factory to create WebAPIRequestError objects
  * @param original - original error
@@ -3837,6 +4063,339 @@ exports.rateLimitedErrorWithDelay = rateLimitedErrorWithDelay;
 
 /***/ }),
 
+/***/ 2482:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.buildInvalidFilesUploadParamError = exports.buildMultipleChannelsErrorMsg = exports.buildChannelsWarning = exports.buildFilesUploadMissingMessage = exports.buildGeneralFilesUploadWarning = exports.buildLegacyMethodWarning = exports.buildMissingExtensionWarning = exports.buildMissingFileNameWarning = exports.buildLegacyFileTypeWarning = exports.buildFileSizeErrorMsg = exports.buildMissingFileIdError = exports.warnIfLegacyFileType = exports.warnIfMissingOrInvalidFileNameAndDefault = exports.errorIfInvalidOrMissingFileData = exports.errorIfChannelsCsv = exports.warnIfChannels = exports.warnIfNotUsingFilesUploadV2 = exports.getAllFileUploadsToComplete = exports.getFileDataAsStream = exports.getFileDataLength = exports.getFileData = exports.getMultipleFileUploadJobs = exports.getFileUploadJob = void 0;
+const fs_1 = __nccwpck_require__(7147);
+const errors_1 = __nccwpck_require__(9781);
+/**
+ * Returns a fileUploadJob used to represent the of the file upload job and
+ * required metadata.
+ * @param options Options provided by user
+ * @param channelId optional channel id to share file with, omitted, channel is private
+ * @returns
+*/
+async function getFileUploadJob(options, logger) {
+    var _a, _b, _c, _d;
+    // Validate parameters
+    warnIfLegacyFileType(options, logger);
+    warnIfChannels(options, logger);
+    errorIfChannelsCsv(options);
+    const fileName = warnIfMissingOrInvalidFileNameAndDefault(options, logger);
+    const fileData = await getFileData(options);
+    const fileDataBytesLength = getFileDataLength(fileData);
+    const fileUploadJob = {
+        // supplied by user
+        alt_text: options.alt_text,
+        channel_id: (_a = options.channels) !== null && _a !== void 0 ? _a : options.channel_id,
+        content: options.content,
+        file: options.file,
+        filename: (_b = options.filename) !== null && _b !== void 0 ? _b : fileName,
+        initial_comment: options.initial_comment,
+        snippet_type: options.snippet_type,
+        thread_ts: options.thread_ts,
+        title: (_c = options.title) !== null && _c !== void 0 ? _c : ((_d = options.filename) !== null && _d !== void 0 ? _d : fileName),
+        // calculated
+        data: fileData,
+        length: fileDataBytesLength,
+    };
+    return fileUploadJob;
+}
+exports.getFileUploadJob = getFileUploadJob;
+/**
+ * Returns an array of files upload entries when `file_uploads` is supplied.
+ * **Note**
+ * file_uploads should be set when multiple files are intended to be attached to a
+ * single message. To support this, we handle options supplied with
+ * top level `initial_comment`, `thread_ts`, `channel_id` and `file_uploads` parameters.
+ * ```javascript
+ * const res = await client.files.uploadV2({
+ *   initial_comment: 'Here are the files!',
+ *   thread_ts: '1223313423434.131321',
+ *   channel_id: 'C12345',
+ *   file_uploads: [
+ *     {
+ *       file: './test/fixtures/test-txt.txt',
+ *       filename: 'test-txt.txt',
+ *     },
+ *     {
+ *       file: './test/fixtures/test-png.png',
+ *       filename: 'test-png.png',
+ *     },
+ *   ],
+ * });
+ * ```
+ * @param options provided by user
+*/
+async function getMultipleFileUploadJobs(options, logger) {
+    if (options.file_uploads) {
+        // go through each file_upload and create a job for it
+        return Promise.all(options.file_uploads.map((upload) => {
+            // ensure no omitted properties included in files_upload entry
+            // these properties are valid only at the top-level, not
+            // inside file_uploads.
+            const { channel_id, channels, initial_comment, thread_ts } = upload;
+            if (channel_id || channels || initial_comment || thread_ts) {
+                throw (0, errors_1.errorWithCode)(new Error(buildInvalidFilesUploadParamError()), errors_1.ErrorCode.FileUploadInvalidArgumentsError);
+            }
+            // takes any channel_id, initial_comment and thread_ts
+            // supplied at the top level.
+            return getFileUploadJob(Object.assign(Object.assign({}, upload), { channels: options.channels, channel_id: options.channel_id, initial_comment: options.initial_comment, thread_ts: options.thread_ts }), logger);
+        }));
+    }
+    throw new Error(buildFilesUploadMissingMessage());
+}
+exports.getMultipleFileUploadJobs = getMultipleFileUploadJobs;
+// Helpers to build the FileUploadJob
+/**
+ * Returns a single file upload's data
+ * @param options
+ * @returns Binary data representation of file
+ */
+async function getFileData(options) {
+    errorIfInvalidOrMissingFileData(options);
+    const { file, content } = options;
+    if (file) {
+        // try to handle as buffer
+        if (Buffer.isBuffer(file))
+            return file;
+        // try to handle as filepath
+        if (typeof file === 'string') {
+            // try to read file as if the string was a file path
+            try {
+                const dataBuffer = (0, fs_1.readFileSync)(file);
+                return dataBuffer;
+            }
+            catch (error) {
+                throw (0, errors_1.errorWithCode)(new Error(`Unable to resolve file data for ${file}. Please supply a filepath string, or binary data Buffer or String directly.`), errors_1.ErrorCode.FileUploadInvalidArgumentsError);
+            }
+        }
+        // try to handle as ReadStream
+        const data = await getFileDataAsStream(file);
+        if (data)
+            return data;
+    }
+    if (content)
+        return Buffer.from(content);
+    // general catch-all error
+    throw (0, errors_1.errorWithCode)(new Error('There was an issue getting the file data for the file or content supplied'), errors_1.ErrorCode.FileUploadReadFileDataError);
+}
+exports.getFileData = getFileData;
+function getFileDataLength(data) {
+    if (data) {
+        return Buffer.byteLength(data, 'utf8');
+    }
+    throw (0, errors_1.errorWithCode)(new Error(buildFileSizeErrorMsg()), errors_1.ErrorCode.FileUploadReadFileDataError);
+}
+exports.getFileDataLength = getFileDataLength;
+async function getFileDataAsStream(readable) {
+    const chunks = [];
+    return new Promise((resolve, reject) => {
+        readable.on('readable', () => {
+            let chunk;
+            /* eslint-disable no-cond-assign */
+            while ((chunk = readable.read()) !== null) {
+                chunks.push(chunk);
+            }
+            if (chunks.length > 0) {
+                const content = Buffer.concat(chunks);
+                resolve(content);
+            }
+            else {
+                reject(Error('No data in supplied file'));
+            }
+        });
+    });
+}
+exports.getFileDataAsStream = getFileDataAsStream;
+/**
+ * Filters through all fileUploads and groups them into jobs for completion
+ * based on combination of channel_id, thread_ts, initial_comment.
+ * {@link https://api.slack.com/methods/files.completeUploadExternal files.completeUploadExternal} allows for multiple
+ * files to be uploaded with a message (`initial_comment`), and as a threaded message (`thread_ts`)
+ * In order to be grouped together, file uploads must have like properties.
+ * @param fileUploads
+ * @returns
+ */
+function getAllFileUploadsToComplete(fileUploads) {
+    const toComplete = {};
+    fileUploads.forEach((upload) => {
+        const { channel_id, thread_ts, initial_comment, file_id, title } = upload;
+        if (file_id) {
+            const compareString = `:::${channel_id}:::${thread_ts}:::${initial_comment}`;
+            if (!Object.prototype.hasOwnProperty.call(toComplete, compareString)) {
+                toComplete[compareString] = {
+                    files: [{ id: file_id, title }],
+                    channel_id,
+                    initial_comment,
+                    thread_ts,
+                };
+            }
+            else {
+                toComplete[compareString].files.push({
+                    id: file_id,
+                    title,
+                });
+            }
+        }
+        else {
+            throw new Error(buildMissingFileIdError());
+        }
+    });
+    return toComplete;
+}
+exports.getAllFileUploadsToComplete = getAllFileUploadsToComplete;
+// Validation
+/**
+ * Advise to use the files.uploadV2 method over legacy files.upload method and over
+ * lower-level utilities.
+ * @param method
+ * @param logger
+*/
+function warnIfNotUsingFilesUploadV2(method, logger) {
+    const targetMethods = ['files.upload'];
+    const isTargetMethod = targetMethods.includes(method);
+    if (method === 'files.upload')
+        logger.warn(buildLegacyMethodWarning(method));
+    if (isTargetMethod)
+        logger.info(buildGeneralFilesUploadWarning());
+}
+exports.warnIfNotUsingFilesUploadV2 = warnIfNotUsingFilesUploadV2;
+/**
+ * `channels` param is supported but only when a single channel is specified.
+ * @param options
+ * @param logger
+ */
+function warnIfChannels(options, logger) {
+    if (options.channels)
+        logger.warn(buildChannelsWarning());
+}
+exports.warnIfChannels = warnIfChannels;
+/**
+ * v1 files.upload supported `channels` parameter provided as a comma-separated
+ * string of values, e.g. 'C1234,C5678'. V2 no longer supports this csv value.
+ * You may still supply `channels` with a single channel string value e.g. 'C1234'
+ * but it is highly encouraged to supply `channel_id` instead.
+ * @param options
+ */
+function errorIfChannelsCsv(options) {
+    const channels = options.channels ? options.channels.split(',') : [];
+    if (channels.length > 1) {
+        throw (0, errors_1.errorWithCode)(new Error(buildMultipleChannelsErrorMsg()), errors_1.ErrorCode.FileUploadInvalidArgumentsError);
+    }
+}
+exports.errorIfChannelsCsv = errorIfChannelsCsv;
+/**
+ * Checks for either a file or content property and errors if missing
+ * @param options
+ */
+function errorIfInvalidOrMissingFileData(options) {
+    const { file, content } = options;
+    if (!(file || content) || (file && content)) {
+        throw (0, errors_1.errorWithCode)(new Error('Either a file or content field is required for valid file upload. You cannot supply both'), errors_1.ErrorCode.FileUploadInvalidArgumentsError);
+    }
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    if (file && !(typeof file === 'string' || Buffer.isBuffer(file) || file instanceof fs_1.ReadStream)) {
+        throw (0, errors_1.errorWithCode)(new Error('file must be a valid string path, buffer or ReadStream'), errors_1.ErrorCode.FileUploadInvalidArgumentsError);
+    }
+    if (content && typeof content !== 'string') {
+        throw (0, errors_1.errorWithCode)(new Error('content must be a string'), errors_1.ErrorCode.FileUploadInvalidArgumentsError);
+    }
+}
+exports.errorIfInvalidOrMissingFileData = errorIfInvalidOrMissingFileData;
+/**
+ * @param options
+ * @param logger
+ * @returns filename if it exists
+ */
+function warnIfMissingOrInvalidFileNameAndDefault(options, logger) {
+    var _a;
+    const DEFAULT_FILETYPE = 'txt';
+    const DEFAULT_FILENAME = `file.${(_a = options.filetype) !== null && _a !== void 0 ? _a : DEFAULT_FILETYPE}`;
+    const { filename } = options;
+    if (!filename) {
+        // Filename was an optional property in legacy method
+        logger.warn(buildMissingFileNameWarning());
+        return DEFAULT_FILENAME;
+    }
+    if (filename.split('.').length < 2) {
+        // likely filename is missing extension
+        logger.warn(buildMissingExtensionWarning(filename));
+    }
+    return filename;
+}
+exports.warnIfMissingOrInvalidFileNameAndDefault = warnIfMissingOrInvalidFileNameAndDefault;
+/**
+ * `filetype` param is no longer supported and will be ignored
+ * @param options
+ * @param logger
+ */
+function warnIfLegacyFileType(options, logger) {
+    if (options.filetype) {
+        logger.warn(buildLegacyFileTypeWarning());
+    }
+}
+exports.warnIfLegacyFileType = warnIfLegacyFileType;
+// Validation message utilities
+function buildMissingFileIdError() {
+    return 'Missing required file id for file upload completion';
+}
+exports.buildMissingFileIdError = buildMissingFileIdError;
+function buildFileSizeErrorMsg() {
+    return 'There was an issue calculating the size of your file';
+}
+exports.buildFileSizeErrorMsg = buildFileSizeErrorMsg;
+function buildLegacyFileTypeWarning() {
+    return 'filetype is no longer a supported field in files.uploadV2.' +
+        ' \nPlease remove this field. To indicate file type, please do so via the required filename property' +
+        ' using the appropriate file extension, e.g. image.png, text.txt';
+}
+exports.buildLegacyFileTypeWarning = buildLegacyFileTypeWarning;
+function buildMissingFileNameWarning() {
+    return 'filename is a required field for files.uploadV2. \n For backwards compatibility and ease of migration, ' +
+        'defaulting the filename. For best experience and consistent unfurl behavior, you' +
+        ' should set the filename property with correct file extension, e.g. image.png, text.txt';
+}
+exports.buildMissingFileNameWarning = buildMissingFileNameWarning;
+function buildMissingExtensionWarning(filename) {
+    return `filename supplied '${filename}' may be missing a proper extension. Missing extenions may result in unexpected unfurl behavior when shared`;
+}
+exports.buildMissingExtensionWarning = buildMissingExtensionWarning;
+function buildLegacyMethodWarning(method) {
+    return `${method} may cause some issues like timeouts for relatively large files.`;
+}
+exports.buildLegacyMethodWarning = buildLegacyMethodWarning;
+function buildGeneralFilesUploadWarning() {
+    return 'Our latest recommendation is to use client.files.uploadV2() method, ' +
+        'which is mostly compatible and much stabler, instead.';
+}
+exports.buildGeneralFilesUploadWarning = buildGeneralFilesUploadWarning;
+function buildFilesUploadMissingMessage() {
+    return 'Something went wrong with processing file_uploads';
+}
+exports.buildFilesUploadMissingMessage = buildFilesUploadMissingMessage;
+function buildChannelsWarning() {
+    return 'Although the \'channels\' parameter is still supported for smoother migration from legacy files.upload, ' +
+        'we recommend using the new channel_id parameter with a single str value instead (e.g. \'C12345\').';
+}
+exports.buildChannelsWarning = buildChannelsWarning;
+function buildMultipleChannelsErrorMsg() {
+    return 'Sharing files with multiple channels is no longer supported in v2. Share files in each channel separately instead.';
+}
+exports.buildMultipleChannelsErrorMsg = buildMultipleChannelsErrorMsg;
+function buildInvalidFilesUploadParamError() {
+    return 'You may supply file_uploads only for a single channel, comment, thread respectively. ' +
+        'Therefore, please supply any channel_id, initial_comment, thread_ts in the top-layer.';
+}
+exports.buildInvalidFilesUploadParamError = buildInvalidFilesUploadParamError;
+//# sourceMappingURL=file-upload.js.map
+
+/***/ }),
+
 /***/ 2500:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -3850,7 +4409,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
  */
 function delay(ms) {
     return new Promise((resolve) => {
-        setTimeout(() => resolve(), ms);
+        setTimeout(resolve, ms);
     });
 }
 exports["default"] = delay;
@@ -4040,6 +4599,9 @@ function bindApiCall(self, method) {
     // `WebAPICallResult`
     return self.apiCall.bind(self, method);
 }
+function bindFilesUploadV2(self) {
+    return self.filesUploadV2.bind(self);
+}
 /**
  * A class that defines all Web API methods, their arguments type, their response type, and binds those methods to the
  * `apiCall` class method.
@@ -4054,7 +4616,9 @@ class Methods extends eventemitter3_1.EventEmitter {
     constructor() {
         super();
         this.admin = {
-            // TODO: admin.analytics.getFile
+            analytics: {
+                getFile: bindApiCall(this, 'admin.analytics.getFile'),
+            },
             apps: {
                 approve: bindApiCall(this, 'admin.apps.approve'),
                 approved: {
@@ -4274,6 +4838,21 @@ class Methods extends eventemitter3_1.EventEmitter {
             revokePublicURL: bindApiCall(this, 'files.revokePublicURL'),
             sharedPublicURL: bindApiCall(this, 'files.sharedPublicURL'),
             upload: bindApiCall(this, 'files.upload'),
+            /**
+             * Custom method to support files upload v2 way of uploading files to Slack
+             * Supports a single file upload
+             * Supply:
+             * - (required) single file or content
+             * - (optional) channel, alt_text, snippet_type,
+             * Supports multiple file uploads
+             * Supply:
+             * - multiple upload_files
+             * Will try to honor both single file or content data supplied as well
+             * as multiple file uploads property.
+            */
+            uploadV2: bindFilesUploadV2(this),
+            getUploadURLExternal: bindApiCall(this, 'files.getUploadURLExternal'),
+            completeUploadExternal: bindApiCall(this, 'files.completeUploadExternal'),
             comments: {
                 delete: bindApiCall(this, 'files.comments.delete'),
             },
@@ -15029,7 +15608,7 @@ module.exports = require("zlib");
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"name":"@slack/web-api","version":"6.7.2","description":"Official library for using the Slack Platform\'s Web API","author":"Slack Technologies, LLC","license":"MIT","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"main":"dist/index.js","types":"./dist/index.d.ts","files":["dist/**/*"],"engines":{"node":">= 12.13.0","npm":">= 6.12.0"},"repository":"slackapi/node-slack-sdk","homepage":"https://slack.dev/node-slack-sdk/web-api","publishConfig":{"access":"public"},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"scripts":{"prepare":"npm run build","build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist ./coverage ./.nyc_output","lint":"eslint --ext .ts src","test":"npm run lint && npm run build && npm run test:mocha && npm run test:types","test:mocha":"nyc mocha --config .mocharc.json src/*.spec.js","test:types":"tsd","coverage":"codecov -F webapi --root=$PWD","ref-docs:model":"api-extractor run","watch":"npx nodemon --watch \'src\' --ext \'ts\' --exec npm run build","build:deno":"esbuild --bundle --define:process.cwd=String --define:process.version=\'\\"v1.15.2\\"\' --define:process.title=\'\\"deno\\"\' --define:Buffer=dummy_buffer --inject:./deno-shims/buffer-shim.js --inject:./deno-shims/xhr-shim.js --target=esnext --format=esm --outfile=./mod.js src/index.ts"},"dependencies":{"@slack/logger":"^3.0.0","@slack/types":"^2.0.0","@types/is-stream":"^1.1.0","@types/node":">=12.0.0","axios":"^0.27.2","eventemitter3":"^3.1.0","form-data":"^2.5.0","is-electron":"2.2.0","is-stream":"^1.1.0","p-queue":"^6.6.1","p-retry":"^4.0.0"},"devDependencies":{"@aoberoi/capture-console":"^1.1.0","@microsoft/api-extractor":"^7.3.4","@types/chai":"^4.1.7","@types/mocha":"^5.2.6","@typescript-eslint/eslint-plugin":"^4.4.1","@typescript-eslint/parser":"^4.4.0","busboy":"^0.3.1","chai":"^4.2.0","codecov":"^3.2.0","esbuild":"^0.13.15","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-config-airbnb-typescript":"^12.3.1","eslint-plugin-import":"^2.22.1","eslint-plugin-jsdoc":"^30.6.1","eslint-plugin-node":"^11.1.0","mocha":"^9.1.0","nock":"^13.2.6","nyc":"^15.1.0","shelljs":"^0.8.3","shx":"^0.3.2","sinon":"^7.2.7","source-map-support":"^0.5.10","ts-node":"^10.8.1","tsd":"^0.13.1","typescript":"^4.1"},"tsd":{"directory":"test/types"}}');
+module.exports = JSON.parse('{"name":"@slack/web-api","version":"6.8.0","description":"Official library for using the Slack Platform\'s Web API","author":"Slack Technologies, LLC","license":"MIT","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"main":"dist/index.js","types":"./dist/index.d.ts","files":["dist/**/*"],"engines":{"node":">= 12.13.0","npm":">= 6.12.0"},"repository":"slackapi/node-slack-sdk","homepage":"https://slack.dev/node-slack-sdk/web-api","publishConfig":{"access":"public"},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"scripts":{"prepare":"npm run build","build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist ./coverage ./.nyc_output","lint":"eslint --ext .ts src","test":"npm run lint && npm run build && npm run test:mocha && npm run test:types","test:mocha":"nyc mocha --config .mocharc.json src/*.spec.js","test:types":"tsd","coverage":"codecov -F webapi --root=$PWD","ref-docs:model":"api-extractor run","watch":"npx nodemon --watch \'src\' --ext \'ts\' --exec npm run build","build:deno":"esbuild --bundle --define:process.cwd=String --define:process.version=\'\\"v1.15.2\\"\' --define:process.title=\'\\"deno\\"\' --define:Buffer=dummy_buffer --inject:./deno-shims/buffer-shim.js --inject:./deno-shims/xhr-shim.js --target=esnext --format=esm --outfile=./mod.js src/index.ts"},"dependencies":{"@slack/logger":"^3.0.0","@slack/types":"^2.0.0","@types/is-stream":"^1.1.0","@types/node":">=12.0.0","axios":"^0.27.2","eventemitter3":"^3.1.0","form-data":"^2.5.0","is-electron":"2.2.0","is-stream":"^1.1.0","p-queue":"^6.6.1","p-retry":"^4.0.0"},"devDependencies":{"@aoberoi/capture-console":"^1.1.0","@microsoft/api-extractor":"^7.3.4","@types/chai":"^4.1.7","@types/mocha":"^5.2.6","@typescript-eslint/eslint-plugin":"^4.4.1","@typescript-eslint/parser":"^4.4.0","busboy":"^1.6.0","chai":"^4.2.0","codecov":"^3.2.0","esbuild":"^0.13.15","eslint":"^7.32.0","eslint-config-airbnb-base":"^14.2.1","eslint-config-airbnb-typescript":"^12.3.1","eslint-plugin-import":"^2.22.1","eslint-plugin-jsdoc":"^30.6.1","eslint-plugin-node":"^11.1.0","mocha":"^9.1.0","nock":"^13.2.6","nyc":"^15.1.0","shelljs":"^0.8.3","shx":"^0.3.2","sinon":"^7.2.7","source-map-support":"^0.5.10","ts-node":"^10.8.1","tsd":"0.23.0","typescript":"^4.1"},"tsd":{"directory":"test/types"}}');
 
 /***/ }),
 
