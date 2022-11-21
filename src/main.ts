@@ -91,7 +91,6 @@ async function postByFile(client: slack.WebClient, option: Option): Promise<slac
         channel_id: option.channel_id,
         initial_comment: option.initialComment,
         thread_ts: option.threadTs,
-        title: option.title,
         file_uploads: files,
     });
 }
