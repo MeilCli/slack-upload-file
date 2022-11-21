@@ -3,31 +3,38 @@
 upload file to slack action
 
 ## Example
+### Post by files
 ```yaml
-name: Slack
-
-on:
-  workflow_dispatch:
-    inputs:
-      message: 
-        description: 'post message as text file to slack'
-        required: true
-        default: 'Hello World!'
-
 jobs:
   post:
     runs-on: ubuntu-latest
     steps:
-      - run: 'echo ${{ github.event.inputs.message }} > message.txt'
-      - uses: MeilCli/slack-upload-file@v2
+      - uses: MeilCli/slack-upload-file@v3
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
-          channels: ${{ secrets.SLACK_CHANNELS }}
-          file_path: 'message.txt'
-          file_type: 'text'
+          channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
+          file_path: 'docs/*.txt'
           initial_comment: 'post by slack-upload-file'
+          # thread_ts: 'option'
 ```
-You can also pin to a [specific release](https://github.com/MeilCli/slack-upload-file/releases) version in the format `@v2.x.x`
+
+### Post by workflow yaml
+```yaml
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: MeilCli/slack-upload-file@v3
+        with:
+          slack_token: ${{ secrets.SLACK_TOKEN }}
+          channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
+          content: 'file content'
+          file_type: 'text'
+          file_name: 'text.txt'
+          title: 'title of file'
+          initial_comment: 'post by slack-upload-file'
+          # thread_ts: 'option'
+```
 
 ## Information
 - This action execute simply [files.upload](https://api.slack.com/methods/files.upload), and can upload multiple files by [glob pattern](https://github.com/actions/toolkit/tree/main/packages/glob#patterns)
@@ -35,6 +42,7 @@ You can also pin to a [specific release](https://github.com/MeilCli/slack-upload
 - How choose Oauth Scope? This action require `files:read` and `files:write`. In simply case, you do choose `files:read` and `files:write` Bot Token Scope.
 - Why use `files:read` Oauth scope? Because this action use files.uploadv2, and its api requires `files:read`.
   - ref: https://github.com/slackapi/node-slack-sdk/pull/1544
+- You can also pin to a [specific release](https://github.com/MeilCli/slack-upload-file/releases) version in the format `@v3.x.x`
 
 ## Input
 - `slack_token`
@@ -84,15 +92,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: 'echo ${{ github.event.inputs.message }} > message.txt'
-      - uses: MeilCli/slack-upload-file@v2
+      - uses: MeilCli/slack-upload-file@v3
         id: message
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
           file_path: 'message.txt'
-          file_type: 'text'
           initial_comment: 'post by slack-upload-file'
-      - run: 'echo ${{ fromJson(steps.message.outputs.response).file.permalink }}'
+      - run: 'echo ${{ fromJson(steps.message.outputs.response).files[0].file.permalink }}'
 ```
 
 ## Contributes
