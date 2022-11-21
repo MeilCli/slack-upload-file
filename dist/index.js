@@ -57,7 +57,7 @@ function readOption() {
     return {
         slackToken: getInput("slack_token"),
         slackApiUrl: getInputOrUndefined("slack_api_url"),
-        channels: getInputOrUndefined("channels"),
+        channel_id: getInputOrUndefined("channel_id"),
         content: getInputOrUndefined("content"),
         filePath: getInputOrUndefined("file_path"),
         filePathFollowSymbolicLinks: getInput("file_path_follow_symbolic_links") == "true",
@@ -72,7 +72,7 @@ function readOption() {
 }
 async function postByContent(client, option) {
     return await client.filesUploadV2({
-        channels: option.channels,
+        channel_id: option.channel_id,
         content: option.content,
         filename: option.fileName,
         filetype: option.fileType,
@@ -95,7 +95,7 @@ async function postByFile(client, option) {
         files.push({ file: fs.readFileSync(filePath), filename: path.basename(filePath) });
     }
     return await client.filesUploadV2({
-        channels: option.channels,
+        channel_id: option.channel_id,
         initial_comment: option.initialComment,
         thread_ts: option.threadTs,
         title: option.title,
