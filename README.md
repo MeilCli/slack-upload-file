@@ -32,7 +32,9 @@ You can also pin to a [specific release](https://github.com/MeilCli/slack-upload
 ## Information
 - This action execute simply [files.upload](https://api.slack.com/methods/files.upload), and can upload multiple files by [glob pattern](https://github.com/actions/toolkit/tree/main/packages/glob#patterns)
 - How get slack token? see [Basic app setup](https://api.slack.com/authentication/basics)
-- How choose Oauth Scope? This action require only `files:write`. In simply case, you do choose `files:write` Bot Token Scope.
+- How choose Oauth Scope? This action require `files:read` and `files:write`. In simply case, you do choose `files:read` and `files:write` Bot Token Scope.
+- Why use `files:read` Oauth scope? Because this action use files.uploadv2, and its api requires `files:read`.
+  - ref: https://github.com/slackapi/node-slack-sdk/pull/1544
 
 ## Input
 - `slack_token`
