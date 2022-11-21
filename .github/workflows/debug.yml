@@ -33,7 +33,7 @@ jobs:
       - run: mkdir -p src/main
       - run: 'echo ${{ github.event.inputs.message }} > src/main/test1.txt'
       - run: 'echo ${{ github.event.inputs.message }} > src/main/test2.txt'
-      - uses: MeilCli/slack-upload-file@v2
+      - uses: ./
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
