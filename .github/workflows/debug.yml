@@ -30,14 +30,15 @@ jobs:
   post2:
     runs-on: ubuntu-latest
     steps:
-      - run: mkdir -p src/main
-      - run: 'echo ${{ github.event.inputs.message }} > src/main/test1.txt'
-      - run: 'echo ${{ github.event.inputs.message }} > src/main/test2.txt'
+      - uses: actions/checkout@v3
+      - run: mkdir -p testsrc/main
+      - run: 'echo ${{ github.event.inputs.message }} > testsrc/main/test1.txt'
+      - run: 'echo ${{ github.event.inputs.message }} > testsrc/main/test2.txt'
       - uses: ./
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
-          file_path: 'src/main/test*.txt'
+          file_path: 'testsrc/main/test*.txt'
           file_type: 'text'
           initial_comment: 'post by slack-upload-file for testing issue 529'
   post3:
