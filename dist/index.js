@@ -71,7 +71,7 @@ function readOption() {
     };
 }
 async function postByContent(client, option) {
-    return await client.files.upload({
+    return await client.filesUploadV2({
         channels: option.channels,
         content: option.content,
         filename: option.fileName,
@@ -90,60 +90,17 @@ async function postByFile(client, option) {
     if (filePaths.length == 0) {
         throw Error("not found files");
     }
-    else if (filePaths.length == 1) {
-        const file = fs.readFileSync(filePaths[0]);
-        return await client.files.upload({
-            channels: option.channels,
-            file: file,
-            filename: path.basename(filePaths[0]),
-            filetype: option.fileType,
-            initial_comment: option.initialComment,
-            thread_ts: option.threadTs,
-            title: option.title,
-        });
+    const files = [];
+    for (const filePath of filePaths) {
+        files.push({ file: fs.readFileSync(filePath), filename: path.basename(filePath) });
     }
-    else {
-        const permalinks = [];
-        for (const filePath of filePaths.slice(1)) {
-            const file = fs.readFileSync(filePath);
-            const result = await client.files.upload({
-                file: file,
-                filename: path.basename(filePath),
-                filetype: option.filePath,
-            });
-            if (result.ok && result.file?.permalink) {
-                permalinks.push(result.file.permalink);
-            }
-            else {
-                throw Error("cannot upload files");
-            }
-        }
-        {
-            const filePath = filePaths[0];
-            const file = fs.readFileSync(filePath);
-            let initalComment;
-            if (option.channels == undefined) {
-                initalComment = undefined;
-            }
-            else if (option.initialComment == undefined) {
-                initalComment = permalinks.map((x) => `<${x}| >`).join();
-            }
-            else {
-                const postfix = permalinks.map((x) => `<${x}| >`).join();
-                initalComment = `${option.initialComment} ${postfix}`;
-            }
-            return await client.files.upload({
-                channels: option.channels,
-                content: option.content,
-                file: file,
-                filename: path.basename(filePath),
-                filetype: option.fileType,
-                initial_comment: initalComment,
-                thread_ts: option.threadTs,
-                title: option.title,
-            });
-        }
-    }
+    return await client.filesUploadV2({
+        channels: option.channels,
+        initial_comment: option.initialComment,
+        thread_ts: option.threadTs,
+        title: option.title,
+        file_uploads: files,
+    });
 }
 async function deleteFile(client, fileId) {
     await client.files.delete({ file: fileId });
