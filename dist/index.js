@@ -122,6 +122,7 @@ async function run() {
         }
         core.setOutput("response", JSON.stringify(result));
         core.setOutput("uploaded_file_id", result.file?.id ?? "");
+        core.info(JSON.stringify(result));
     }
     catch (error) {
         if (error instanceof Error) {
