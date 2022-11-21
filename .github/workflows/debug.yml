@@ -7,7 +7,7 @@ on:
         description: 'post message as text file to slack'
         required: true
         default: 'Hello World!'
-      delete_file_id_before_upload:
+      delete_file_ids_before_upload:
         description: 'for post3 job argument'
         required: false
         default: ''
@@ -53,5 +53,5 @@ jobs:
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
           file_path: 'replacement_test.txt'
           file_type: 'text'
-          delete_file_id_before_upload: ${{ github.event.inputs.delete_file_id_before_upload }}
+          delete_file_ids_before_upload: ${{ github.event.inputs.delete_file_ids_before_upload }}
       - run: 'echo ${{ steps.slack_upload.outputs.uploaded_file_id }}'

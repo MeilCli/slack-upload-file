@@ -67,14 +67,15 @@ You can also pin to a [specific release](https://github.com/MeilCli/slack-upload
   - Title of file.
 - `retries`
   - max API retry count. default retries is 3.
-- `delete_file_id_before_upload`
-  - file deletion before upload. this argument is purpose for previous uploaded file replacement.
+- `delete_file_ids_before_upload`
+  - file deletion before upload. comma separeted file ids. this argument is purpose for previous uploaded file replacement.
 
 ## Output
 - `response`
   - the api response
-- `uploaded_file_id`
-  - uploaded file id
+  - json structure: [Summary of response](./docs/response.md)
+- `uploaded_file_ids`
+  - comma separeted uploaded file ids
 
 ### Example
 ```yaml

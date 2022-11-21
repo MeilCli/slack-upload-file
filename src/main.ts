@@ -19,7 +19,7 @@ interface Option {
     threadTs: string | undefined;
     title: string | undefined;
     retries: number | undefined;
-    deleteFileIdBeforeUpload: string | undefined;
+    deleteFileIdsBeforeUpload: string[] | undefined;
 }
 
 function getInput(key: string): string {
@@ -56,7 +56,7 @@ function readOption(): Option {
         threadTs: getInputOrUndefined("thread_ts"),
         title: getInputOrUndefined("title"),
         retries: getInputNumberOrUndefined("retries"),
-        deleteFileIdBeforeUpload: getInputOrUndefined("delete_file_id_before_upload"),
+        deleteFileIdsBeforeUpload: getInputOrUndefined("delete_file_id_before_upload")?.split(","),
     };
 }
 
@@ -95,8 +95,10 @@ async function postByFile(client: slack.WebClient, option: Option): Promise<slac
     });
 }
 
-async function deleteFile(client: slack.WebClient, fileId: string): Promise<void> {
-    await client.files.delete({ file: fileId });
+async function deleteFiles(client: slack.WebClient, fileIds: string[]): Promise<void> {
+    for (const fileId of fileIds) {
+        await client.files.delete({ file: fileId });
+    }
 }
 
 async function run() {
@@ -107,8 +109,8 @@ async function run() {
             retryConfig: { retries: option.retries ?? defaultMaxRetryCount },
         });
 
-        if (option.deleteFileIdBeforeUpload != undefined) {
-            await deleteFile(client, option.deleteFileIdBeforeUpload);
+        if (option.deleteFileIdsBeforeUpload != undefined) {
+            await deleteFiles(client, option.deleteFileIdsBeforeUpload);
         }
 
         const result =
@@ -117,9 +119,10 @@ async function run() {
             core.setFailed(result.error ?? "unknown error");
             return;
         }
+
+        const response = result as unknown as { files: { file: { id: string } }[] };
         core.setOutput("response", JSON.stringify(result));
-        core.setOutput("uploaded_file_id", result.file?.id ?? "");
-        core.info(JSON.stringify(result));
+        core.setOutput("uploaded_file_ids", response.files.map((x) => x.file.id).join(","));
     } catch (error) {
         if (error instanceof Error) {
             core.setFailed(error.message);

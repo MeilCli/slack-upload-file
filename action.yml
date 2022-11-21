@@ -31,13 +31,13 @@ inputs:
     description: 'Title of file.'
   retries:
     description: 'max API retry count. default retries is 3'
-  delete_file_id_before_upload:
-    description: 'file deletion before upload. this argument is purpose for previous uploaded file replacement.'
+  delete_file_ids_before_upload:
+    description: 'file deletion before upload. comma separeted file ids. this argument is purpose for previous uploaded file replacement.'
 outputs:
   response:
     description: 'the api response'
-  uploaded_file_id:
-    description: 'uploaded file id'
+  uploaded_file_ids:
+    description: 'comma separated uploaded file ids'
 runs:
   using: 'node16'
   main: 'dist/index.js'
