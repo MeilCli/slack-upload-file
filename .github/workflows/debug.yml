@@ -23,7 +23,7 @@ jobs:
         id: upload_file
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
-          channels: ${{ secrets.SLACK_CHANNELS }}
+          channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
           file_path: 'test*.txt'
           initial_comment: 'post by slack-upload-file'
   # test for issue 529
@@ -36,7 +36,7 @@ jobs:
       - uses: MeilCli/slack-upload-file@v2
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
-          channels: ${{ secrets.SLACK_CHANNELS }}
+          channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
           file_path: 'src/main/test*.txt'
           file_type: 'text'
           initial_comment: 'post by slack-upload-file for testing issue 529'
@@ -49,7 +49,7 @@ jobs:
         id: slack_upload
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
-          channels: ${{ secrets.SLACK_CHANNELS }}
+          channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
           file_path: 'replacement_test.txt'
           file_type: 'text'
           delete_file_id_before_upload: ${{ github.event.inputs.delete_file_id_before_upload }}

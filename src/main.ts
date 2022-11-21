@@ -9,7 +9,7 @@ const defaultMaxRetryCount = 3;
 interface Option {
     slackToken: string;
     slackApiUrl: string | undefined;
-    channels: string | undefined;
+    channel_id: string | undefined;
     content: string | undefined;
     filePath: string | undefined;
     filePathFollowSymbolicLinks: boolean;
@@ -46,7 +46,7 @@ function readOption(): Option {
     return {
         slackToken: getInput("slack_token"),
         slackApiUrl: getInputOrUndefined("slack_api_url"),
-        channels: getInputOrUndefined("channels"),
+        channel_id: getInputOrUndefined("channel_id"),
         content: getInputOrUndefined("content"),
         filePath: getInputOrUndefined("file_path"),
         filePathFollowSymbolicLinks: getInput("file_path_follow_symbolic_links") == "true",
@@ -62,7 +62,7 @@ function readOption(): Option {
 
 async function postByContent(client: slack.WebClient, option: Option): Promise<slack.FilesUploadResponse> {
     return await client.filesUploadV2({
-        channels: option.channels,
+        channel_id: option.channel_id,
         content: option.content,
         filename: option.fileName,
         filetype: option.fileType,
@@ -88,7 +88,7 @@ async function postByFile(client: slack.WebClient, option: Option): Promise<slac
     }
 
     return await client.filesUploadV2({
-        channels: option.channels,
+        channel_id: option.channel_id,
         initial_comment: option.initialComment,
         thread_ts: option.threadTs,
         title: option.title,

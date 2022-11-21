@@ -40,8 +40,8 @@ You can also pin to a [specific release](https://github.com/MeilCli/slack-upload
   - Slack token, must has files:write permission
 - `slack_api_url`
   - Custom slack api url
-- `channels`
-  - Comma-separated list of channel names or IDs where the file will be shared.
+- `channel_id`
+  - Slack channel id
 - `content`
   - File contents via a POST variable. If omitting this parameter, you must provide a `file`.
 - `file_path`
@@ -85,7 +85,7 @@ jobs:
         id: message
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
-          channels: ${{ secrets.SLACK_CHANNELS }}
+          channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
           file_path: 'message.txt'
           file_type: 'text'
           initial_comment: 'post by slack-upload-file'
