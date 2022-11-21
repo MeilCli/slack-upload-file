@@ -61,7 +61,7 @@ function readOption(): Option {
 }
 
 async function postByContent(client: slack.WebClient, option: Option): Promise<slack.FilesUploadResponse> {
-    return await client.files.upload({
+    return await client.filesUploadV2({
         channels: option.channels,
         content: option.content,
         filename: option.fileName,
@@ -80,56 +80,20 @@ async function postByFile(client: slack.WebClient, option: Option): Promise<slac
     const filePaths = await globber.glob();
     if (filePaths.length == 0) {
         throw Error("not found files");
-    } else if (filePaths.length == 1) {
-        const file = fs.readFileSync(filePaths[0]);
-        return await client.files.upload({
-            channels: option.channels,
-            file: file,
-            filename: path.basename(filePaths[0]),
-            filetype: option.fileType,
-            initial_comment: option.initialComment,
-            thread_ts: option.threadTs,
-            title: option.title,
-        });
-    } else {
-        const permalinks: string[] = [];
-        for (const filePath of filePaths.slice(1)) {
-            const file = fs.readFileSync(filePath);
-            const result = await client.files.upload({
-                file: file,
-                filename: path.basename(filePath),
-                filetype: option.filePath,
-            });
-            if (result.ok && result.file?.permalink) {
-                permalinks.push(result.file.permalink);
-            } else {
-                throw Error("cannot upload files");
-            }
-        }
-        {
-            const filePath = filePaths[0];
-            const file = fs.readFileSync(filePath);
-            let initalComment: string | undefined;
-            if (option.channels == undefined) {
-                initalComment = undefined;
-            } else if (option.initialComment == undefined) {
-                initalComment = permalinks.map((x) => `<${x}| >`).join();
-            } else {
-                const postfix = permalinks.map((x) => `<${x}| >`).join();
-                initalComment = `${option.initialComment} ${postfix}`;
-            }
-            return await client.files.upload({
-                channels: option.channels,
-                content: option.content,
-                file: file,
-                filename: path.basename(filePath),
-                filetype: option.fileType,
-                initial_comment: initalComment,
-                thread_ts: option.threadTs,
-                title: option.title,
-            });
-        }
     }
+
+    const files: { file: Buffer; filename: string }[] = [];
+    for (const filePath of filePaths) {
+        files.push({ file: fs.readFileSync(filePath), filename: path.basename(filePath) });
+    }
+
+    return await client.filesUploadV2({
+        channels: option.channels,
+        initial_comment: option.initialComment,
+        thread_ts: option.threadTs,
+        title: option.title,
+        file_uploads: files,
+    });
 }
 
 async function deleteFile(client: slack.WebClient, fileId: string): Promise<void> {
