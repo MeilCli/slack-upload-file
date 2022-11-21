@@ -102,6 +102,17 @@ jobs:
       - run: 'echo ${{ fromJson(steps.message.outputs.response).files[0].file.permalink }}'
 ```
 
+## Migration from v2 to v3
+- Must: add `files:read` permission scope to Slack App.
+- Need: change to `channel_id` from `channels`. `channels` is removed because it is deprecated. 
+- Some: change some input and output.
+  - input:
+    - new: `delete_file_id_before_upload`, old: `delete_file_id_before_upload`
+    - `title` is changed, it will not send when upload by files.
+  - output:
+    - new: `uploaded_file_ids`, old: `uploaded_file_id`
+    - `response` is changed.
+
 ## Contributes
 [<img src="https://gist.github.com/MeilCli/9851a2980ae568e93042315ec2b43588/raw/859ead0ea54e1a8e943b575937bdc0e3c54bf0ac/metrics_contributors.svg">](https://github.com/MeilCli/slack-upload-file/graphs/contributors)
 
