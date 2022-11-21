@@ -67,7 +67,7 @@ function readOption() {
         threadTs: getInputOrUndefined("thread_ts"),
         title: getInputOrUndefined("title"),
         retries: getInputNumberOrUndefined("retries"),
-        deleteFileIdBeforeUpload: getInputOrUndefined("delete_file_id_before_upload"),
+        deleteFileIdsBeforeUpload: getInputOrUndefined("delete_file_id_before_upload")?.split(","),
     };
 }
 async function postByContent(client, option) {
@@ -98,12 +98,13 @@ async function postByFile(client, option) {
         channel_id: option.channel_id,
         initial_comment: option.initialComment,
         thread_ts: option.threadTs,
-        title: option.title,
         file_uploads: files,
     });
 }
-async function deleteFile(client, fileId) {
-    await client.files.delete({ file: fileId });
+async function deleteFiles(client, fileIds) {
+    for (const fileId of fileIds) {
+        await client.files.delete({ file: fileId });
+    }
 }
 async function run() {
     try {
@@ -112,17 +113,17 @@ async function run() {
             slackApiUrl: option.slackApiUrl,
             retryConfig: { retries: option.retries ?? defaultMaxRetryCount },
         });
-        if (option.deleteFileIdBeforeUpload != undefined) {
-            await deleteFile(client, option.deleteFileIdBeforeUpload);
+        if (option.deleteFileIdsBeforeUpload != undefined) {
+            await deleteFiles(client, option.deleteFileIdsBeforeUpload);
         }
         const result = option.filePath == undefined ? await postByContent(client, option) : await postByFile(client, option);
         if (result.ok == false) {
             core.setFailed(result.error ?? "unknown error");
             return;
         }
+        const response = result;
         core.setOutput("response", JSON.stringify(result));
-        core.setOutput("uploaded_file_id", result.file?.id ?? "");
-        core.info(JSON.stringify(result));
+        core.setOutput("uploaded_file_ids", response.files.map((x) => x.file.id).join(","));
     }
     catch (error) {
         if (error instanceof Error) {
