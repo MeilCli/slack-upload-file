@@ -36,5 +36,4 @@ jobs:
           title: 'update actions'
           labels: 'Action'
           assignees: 'MeilCli'
-          reviewers: 'MeilCli'
           branch: 'update/action'
