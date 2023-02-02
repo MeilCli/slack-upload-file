@@ -15,7 +15,7 @@
     "dependencies": {
         "@actions/core": "^1.10.0",
         "@actions/glob": "^0.4.0",
-        "@slack/web-api": "^6.8.0"
+        "@slack/web-api": "^6.8.1"
     },
     "devDependencies": {
         "@types/node": "^18.11.18",
