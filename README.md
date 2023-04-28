@@ -69,6 +69,7 @@ jobs:
   - ref: [https://api.slack.com/types/file#file_types](https://api.slack.com/types/file#file_types)
 - `initial_comment`
   - The message text introducing the file in specified channels.
+  - links might not work because files.uploadv2 limitation. ref: [#695](https://github.com/MeilCli/slack-upload-file/issues/695)
 - `thread_ts`
   - Provide another message's ts value to upload this file as a reply. Never use a reply's ts value; use its parent instead.
 - `title`
