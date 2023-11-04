@@ -61,6 +61,12 @@ jobs:
   - Indicates whether to follow symbolic links
   - This parameter only use glob pattern
   - default: true
+- `if_no_files_found`
+  - file not founding options: warn, error or ignore. alike actions/upload-artifact
+  - `warn`: output warning, but do not fail
+  - `ignore`: no output and do not fail
+  - `error`: output warning and do fail
+  - default: error
 - `file_name`
   - Filename of file.
   - This parameter can only use providing `content`

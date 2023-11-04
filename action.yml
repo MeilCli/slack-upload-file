@@ -23,6 +23,8 @@ inputs:
     description: 'Filename of file.'
   file_type:
     description: 'A file type identifier.'
+  if_no_files_found:
+    description: 'file not founding options: warn, error or ignore. alike actions/upload-artifact'
   initial_comment:
     description: 'The message text introducing the file in specified channels.'
   thread_ts:
