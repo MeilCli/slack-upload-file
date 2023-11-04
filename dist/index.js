@@ -129,6 +129,7 @@ async function run() {
         core.info("post post");
         const response = result;
         core.setOutput("response", JSON.stringify(result));
+        core.info(`json: ${JSON.stringify(result)}`);
         core.setOutput("uploaded_file_ids", response.files.map((x) => x.file.id).join(","));
     }
     catch (error) {
