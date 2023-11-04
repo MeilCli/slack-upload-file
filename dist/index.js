@@ -63,12 +63,34 @@ function readOption() {
         filePathFollowSymbolicLinks: getInput("file_path_follow_symbolic_links") == "true",
         fileName: getInputOrUndefined("file_name"),
         fileType: getInputOrUndefined("file_type"),
+        ifNoFilesFound: getInputOrUndefined("if_no_files_found"),
         initialComment: getInputOrUndefined("initial_comment"),
         threadTs: getInputOrUndefined("thread_ts"),
         title: getInputOrUndefined("title"),
         retries: getInputNumberOrUndefined("retries"),
         deleteFileIdsBeforeUpload: getInputOrUndefined("delete_file_id_before_upload")?.split(","),
     };
+}
+// return if true: don't file-base uploading or file provided
+async function validateFileProvided(option) {
+    if (option.filePath == undefined) {
+        return true;
+    }
+    const globber = await glob.create(option.filePath, { followSymbolicLinks: option.filePathFollowSymbolicLinks });
+    const filePaths = await globber.glob();
+    if (filePaths.length == 0) {
+        if (option.ifNoFilesFound == "warn") {
+            core.warning(`file cannot find, path: ${option.filePath}`);
+            return false;
+        }
+        else if (option.ifNoFilesFound == "ignore") {
+            return false;
+        }
+        else {
+            throw Error(`file cannot find, path: ${option.filePath}`);
+        }
+    }
+    return true;
 }
 async function postByContent(client, option) {
     return await client.filesUploadV2({
@@ -113,6 +135,10 @@ async function run() {
             slackApiUrl: option.slackApiUrl,
             retryConfig: { retries: option.retries ?? defaultMaxRetryCount },
         });
+        const validateFileProviding = await validateFileProvided(option);
+        if (validateFileProviding == false) {
+            return;
+        }
         if (option.deleteFileIdsBeforeUpload != undefined) {
             await deleteFiles(client, option.deleteFileIdsBeforeUpload);
         }
