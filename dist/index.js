@@ -108,29 +108,22 @@ async function deleteFiles(client, fileIds) {
 }
 async function run() {
     try {
-        core.info("pre readOption");
         const option = readOption();
-        core.info("post readOption");
         const client = new slack.WebClient(option.slackToken, {
             slackApiUrl: option.slackApiUrl,
             retryConfig: { retries: option.retries ?? defaultMaxRetryCount },
         });
-        core.info("pre deleteFiles");
         if (option.deleteFileIdsBeforeUpload != undefined) {
             await deleteFiles(client, option.deleteFileIdsBeforeUpload);
         }
-        core.info("post deleteFiles");
-        core.info("pre post");
         const result = option.filePath == undefined ? await postByContent(client, option) : await postByFile(client, option);
         if (result.ok == false) {
             core.setFailed(result.error ?? "unknown error");
             return;
         }
-        core.info("post post");
         const response = result;
         core.setOutput("response", JSON.stringify(result));
-        core.info(`json: ${JSON.stringify(result)}`);
-        core.setOutput("uploaded_file_ids", response.files.map((x) => x.file.id).join(","));
+        core.setOutput("uploaded_file_ids", response.files.flatMap((x) => x.files.map((y) => y.id)).join(","));
     }
     catch (error) {
         if (error instanceof Error) {
