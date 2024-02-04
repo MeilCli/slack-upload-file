@@ -42,7 +42,7 @@ jobs:
 - How choose Oauth Scope? This action require `files:read` and `files:write`. In simply case, you do choose `files:read` and `files:write` Bot Token Scope.
 - Why use `files:read` Oauth scope? Because this action use files.uploadv2, and its api requires `files:read`.
   - ref: https://github.com/slackapi/node-slack-sdk/pull/1544
-- You can also pin to a [specific release](https://github.com/MeilCli/slack-upload-file/releases) version in the format `@v3.x.x`
+- You can also pin to a [specific release](https://github.com/MeilCli/slack-upload-file/releases) version in the format `@v4.x.x`
 
 ## Input
 - `slack_token`
