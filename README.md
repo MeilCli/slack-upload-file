@@ -9,7 +9,7 @@ jobs:
   post:
     runs-on: ubuntu-latest
     steps:
-      - uses: MeilCli/slack-upload-file@v3
+      - uses: MeilCli/slack-upload-file@v4
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
@@ -24,7 +24,7 @@ jobs:
   post:
     runs-on: ubuntu-latest
     steps:
-      - uses: MeilCli/slack-upload-file@v3
+      - uses: MeilCli/slack-upload-file@v4
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
@@ -99,7 +99,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: 'echo ${{ github.event.inputs.message }} > message.txt'
-      - uses: MeilCli/slack-upload-file@v3
+      - uses: MeilCli/slack-upload-file@v4
         id: message
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
@@ -109,7 +109,7 @@ jobs:
       - run: 'echo ${{ fromJson(steps.message.outputs.response).files[0].file.permalink }}'
 ```
 
-## Migration from v2 to v3
+## Migration from v2 to v3/v4
 - Must: add `files:read` permission scope to Slack App.
 - Need: change to `channel_id` from `channels`. `channels` is removed because it is deprecated. 
 - Some: change some input and output.
