@@ -16,7 +16,7 @@ jobs:
   post1:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: 'echo ${{ github.event.inputs.message }} > test1.txt'
       - run: 'echo ${{ github.event.inputs.message }} > test2.txt'
       - uses: ./
@@ -30,7 +30,7 @@ jobs:
   post2:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: mkdir -p testsrc/main
       - run: 'echo ${{ github.event.inputs.message }} > testsrc/main/test1.txt'
       - run: 'echo ${{ github.event.inputs.message }} > testsrc/main/test2.txt'
@@ -44,7 +44,7 @@ jobs:
   post3:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: 'echo ${{ github.event.inputs.message }}${{ github.run_number }} > replacement_test.txt'
       - uses: ./
         id: slack_upload
