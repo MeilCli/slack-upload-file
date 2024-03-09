@@ -83,9 +83,12 @@ async function validateFileProvided(option: Option): Promise<boolean> {
 }
 
 async function postByContent(client: slack.WebClient, option: Option): Promise<slack.FilesUploadResponse> {
+    if (option.content == undefined) {
+        throw Error(`content is undefined`);
+    }
     return await client.filesUploadV2({
         channel_id: option.channel_id,
-        content: option.content,
+        file_uploads: [{ content: option.content }],
         filename: option.fileName,
         filetype: option.fileType,
         initial_comment: option.initialComment,
