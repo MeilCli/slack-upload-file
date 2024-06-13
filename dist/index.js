@@ -3419,7 +3419,6 @@ const is_stream_1 = __importDefault(__nccwpck_require__(1554));
 const p_queue_1 = __importDefault(__nccwpck_require__(8983));
 const p_retry_1 = __importStar(__nccwpck_require__(2548));
 const axios_1 = __importDefault(__nccwpck_require__(8757));
-// eslint-disable-next-line @typescript-eslint/naming-convention
 const form_data_1 = __importDefault(__nccwpck_require__(4334));
 const is_electron_1 = __importDefault(__nccwpck_require__(4293));
 const methods_1 = __nccwpck_require__(1571);
@@ -3453,7 +3452,7 @@ class WebClient extends methods_1.Methods {
     /**
      * @param token - An API token to authenticate/authorize with Slack (usually start with `xoxp`, `xoxb`)
      */
-    constructor(token, { slackApiUrl = 'https://slack.com/api/', logger = undefined, logLevel = undefined, maxRequestConcurrency = 100, retryConfig = retry_policies_1.tenRetriesInAboutThirtyMinutes, agent = undefined, tls = undefined, timeout = 0, rejectRateLimitedCalls = false, headers = {}, teamId = undefined, } = {}) {
+    constructor(token, { slackApiUrl = 'https://slack.com/api/', logger = undefined, logLevel = undefined, maxRequestConcurrency = 100, retryConfig = retry_policies_1.tenRetriesInAboutThirtyMinutes, agent = undefined, tls = undefined, timeout = 0, rejectRateLimitedCalls = false, headers = {}, teamId = undefined, attachOriginalToWebAPIRequestError = true, } = {}) {
         super();
         this.token = token;
         this.slackApiUrl = slackApiUrl;
@@ -3464,6 +3463,7 @@ class WebClient extends methods_1.Methods {
         this.tlsConfig = tls !== undefined ? tls : {};
         this.rejectRateLimitedCalls = rejectRateLimitedCalls;
         this.teamId = teamId;
+        this.attachOriginalToWebAPIRequestError = attachOriginalToWebAPIRequestError;
         // Logging
         if (typeof logger !== 'undefined') {
             this.logger = logger;
@@ -3821,7 +3821,7 @@ class WebClient extends methods_1.Methods {
                     const e = error;
                     this.logger.warn('http request failed', e.message);
                     if (e.request) {
-                        throw (0, errors_1.requestErrorWithOriginal)(e);
+                        throw (0, errors_1.requestErrorWithOriginal)(e, this.attachOriginalToWebAPIRequestError);
                     }
                     throw error;
                 }
@@ -4155,10 +4155,13 @@ exports.errorWithCode = errorWithCode;
 /**
  * A factory to create WebAPIRequestError objects
  * @param original - original error
+ * @param attachOriginal - config indicating if 'original' property should be added on the error object
  */
-function requestErrorWithOriginal(original) {
+function requestErrorWithOriginal(original, attachOriginal) {
     const error = errorWithCode(new Error(`A request error occurred: ${original.message}`), ErrorCode.RequestError);
-    error.original = original;
+    if (attachOriginal) {
+        error.original = original;
+    }
     return error;
 }
 exports.requestErrorWithOriginal = requestErrorWithOriginal;
@@ -5476,6 +5479,42 @@ class Methods extends eventemitter3_1.EventEmitter {
                 remove: bindApiCall(this, 'calls.participants.remove'),
             },
         };
+        this.canvases = {
+            access: {
+                /**
+                 * @description Remove access to a canvas for specified entities.
+                 * @see {@link https://api.slack.com/methods/canvases.access.delete `canvases.access.delete` API reference}.
+                 */
+                delete: bindApiCall(this, 'canvases.access.delete'),
+                /**
+                 * @description Sets the access level to a canvas for specified entities.
+                 * @see {@link https://api.slack.com/methods/canvases.access.set `canvases.access.set` API reference}.
+                 */
+                set: bindApiCall(this, 'canvases.access.set'),
+            },
+            /**
+             * @description Create Canvas for a user.
+             * @see {@link https://api.slack.com/methods/canvases.create `canvases.create` API reference}.
+             */
+            create: bindApiCall(this, 'canvases.create'),
+            /**
+             * @description Deletes a canvas.
+             * @see {@link https://api.slack.com/methods/canvases.delete `canvases.delete` API reference}.
+             */
+            delete: bindApiCall(this, 'canvases.delete'),
+            /**
+             * @description Update an existing canvas.
+             * @see {@link https://api.slack.com/methods/canvases.edit `canvases.edit` API reference}.
+             */
+            edit: bindApiCall(this, 'canvases.edit'),
+            sections: {
+                /**
+                 * @description Find sections matching the provided criteria.
+                 * @see {@link https://api.slack.com/methods/canvases.sections.lookup `canvases.sections.lookup` API reference}.
+                 */
+                lookup: bindApiCall(this, 'canvases.sections.lookup'),
+            },
+        };
         this.chat = {
             /**
              * @description Deletes a message.
@@ -5546,6 +5585,13 @@ class Methods extends eventemitter3_1.EventEmitter {
              * @see {@link https://api.slack.com/methods/conversations.archive `conversations.archive` API reference}.
              */
             archive: bindApiCall(this, 'conversations.archive'),
+            canvases: {
+                /**
+                 * @description Create a Channel Canvas for a channel.
+                 * @see {@link https://api.slack.com/methods/conversations.canvases.create `conversations.canvases.create` API reference}.
+                 */
+                create: bindApiCall(this, 'conversations.canvases.create'),
+            },
             /**
              * @description Closes a direct message or multi-person direct message.
              * @see {@link https://api.slack.com/methods/conversations.close `conversations.close` API reference}.
@@ -17980,7 +18026,7 @@ module.exports = axios;
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"name":"@slack/web-api","version":"7.0.4","description":"Official library for using the Slack Platform\'s Web API","author":"Slack Technologies, LLC","license":"MIT","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"main":"dist/index.js","types":"./dist/index.d.ts","files":["dist/**/*"],"engines":{"node":">= 18","npm":">= 8.6.0"},"repository":"slackapi/node-slack-sdk","homepage":"https://slack.dev/node-slack-sdk/web-api","publishConfig":{"access":"public"},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"scripts":{"prepare":"npm run build","build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist ./coverage ./.nyc_output","lint":"eslint --ext .ts src","mocha":"mocha --config .mocharc.json src/*.spec.js","test":"npm run lint && npm run test:unit && npm run test:types && npm run test:integration","test:integration":"npm run build && node test/integration/commonjs-project/index.js && node test/integration/esm-project/index.mjs","test:unit":"npm run build && nyc --reporter=text-summary npm run mocha","test:types":"tsd","ref-docs:model":"api-extractor run","watch":"npx nodemon --watch \'src\' --ext \'ts\' --exec npm run build"},"dependencies":{"@slack/logger":"^4.0.0","@slack/types":"^2.9.0","@types/node":">=18.0.0","@types/retry":"0.12.0","axios":"^1.6.5","eventemitter3":"^5.0.1","form-data":"^4.0.0","is-electron":"2.2.2","is-stream":"^2","p-queue":"^6","p-retry":"^4","retry":"^0.13.1"},"devDependencies":{"@microsoft/api-extractor":"^7","@tsconfig/recommended":"^1","@types/chai":"^4","@types/mocha":"^10","@types/sinon":"^17","@typescript-eslint/eslint-plugin":"^6","@typescript-eslint/parser":"^6","busboy":"^1","chai":"^4","eslint":"^8","eslint-config-airbnb-base":"^15","eslint-config-airbnb-typescript":"^17","eslint-plugin-import":"^2","eslint-plugin-import-newlines":"^1.3.4","eslint-plugin-jsdoc":"^48","eslint-plugin-node":"^11","mocha":"^10","nock":"^13","nyc":"^15","shx":"^0.3.2","sinon":"^17","source-map-support":"^0.5.21","ts-node":"^10","tsd":"^0.30.0","typescript":"5.3.3"},"tsd":{"directory":"test/types"}}');
+module.exports = JSON.parse('{"name":"@slack/web-api","version":"7.1.0","description":"Official library for using the Slack Platform\'s Web API","author":"Slack Technologies, LLC","license":"MIT","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"main":"dist/index.js","types":"./dist/index.d.ts","files":["dist/**/*"],"engines":{"node":">= 18","npm":">= 8.6.0"},"repository":"slackapi/node-slack-sdk","homepage":"https://slack.dev/node-slack-sdk/web-api","publishConfig":{"access":"public"},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"scripts":{"prepare":"npm run build","build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist ./coverage","lint":"eslint --ext .ts src","mocha":"mocha --config .mocharc.json src/*.spec.js","test":"npm run lint && npm run test:types && npm run test:integration && npm run test:unit","test:integration":"npm run build && node test/integration/commonjs-project/index.js && node test/integration/esm-project/index.mjs","test:unit":"npm run build && c8 npm run mocha","test:types":"tsd","ref-docs:model":"api-extractor run","watch":"npx nodemon --watch \'src\' --ext \'ts\' --exec npm run build"},"dependencies":{"@slack/logger":"^4.0.0","@slack/types":"^2.9.0","@types/node":">=18.0.0","@types/retry":"0.12.0","axios":"^1.6.5","eventemitter3":"^5.0.1","form-data":"^4.0.0","is-electron":"2.2.2","is-stream":"^2","p-queue":"^6","p-retry":"^4","retry":"^0.13.1"},"devDependencies":{"@microsoft/api-extractor":"^7","@tsconfig/recommended":"^1","@types/chai":"^4","@types/mocha":"^10","@types/sinon":"^17","@typescript-eslint/eslint-plugin":"^6","@typescript-eslint/parser":"^6","busboy":"^1","c8":"^9.1.0","chai":"^4","eslint":"^8","eslint-config-airbnb-base":"^15","eslint-config-airbnb-typescript":"^17","eslint-plugin-import":"^2","eslint-plugin-import-newlines":"^1.3.4","eslint-plugin-jsdoc":"^48","eslint-plugin-node":"^11","mocha":"^10","nock":"^13","shx":"^0.3.2","sinon":"^17","source-map-support":"^0.5.21","ts-node":"^10","tsd":"^0.30.0","typescript":"5.3.3"},"tsd":{"directory":"test/types"}}');
 
 /***/ }),
 
