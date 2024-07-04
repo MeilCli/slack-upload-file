@@ -3411,23 +3411,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.buildThreadTsWarningMessage = exports.WebClient = exports.WebClientEvent = void 0;
-const querystring_1 = __nccwpck_require__(3477);
 const path_1 = __nccwpck_require__(1017);
-const zlib_1 = __importDefault(__nccwpck_require__(9796));
+const querystring_1 = __nccwpck_require__(3477);
 const util_1 = __nccwpck_require__(3837);
-const is_stream_1 = __importDefault(__nccwpck_require__(1554));
-const p_queue_1 = __importDefault(__nccwpck_require__(8983));
-const p_retry_1 = __importStar(__nccwpck_require__(2548));
+const zlib_1 = __importDefault(__nccwpck_require__(9796));
 const axios_1 = __importDefault(__nccwpck_require__(8757));
 const form_data_1 = __importDefault(__nccwpck_require__(4334));
 const is_electron_1 = __importDefault(__nccwpck_require__(4293));
-const methods_1 = __nccwpck_require__(1571);
-const instrument_1 = __nccwpck_require__(7763);
+const is_stream_1 = __importDefault(__nccwpck_require__(1554));
+const p_queue_1 = __importDefault(__nccwpck_require__(8983));
+const p_retry_1 = __importStar(__nccwpck_require__(2548));
 const errors_1 = __nccwpck_require__(9781);
-const logger_1 = __nccwpck_require__(1336);
-const retry_policies_1 = __nccwpck_require__(2156);
-const helpers_1 = __importDefault(__nccwpck_require__(2500));
 const file_upload_1 = __nccwpck_require__(2482);
+const helpers_1 = __importDefault(__nccwpck_require__(2500));
+const instrument_1 = __nccwpck_require__(7763);
+const logger_1 = __nccwpck_require__(1336);
+const methods_1 = __nccwpck_require__(1571);
+const retry_policies_1 = __nccwpck_require__(2156);
 /*
  * Helpers
  */
@@ -5607,6 +5607,14 @@ class Methods extends eventemitter3_1.EventEmitter {
              * @see {@link https://api.slack.com/methods/conversations.declineSharedInvite `conversations.declineSharedInvite` API reference}.
              */
             declineSharedInvite: bindApiCall(this, 'conversations.declineSharedInvite'),
+            externalInvitePermissions: {
+                /**
+                 * @description Convert a team in a shared channel from an External Limited channel to a fully shared Slack
+                 * Connect channel or vice versa.
+                 * @see {@link https://api.slack.com/methods/conversations.externalInvitePermissions.set `conversations.externalInvitePermissions.set` API reference}.
+                 */
+                set: bindApiCall(this, 'conversations.externalInvitePermissions.set'),
+            },
             /**
              * @description Fetches a conversation's history of messages and events.
              * @see {@link https://api.slack.com/methods/conversations.history `conversations.history` API reference}.
@@ -6002,10 +6010,15 @@ class Methods extends eventemitter3_1.EventEmitter {
             },
             externalTeams: {
                 /**
+                 * @description Disconnect an external organization.
+                 * @see {@link https://api.slack.com/methods/team.externalTeams.disconnect `team.externalTeams.disconnect` API reference}.
+                 */
+                disconnect: bindApiCall(this, 'team.externalTeams.disconnect'),
+                /**
                  * @description Returns a list of all the external teams connected and details about the connection.
                  * @see {@link https://api.slack.com/methods/team.externalTeams.list `team.externalTeams.list` API reference}.
                  */
-                lookup: bindApiCall(this, 'team.externalTeams.list'),
+                list: bindApiCall(this, 'team.externalTeams.list'),
             },
             /**
              * @description Gets information about the current team.
@@ -18040,7 +18053,7 @@ module.exports = axios;
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"name":"@slack/web-api","version":"7.2.0","description":"Official library for using the Slack Platform\'s Web API","author":"Slack Technologies, LLC","license":"MIT","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"main":"dist/index.js","types":"./dist/index.d.ts","files":["dist/**/*"],"engines":{"node":">= 18","npm":">= 8.6.0"},"repository":"slackapi/node-slack-sdk","homepage":"https://slack.dev/node-slack-sdk/web-api","publishConfig":{"access":"public"},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"scripts":{"prepare":"npm run build","build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist ./coverage","lint":"eslint --ext .ts src","mocha":"mocha --config .mocharc.json src/*.spec.js","test":"npm run lint && npm run test:types && npm run test:integration && npm run test:unit","test:integration":"npm run build && node test/integration/commonjs-project/index.js && node test/integration/esm-project/index.mjs","test:unit":"npm run build && c8 npm run mocha","test:types":"tsd","ref-docs:model":"api-extractor run","watch":"npx nodemon --watch \'src\' --ext \'ts\' --exec npm run build"},"dependencies":{"@slack/logger":"^4.0.0","@slack/types":"^2.9.0","@types/node":">=18.0.0","@types/retry":"0.12.0","axios":"^1.6.5","eventemitter3":"^5.0.1","form-data":"^4.0.0","is-electron":"2.2.2","is-stream":"^2","p-queue":"^6","p-retry":"^4","retry":"^0.13.1"},"devDependencies":{"@microsoft/api-extractor":"^7","@tsconfig/recommended":"^1","@types/chai":"^4","@types/mocha":"^10","@types/sinon":"^17","@typescript-eslint/eslint-plugin":"^6","@typescript-eslint/parser":"^6","busboy":"^1","c8":"^9.1.0","chai":"^4","eslint":"^8","eslint-config-airbnb-base":"^15","eslint-config-airbnb-typescript":"^17","eslint-plugin-import":"^2","eslint-plugin-import-newlines":"^1.3.4","eslint-plugin-jsdoc":"^48","eslint-plugin-node":"^11","mocha":"^10","nock":"^13","shx":"^0.3.2","sinon":"^17","source-map-support":"^0.5.21","ts-node":"^10","tsd":"^0.30.0","typescript":"5.3.3"},"tsd":{"directory":"test/types"}}');
+module.exports = JSON.parse('{"name":"@slack/web-api","version":"7.3.0","description":"Official library for using the Slack Platform\'s Web API","author":"Slack Technologies, LLC","license":"MIT","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"main":"dist/index.js","types":"./dist/index.d.ts","files":["dist/**/*"],"engines":{"node":">= 18","npm":">= 8.6.0"},"repository":"slackapi/node-slack-sdk","homepage":"https://slack.dev/node-slack-sdk/web-api","publishConfig":{"access":"public"},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"scripts":{"prepare":"npm run build","build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist ./coverage","lint":"eslint --fix --ext .ts src","mocha":"mocha --config .mocharc.json src/*.spec.js","test":"npm run lint && npm run test:types && npm run test:integration && npm run test:unit","test:integration":"npm run build && node test/integration/commonjs-project/index.js && node test/integration/esm-project/index.mjs","test:unit":"npm run build && c8 npm run mocha","test:types":"tsd","ref-docs:model":"api-extractor run","watch":"npx nodemon --watch \'src\' --ext \'ts\' --exec npm run build"},"dependencies":{"@slack/logger":"^4.0.0","@slack/types":"^2.9.0","@types/node":">=18.0.0","@types/retry":"0.12.0","axios":"^1.6.5","eventemitter3":"^5.0.1","form-data":"^4.0.0","is-electron":"2.2.2","is-stream":"^2","p-queue":"^6","p-retry":"^4","retry":"^0.13.1"},"devDependencies":{"@microsoft/api-extractor":"^7","@tsconfig/recommended":"^1","@types/chai":"^4","@types/mocha":"^10","@types/sinon":"^17","@typescript-eslint/eslint-plugin":"^6","@typescript-eslint/parser":"^6","busboy":"^1","c8":"^9.1.0","chai":"^4","eslint":"^8","eslint-config-airbnb-base":"^15","eslint-config-airbnb-typescript":"^17","eslint-plugin-import":"^2","eslint-plugin-import-newlines":"^1.3.4","eslint-plugin-jsdoc":"^48","eslint-plugin-node":"^11","mocha":"^10","nock":"^13","shx":"^0.3.2","sinon":"^17","source-map-support":"^0.5.21","ts-node":"^10","tsd":"^0.30.0","typescript":"5.3.3"},"tsd":{"directory":"test/types"}}');
 
 /***/ }),
 
