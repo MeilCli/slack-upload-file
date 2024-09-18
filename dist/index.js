@@ -5394,6 +5394,25 @@ class Methods extends eventemitter3_1.EventEmitter {
              */
             test: bindApiCallWithOptionalArgument(this, 'api.test'),
         };
+        this.assistant = {
+            threads: {
+                /**
+                 * @description Set loading status to indicate that the app is building a response.
+                 * @see {@link https://api.slack.com/methods/assistant.threads.setStatus `assistant.threads.setStatus` API reference}.
+                 */
+                setStatus: bindApiCall(this, 'assistant.threads.setStatus'),
+                /**
+                 * @description Set suggested prompts for the user. Can suggest up to four prompts.
+                 * @see {@link https://api.slack.com/methods/assistant.threads.setSuggestedPrompts `assistant.threads.setSuggestedPrompts` API reference}.
+                 */
+                setSuggestedPrompts: bindApiCall(this, 'assistant.threads.setSuggestedPrompts'),
+                /**
+                 * @description Set the title of the thread. This is shown when a user views the app's chat history.
+                 * @see {@link https://api.slack.com/methods/assistant.threads.setTitle `assistant.threads.setTitle` API reference}.
+                 */
+                setTitle: bindApiCall(this, 'assistant.threads.setTitle'),
+            },
+        };
         this.apps = {
             connections: {
                 /**
@@ -18542,7 +18561,7 @@ module.exports = axios;
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"name":"@slack/web-api","version":"7.4.0","description":"Official library for using the Slack Platform\'s Web API","author":"Slack Technologies, LLC","license":"MIT","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"main":"dist/index.js","types":"./dist/index.d.ts","files":["dist/**/*"],"engines":{"node":">= 18","npm":">= 8.6.0"},"repository":"slackapi/node-slack-sdk","homepage":"https://slack.dev/node-slack-sdk/web-api","publishConfig":{"access":"public"},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"scripts":{"prepare":"npm run build","build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist ./coverage","lint":"npx @biomejs/biome check --write .","mocha":"mocha --config .mocharc.json \\"./src/**/*.spec.ts\\"","test":"npm run lint && npm run test:types && npm run test:integration && npm run test:unit","test:integration":"npm run build && node test/integration/commonjs-project/index.js && node test/integration/esm-project/index.mjs && npm run test:integration:ts","test:integration:ts":"cd test/integration/ts-4.7-project && npm i && npm run build","test:unit":"npm run build && c8 npm run mocha","test:types":"tsd","watch":"npx nodemon --watch \'src\' --ext \'ts\' --exec npm run build"},"dependencies":{"@slack/logger":"^4.0.0","@slack/types":"^2.9.0","@types/node":">=18.0.0","@types/retry":"0.12.0","axios":"^1.7.4","eventemitter3":"^5.0.1","form-data":"^4.0.0","is-electron":"2.2.2","is-stream":"^2","p-queue":"^6","p-retry":"^4","retry":"^0.13.1"},"devDependencies":{"@biomejs/biome":"^1.8.3","@tsconfig/recommended":"^1","@types/busboy":"^1.5.4","@types/chai":"^4","@types/mocha":"^10","@types/sinon":"^17","busboy":"^1","c8":"^10.1.2","chai":"^4","mocha":"^10","nock":"^13","shx":"^0.3.2","sinon":"^18","source-map-support":"^0.5.21","ts-node":"^10","tsd":"^0.31.1","typescript":"5.3.3"},"tsd":{"directory":"test/types"}}');
+module.exports = JSON.parse('{"name":"@slack/web-api","version":"7.5.0","description":"Official library for using the Slack Platform\'s Web API","author":"Slack Technologies, LLC","license":"MIT","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"main":"dist/index.js","types":"./dist/index.d.ts","files":["dist/**/*"],"engines":{"node":">= 18","npm":">= 8.6.0"},"repository":"slackapi/node-slack-sdk","homepage":"https://slack.dev/node-slack-sdk/web-api","publishConfig":{"access":"public"},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"scripts":{"prepare":"npm run build","build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist ./coverage","lint":"npx @biomejs/biome check --write .","mocha":"mocha --config .mocharc.json \\"./src/**/*.spec.ts\\"","test":"npm run lint && npm run test:types && npm run test:integration && npm run test:unit","test:integration":"npm run build && node test/integration/commonjs-project/index.js && node test/integration/esm-project/index.mjs && npm run test:integration:ts","test:integration:ts":"cd test/integration/ts-4.7-project && npm i && npm run build","test:unit":"npm run build && c8 npm run mocha","test:types":"tsd","watch":"npx nodemon --watch \'src\' --ext \'ts\' --exec npm run build"},"dependencies":{"@slack/logger":"^4.0.0","@slack/types":"^2.9.0","@types/node":">=18.0.0","@types/retry":"0.12.0","axios":"^1.7.4","eventemitter3":"^5.0.1","form-data":"^4.0.0","is-electron":"2.2.2","is-stream":"^2","p-queue":"^6","p-retry":"^4","retry":"^0.13.1"},"devDependencies":{"@biomejs/biome":"^1.8.3","@tsconfig/recommended":"^1","@types/busboy":"^1.5.4","@types/chai":"^4","@types/mocha":"^10","@types/sinon":"^17","busboy":"^1","c8":"^10.1.2","chai":"^4","mocha":"^10","nock":"^13","shx":"^0.3.2","sinon":"^19","source-map-support":"^0.5.21","ts-node":"^10","tsd":"^0.31.1","typescript":"5.3.3"},"tsd":{"directory":"test/types"}}');
 
 /***/ }),
 
