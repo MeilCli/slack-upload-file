@@ -14582,10 +14582,11 @@ module.exports = require("zlib");
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
-// Axios v1.7.9 Copyright (c) 2024 Matt Zabriskie and contributors
+/*! Axios v1.8.2 Copyright (c) 2025 Matt Zabriskie and contributors */
 
 
 const FormData$1 = __nccwpck_require__(6454);
+const crypto = __nccwpck_require__(6982);
 const url = __nccwpck_require__(7016);
 const proxyFromEnv = __nccwpck_require__(7777);
 const http = __nccwpck_require__(8611);
@@ -14599,6 +14600,7 @@ const events = __nccwpck_require__(4434);
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
 const FormData__default = /*#__PURE__*/_interopDefaultLegacy(FormData$1);
+const crypto__default = /*#__PURE__*/_interopDefaultLegacy(crypto);
 const url__default = /*#__PURE__*/_interopDefaultLegacy(url);
 const proxyFromEnv__default = /*#__PURE__*/_interopDefaultLegacy(proxyFromEnv);
 const http__default = /*#__PURE__*/_interopDefaultLegacy(http);
@@ -15214,26 +15216,6 @@ const toFiniteNumber = (value, defaultValue) => {
   return value != null && Number.isFinite(value = +value) ? value : defaultValue;
 };
 
-const ALPHA = 'abcdefghijklmnopqrstuvwxyz';
-
-const DIGIT = '0123456789';
-
-const ALPHABET = {
-  DIGIT,
-  ALPHA,
-  ALPHA_DIGIT: ALPHA + ALPHA.toUpperCase() + DIGIT
-};
-
-const generateString = (size = 16, alphabet = ALPHABET.ALPHA_DIGIT) => {
-  let str = '';
-  const {length} = alphabet;
-  while (size--) {
-    str += alphabet[Math.random() * length|0];
-  }
-
-  return str;
-};
-
 /**
  * If the thing is a FormData object, return true, otherwise return false.
  *
@@ -15361,8 +15343,6 @@ const utils$1 = {
   findKey,
   global: _global,
   isContextDefined,
-  ALPHABET,
-  generateString,
   isSpecCompliantForm,
   toJSONObject,
   isAsyncFn,
@@ -15874,6 +15854,29 @@ const transitionalDefaults = {
 
 const URLSearchParams = url__default["default"].URLSearchParams;
 
+const ALPHA = 'abcdefghijklmnopqrstuvwxyz';
+
+const DIGIT = '0123456789';
+
+const ALPHABET = {
+  DIGIT,
+  ALPHA,
+  ALPHA_DIGIT: ALPHA + ALPHA.toUpperCase() + DIGIT
+};
+
+const generateString = (size = 16, alphabet = ALPHABET.ALPHA_DIGIT) => {
+  let str = '';
+  const {length} = alphabet;
+  const randomValues = new Uint32Array(size);
+  crypto__default["default"].randomFillSync(randomValues);
+  for (let i = 0; i < size; i++) {
+    str += alphabet[randomValues[i] % length];
+  }
+
+  return str;
+};
+
+
 const platform$1 = {
   isNode: true,
   classes: {
@@ -15881,6 +15884,8 @@ const platform$1 = {
     FormData: FormData__default["default"],
     Blob: typeof Blob !== 'undefined' && Blob || null
   },
+  ALPHABET,
+  generateString,
   protocols: [ 'http', 'https', 'file', 'data' ]
 };
 
@@ -16655,14 +16660,15 @@ function combineURLs(baseURL, relativeURL) {
  *
  * @returns {string} The combined full path
  */
-function buildFullPath(baseURL, requestedURL) {
-  if (baseURL && !isAbsoluteURL(requestedURL)) {
+function buildFullPath(baseURL, requestedURL, allowAbsoluteUrls) {
+  let isRelativeUrl = !isAbsoluteURL(requestedURL);
+  if (baseURL && isRelativeUrl || allowAbsoluteUrls == false) {
     return combineURLs(baseURL, requestedURL);
   }
   return requestedURL;
 }
 
-const VERSION = "1.7.9";
+const VERSION = "1.8.2";
 
 function parseProtocol(url) {
   const match = /^([-+\w]{1,25})(:?\/\/|:)/.exec(url);
@@ -16872,7 +16878,7 @@ const readBlob = async function* (blob) {
 
 const readBlob$1 = readBlob;
 
-const BOUNDARY_ALPHABET = utils$1.ALPHABET.ALPHA_DIGIT + '-_';
+const BOUNDARY_ALPHABET = platform.ALPHABET.ALPHA_DIGIT + '-_';
 
 const textEncoder = typeof TextEncoder === 'function' ? new TextEncoder() : new util__default["default"].TextEncoder();
 
@@ -16932,7 +16938,7 @@ const formDataToStream = (form, headersHandler, options) => {
   const {
     tag = 'form-data-boundary',
     size = 25,
-    boundary = tag + '-' + utils$1.generateString(size, BOUNDARY_ALPHABET)
+    boundary = tag + '-' + platform.generateString(size, BOUNDARY_ALPHABET)
   } = options || {};
 
   if(!utils$1.isFormData(form)) {
@@ -17357,7 +17363,7 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter(config) {
     }
 
     // Parse url
-    const fullPath = buildFullPath(config.baseURL, config.url);
+    const fullPath = buildFullPath(config.baseURL, config.url, config.allowAbsoluteUrls);
     const parsed = new URL(fullPath, platform.hasBrowserEnv ? platform.origin : undefined);
     const protocol = parsed.protocol || supportedProtocols[0];
 
@@ -18888,6 +18894,13 @@ class Axios {
       }
     }
 
+    // Set config.allowAbsoluteUrls
+    if (config.allowAbsoluteUrls !== undefined) ; else if (this.defaults.allowAbsoluteUrls !== undefined) {
+      config.allowAbsoluteUrls = this.defaults.allowAbsoluteUrls;
+    } else {
+      config.allowAbsoluteUrls = true;
+    }
+
     validator.assertOptions(config, {
       baseUrl: validators.spelling('baseURL'),
       withXsrfToken: validators.spelling('withXSRFToken')
@@ -18983,7 +18996,7 @@ class Axios {
 
   getUri(config) {
     config = mergeConfig(this.defaults, config);
-    const fullPath = buildFullPath(config.baseURL, config.url);
+    const fullPath = buildFullPath(config.baseURL, config.url, config.allowAbsoluteUrls);
     return buildURL(fullPath, config.params, config.paramsSerializer);
   }
 }
