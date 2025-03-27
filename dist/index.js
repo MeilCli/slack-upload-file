@@ -4897,7 +4897,6 @@ class WebClient extends methods_1.Methods {
             adapter: adapter ? (config) => adapter(Object.assign(Object.assign({}, config), { adapter: undefined })) : undefined,
             timeout,
             baseURL: slackApiUrl,
-            allowAbsoluteUrls,
             headers: (0, is_electron_1.default)() ? headers : Object.assign({ 'User-Agent': (0, instrument_1.getUserAgent)() }, headers),
             httpAgent: agent,
             httpsAgent: agent,
@@ -4940,7 +4939,8 @@ class WebClient extends methods_1.Methods {
             const headers = {};
             if (options.token)
                 headers.Authorization = `Bearer ${options.token}`;
-            const response = yield this.makeRequest(method, Object.assign({ team_id: this.teamId }, options), headers);
+            const url = this.deriveRequestUrl(method);
+            const response = yield this.makeRequest(url, Object.assign({ team_id: this.teamId }, options), headers);
             const result = yield this.buildResult(response);
             this.logger.debug(`http request result: ${JSON.stringify(result)}`);
             // log warnings in response metadata
@@ -5170,7 +5170,6 @@ class WebClient extends methods_1.Methods {
         return __awaiter(this, void 0, void 0, function* () {
             // TODO: better input types - remove any
             const task = () => this.requestQueue.add(() => __awaiter(this, void 0, void 0, function* () {
-                const requestURL = this.deriveRequestUrl(url);
                 try {
                     // biome-ignore lint/suspicious/noExplicitAny: TODO: type this
                     const config = Object.assign({ headers }, this.tlsConfig);
@@ -5184,7 +5183,7 @@ class WebClient extends methods_1.Methods {
                     if (url.endsWith('apps.event.authorizations.list')) {
                         body.token = undefined;
                     }
-                    this.logger.debug(`http request url: ${requestURL}`);
+                    this.logger.debug(`http request url: ${url}`);
                     this.logger.debug(`http request body: ${JSON.stringify(redact(body))}`);
                     // compile all headers - some set by default under the hood by axios - that will be sent along
                     let allHeaders = Object.keys(this.axios.defaults.headers).reduce((acc, cur) => {
@@ -20445,7 +20444,7 @@ module.exports = axios;
 /***/ ((module) => {
 
 "use strict";
-module.exports = /*#__PURE__*/JSON.parse('{"name":"@slack/web-api","version":"7.9.0","description":"Official library for using the Slack Platform\'s Web API","author":"Slack Technologies, LLC","license":"MIT","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"main":"dist/index.js","types":"./dist/index.d.ts","files":["dist/**/*"],"engines":{"node":">= 18","npm":">= 8.6.0"},"repository":"slackapi/node-slack-sdk","homepage":"https://tools.slack.dev/node-slack-sdk/web-api","publishConfig":{"access":"public"},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"scripts":{"prepare":"npm run build","build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist ./coverage","lint":"npx @biomejs/biome check .","lint:fix":"npx @biomejs/biome check --write .","mocha":"mocha --config ./test/.mocharc.json \\"./src/**/*.spec.ts\\"","test":"npm run lint && npm run test:types && npm run test:integration && npm run test:unit","test:integration":"npm run build && node test/integration/commonjs-project/index.js && node test/integration/esm-project/index.mjs && npm run test:integration:ts","test:integration:ts":"cd test/integration/ts-4.7-project && npm i && npm run build","test:unit":"npm run build && c8 --config ./test/.c8rc.json npm run mocha","test:types":"tsd","watch":"npx nodemon --watch \'src\' --ext \'ts\' --exec npm run build"},"dependencies":{"@slack/logger":"^4.0.0","@slack/types":"^2.9.0","@types/node":">=18.0.0","@types/retry":"0.12.0","axios":"^1.8.3","eventemitter3":"^5.0.1","form-data":"^4.0.0","is-electron":"2.2.2","is-stream":"^2","p-queue":"^6","p-retry":"^4","retry":"^0.13.1"},"devDependencies":{"@biomejs/biome":"^1.8.3","@tsconfig/recommended":"^1","@types/busboy":"^1.5.4","@types/chai":"^4","@types/mocha":"^10","@types/sinon":"^17","busboy":"^1","c8":"^10.1.2","chai":"^4","mocha":"^11","mocha-junit-reporter":"^2.2.1","mocha-multi-reporters":"^1.5.1","nock":"^13","shx":"^0.4.0","sinon":"^19","source-map-support":"^0.5.21","ts-node":"^10","tsd":"^0.31.1","typescript":"5.3.3"},"tsd":{"directory":"test/types"}}');
+module.exports = /*#__PURE__*/JSON.parse('{"name":"@slack/web-api","version":"7.9.1","description":"Official library for using the Slack Platform\'s Web API","author":"Slack Technologies, LLC","license":"MIT","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"main":"dist/index.js","types":"./dist/index.d.ts","files":["dist/**/*"],"engines":{"node":">= 18","npm":">= 8.6.0"},"repository":"slackapi/node-slack-sdk","homepage":"https://tools.slack.dev/node-slack-sdk/web-api","publishConfig":{"access":"public"},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"scripts":{"prepare":"npm run build","build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist ./coverage","lint":"npx @biomejs/biome check .","lint:fix":"npx @biomejs/biome check --write .","mocha":"mocha --config ./test/.mocharc.json \\"./src/**/*.spec.ts\\"","test":"npm run lint && npm run test:types && npm run test:integration && npm run test:unit","test:integration":"npm run build && node test/integration/commonjs-project/index.js && node test/integration/esm-project/index.mjs && npm run test:integration:ts","test:integration:ts":"cd test/integration/ts-4.7-project && npm i && npm run build","test:unit":"npm run build && c8 --config ./test/.c8rc.json npm run mocha","test:types":"tsd","watch":"npx nodemon --watch \'src\' --ext \'ts\' --exec npm run build"},"dependencies":{"@slack/logger":"^4.0.0","@slack/types":"^2.9.0","@types/node":">=18.0.0","@types/retry":"0.12.0","axios":"^1.8.3","eventemitter3":"^5.0.1","form-data":"^4.0.0","is-electron":"2.2.2","is-stream":"^2","p-queue":"^6","p-retry":"^4","retry":"^0.13.1"},"devDependencies":{"@biomejs/biome":"^1.8.3","@tsconfig/recommended":"^1","@types/busboy":"^1.5.4","@types/chai":"^4","@types/mocha":"^10","@types/sinon":"^17","busboy":"^1","c8":"^10.1.2","chai":"^4","mocha":"^11","mocha-junit-reporter":"^2.2.1","mocha-multi-reporters":"^1.5.1","nock":"^13","shx":"^0.4.0","sinon":"^20","source-map-support":"^0.5.21","ts-node":"^10","tsd":"^0.31.1","typescript":"5.3.3"},"tsd":{"directory":"test/types"}}');
 
 /***/ }),
 
