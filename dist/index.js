@@ -5697,6 +5697,7 @@ function getFileUploadJob(options, logger) {
         const fileUploadJob = {
             // supplied by user
             alt_text: options.alt_text,
+            blocks: options.blocks,
             channel_id: (_a = options.channels) !== null && _a !== void 0 ? _a : options.channel_id,
             filename: (_b = options.filename) !== null && _b !== void 0 ? _b : fileName,
             initial_comment: options.initial_comment,
@@ -5754,13 +5755,13 @@ function getMultipleFileUploadJobs(options, logger) {
                 // ensure no omitted properties included in files_upload entry
                 // these properties are valid only at the top-level, not
                 // inside file_uploads.
-                const { channel_id, channels, initial_comment, thread_ts } = upload;
-                if (channel_id || channels || initial_comment || thread_ts) {
+                const { blocks, channel_id, channels, initial_comment, thread_ts } = upload;
+                if (blocks || channel_id || channels || initial_comment || thread_ts) {
                     throw (0, errors_1.errorWithCode)(new Error(buildInvalidFilesUploadParamError()), errors_1.ErrorCode.FileUploadInvalidArgumentsError);
                 }
                 // takes any channel_id, initial_comment and thread_ts
                 // supplied at the top level.
-                const uploadJobArgs = Object.assign(Object.assign({}, upload), { channels: options.channels, channel_id: options.channel_id, initial_comment: options.initial_comment });
+                const uploadJobArgs = Object.assign(Object.assign({}, upload), { blocks: options.blocks, channels: options.channels, channel_id: options.channel_id, initial_comment: options.initial_comment });
                 if ('thread_ts' in options) {
                     uploadJobArgs.thread_ts = options.thread_ts;
                 }
@@ -5846,7 +5847,7 @@ function getFileDataAsStream(readable) {
 }
 /**
  * Filters through all fileUploads and groups them into jobs for completion
- * based on combination of channel_id, thread_ts, initial_comment.
+ * based on combination of channel_id, thread_ts, initial_comment, blocks.
  * {@link https://api.slack.com/methods/files.completeUploadExternal files.completeUploadExternal} allows for multiple
  * files to be uploaded with a message (`initial_comment`), and as a threaded message (`thread_ts`)
  * In order to be grouped together, file uploads must have like properties.
@@ -5856,13 +5857,14 @@ function getFileDataAsStream(readable) {
 function getAllFileUploadsToComplete(fileUploads) {
     const toComplete = {};
     for (const upload of fileUploads) {
-        const { channel_id, thread_ts, initial_comment, file_id, title } = upload;
+        const { blocks, channel_id, thread_ts, initial_comment, file_id, title } = upload;
         if (file_id) {
-            const compareString = `:::${channel_id}:::${thread_ts}:::${initial_comment}`;
+            const compareString = `:::${channel_id}:::${thread_ts}:::${initial_comment}:::${JSON.stringify(blocks)}`;
             if (!Object.prototype.hasOwnProperty.call(toComplete, compareString)) {
                 toComplete[compareString] = {
                     files: [{ id: file_id, title }],
                     channel_id,
+                    blocks,
                     initial_comment,
                 };
                 if (thread_ts && channel_id) {
@@ -6015,8 +6017,8 @@ function buildMultipleChannelsErrorMsg() {
     return 'Sharing files with multiple channels is no longer supported in v2. Share files in each channel separately instead.';
 }
 function buildInvalidFilesUploadParamError() {
-    return ('You may supply file_uploads only for a single channel, comment, thread respectively. ' +
-        'Therefore, please supply any channel_id, initial_comment, thread_ts in the top-layer.');
+    return ('You may supply file_uploads only for a single channel, message, or thread respectively. ' +
+        'Therefore, please supply any channel_id, initial_comment or blocks, or thread_ts in the top-layer.');
 }
 //# sourceMappingURL=file-upload.js.map
 
@@ -20490,7 +20492,7 @@ module.exports = axios;
 /***/ ((module) => {
 
 "use strict";
-module.exports = /*#__PURE__*/JSON.parse('{"name":"@slack/web-api","version":"7.9.2","description":"Official library for using the Slack Platform\'s Web API","author":"Slack Technologies, LLC","license":"MIT","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"main":"dist/index.js","types":"./dist/index.d.ts","files":["dist/**/*"],"engines":{"node":">= 18","npm":">= 8.6.0"},"repository":"slackapi/node-slack-sdk","homepage":"https://tools.slack.dev/node-slack-sdk/web-api","publishConfig":{"access":"public"},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"scripts":{"prepare":"npm run build","build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist ./coverage","lint":"npx @biomejs/biome check .","lint:fix":"npx @biomejs/biome check --write .","mocha":"mocha --config ./test/.mocharc.json \\"./src/**/*.spec.ts\\"","test":"npm run lint && npm run test:types && npm run test:integration && npm run test:unit","test:integration":"npm run build && node test/integration/commonjs-project/index.js && node test/integration/esm-project/index.mjs && npm run test:integration:ts","test:integration:ts":"cd test/integration/ts-4.7-project && npm i && npm run build","test:unit":"npm run build && c8 --config ./test/.c8rc.json npm run mocha","test:types":"tsd","watch":"npx nodemon --watch \'src\' --ext \'ts\' --exec npm run build"},"dependencies":{"@slack/logger":"^4.0.0","@slack/types":"^2.9.0","@types/node":">=18.0.0","@types/retry":"0.12.0","axios":"^1.8.3","eventemitter3":"^5.0.1","form-data":"^4.0.0","is-electron":"2.2.2","is-stream":"^2","p-queue":"^6","p-retry":"^4","retry":"^0.13.1"},"devDependencies":{"@biomejs/biome":"^1.8.3","@tsconfig/recommended":"^1","@types/busboy":"^1.5.4","@types/chai":"^4","@types/mocha":"^10","@types/sinon":"^17","busboy":"^1","c8":"^10.1.2","chai":"^4","mocha":"^11","mocha-junit-reporter":"^2.2.1","mocha-multi-reporters":"^1.5.1","nock":"^14","shx":"^0.4.0","sinon":"^20","source-map-support":"^0.5.21","ts-node":"^10","tsd":"^0.32.0","typescript":"5.8.3"},"tsd":{"directory":"test/types"}}');
+module.exports = /*#__PURE__*/JSON.parse('{"name":"@slack/web-api","version":"7.9.3","description":"Official library for using the Slack Platform\'s Web API","author":"Slack Technologies, LLC","license":"MIT","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"main":"dist/index.js","types":"./dist/index.d.ts","files":["dist/**/*"],"engines":{"node":">= 18","npm":">= 8.6.0"},"repository":"slackapi/node-slack-sdk","homepage":"https://tools.slack.dev/node-slack-sdk/web-api","publishConfig":{"access":"public"},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"scripts":{"prepare":"npm run build","build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist ./coverage","lint":"npx @biomejs/biome check .","lint:fix":"npx @biomejs/biome check --write .","mocha":"mocha --config ./test/.mocharc.json \\"./src/**/*.spec.ts\\"","test":"npm run lint && npm run test:types && npm run test:integration && npm run test:unit","test:integration":"npm run build && node test/integration/commonjs-project/index.js && node test/integration/esm-project/index.mjs && npm run test:integration:ts","test:integration:ts":"cd test/integration/ts-4.7-project && npm i && npm run build","test:unit":"npm run build && c8 --config ./test/.c8rc.json npm run mocha","test:types":"tsd","watch":"npx nodemon --watch \'src\' --ext \'ts\' --exec npm run build"},"dependencies":{"@slack/logger":"^4.0.0","@slack/types":"^2.9.0","@types/node":">=18.0.0","@types/retry":"0.12.0","axios":"^1.8.3","eventemitter3":"^5.0.1","form-data":"^4.0.0","is-electron":"2.2.2","is-stream":"^2","p-queue":"^6","p-retry":"^4","retry":"^0.13.1"},"devDependencies":{"@biomejs/biome":"^1.8.3","@tsconfig/recommended":"^1","@types/busboy":"^1.5.4","@types/chai":"^4","@types/mocha":"^10","@types/sinon":"^17","busboy":"^1","c8":"^10.1.2","chai":"^4","mocha":"^11","mocha-junit-reporter":"^2.2.1","mocha-multi-reporters":"^1.5.1","nock":"^14","shx":"^0.4.0","sinon":"^21","source-map-support":"^0.5.21","ts-node":"^10","tsd":"^0.32.0","typescript":"5.8.3"},"tsd":{"directory":"test/types"}}');
 
 /***/ }),
 
