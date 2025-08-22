@@ -4870,7 +4870,7 @@ var WebClientEvent;
 /**
  * A client for Slack's Web API
  *
- * This client provides an alias for each {@link https://api.slack.com/methods|Web API method}. Each method is
+ * This client provides an alias for each {@link https://docs.slack.dev/reference/methods|Web API method}. Each method is
  * a convenience wrapper for calling the {@link WebClient#apiCall} method using the method name as the first parameter.
  */
 class WebClient extends methods_1.Methods {
@@ -4934,7 +4934,7 @@ class WebClient extends methods_1.Methods {
     }
     /**
      * Generic method for calling a Web API method
-     * @param method - the Web API method to call {@link https://api.slack.com/methods}
+     * @param method - the Web API method to call {@link https://docs.slack.dev/reference/methods}
      * @param options - options
      */
     apiCall(method_1) {
@@ -4962,7 +4962,7 @@ class WebClient extends methods_1.Methods {
                 result.response_metadata.warnings.forEach(this.logger.warn.bind(this.logger));
             }
             // log warnings and errors in response metadata messages
-            // related to https://api.slack.com/changelog/2016-09-28-response-metadata-is-on-the-way
+            // related to https://docs.slack.dev/changelog/2016/09/28/response-metadata-is-on-the-way
             if (result.response_metadata !== undefined && result.response_metadata.messages !== undefined) {
                 for (const msg of result.response_metadata.messages) {
                     const errReg = /\[ERROR\](.*)/;
@@ -5070,13 +5070,13 @@ class WebClient extends methods_1.Methods {
      * This wrapper method provides an easy way to upload files using the following endpoints:
      *
      * **#1**: For each file submitted with this method, submit filenames
-     * and file metadata to {@link https://api.slack.com/methods/files.getUploadURLExternal files.getUploadURLExternal} to request a URL to
+     * and file metadata to {@link https://docs.slack.dev/reference/methods/files.getuploadurlexternal files.getUploadURLExternal} to request a URL to
      * which to send the file data to and an id for the file
      *
      * **#2**: for each returned file `upload_url`, upload corresponding file to
      * URLs returned from step 1 (e.g. https://files.slack.com/upload/v1/...\")
      *
-     * **#3**: Complete uploads {@link https://api.slack.com/methods/files.completeUploadExternal files.completeUploadExternal}
+     * **#3**: Complete uploads {@link https://docs.slack.dev/reference/methods/files.completeuploadexternal files.completeUploadExternal}
      * @param options
      */
     filesUploadV2(options) {
@@ -5465,13 +5465,13 @@ function parseRetryHeaders(response) {
  * @param logger instance of web clients logger
  */
 function warnDeprecations(method, logger) {
-    const deprecatedMethods = ['workflows.'];
+    const deprecatedMethods = ['workflows.stepCompleted', 'workflows.stepFailed', 'workflows.updateStep'];
     const isDeprecated = deprecatedMethods.some((depMethod) => {
         const re = new RegExp(`^${depMethod}`);
         return re.test(method);
     });
     if (isDeprecated) {
-        logger.warn(`${method} is deprecated. Please check on https://api.slack.com/methods for an alternative.`);
+        logger.warn(`${method} is deprecated. Please check on https://docs.slack.dev/reference/methods for an alternative.`);
     }
 }
 /**
@@ -5486,9 +5486,10 @@ function warnIfFallbackIsMissing(method, logger, options) {
     const hasAttachments = (args) => Array.isArray(args.attachments) && args.attachments.length;
     const missingAttachmentFallbackDetected = (args) => Array.isArray(args.attachments) &&
         args.attachments.some((attachment) => !attachment.fallback || attachment.fallback.trim() === '');
-    const isEmptyText = (args) => args.text === undefined || args.text === null || args.text === '';
+    const isEmptyText = (args) => (args.text === undefined || args.text === null || args.text === '') &&
+        (args.markdown_text === undefined || args.markdown === null || args.markdown_text === '');
     const buildMissingTextWarning = () => `The top-level \`text\` argument is missing in the request payload for a ${method} call - It's a best practice to always provide a \`text\` argument when posting a message. The \`text\` is used in places where the content cannot be rendered such as: system push notifications, assistive technology such as screen readers, etc.`;
-    const buildMissingFallbackWarning = () => `Additionally, the attachment-level \`fallback\` argument is missing in the request payload for a ${method} call - To avoid this warning, it is recommended to always provide a top-level \`text\` argument when posting a message. Alternatively, you can provide an attachment-level \`fallback\` argument, though this is now considered a legacy field (see https://api.slack.com/reference/messaging/attachments#legacy_fields for more details).`;
+    const buildMissingFallbackWarning = () => `Additionally, the attachment-level \`fallback\` argument is missing in the request payload for a ${method} call - To avoid this warning, it is recommended to always provide a top-level \`text\` argument when posting a message. Alternatively, you can provide an attachment-level \`fallback\` argument, though this is now considered a legacy field (see https://docs.slack.dev/legacy/legacy-messaging/legacy-secondary-message-attachments for more details).`;
     if (isTargetMethod && typeof options === 'object') {
         if (hasAttachments(options)) {
             if (missingAttachmentFallbackDetected(options) && isEmptyText(options)) {
@@ -5801,7 +5802,7 @@ function getFileData(options) {
                     const dataBuffer = (0, node_fs_1.readFileSync)(file);
                     return dataBuffer;
                 }
-                catch (error) {
+                catch (_err) {
                     throw (0, errors_1.errorWithCode)(new Error(`Unable to resolve file data for ${file}. Please supply a filepath string, or binary data Buffer or String directly.`), errors_1.ErrorCode.FileUploadInvalidArgumentsError);
                 }
             }
@@ -5848,7 +5849,7 @@ function getFileDataAsStream(readable) {
 /**
  * Filters through all fileUploads and groups them into jobs for completion
  * based on combination of channel_id, thread_ts, initial_comment, blocks.
- * {@link https://api.slack.com/methods/files.completeUploadExternal files.completeUploadExternal} allows for multiple
+ * {@link https://docs.slack.dev/reference/methods/files.completeUploadExternal files.completeUploadExternal} allows for multiple
  * files to be uploaded with a message (`initial_comment`), and as a threaded message (`thread_ts`)
  * In order to be grouped together, file uploads must have like properties.
  * @param fileUploads
@@ -5860,6 +5861,7 @@ function getAllFileUploadsToComplete(fileUploads) {
         const { blocks, channel_id, thread_ts, initial_comment, file_id, title } = upload;
         if (file_id) {
             const compareString = `:::${channel_id}:::${thread_ts}:::${initial_comment}:::${JSON.stringify(blocks)}`;
+            // biome-ignore lint/suspicious/noPrototypeBuiltins: TODO use hasOwn instead of hasOwnProperty
             if (!Object.prototype.hasOwnProperty.call(toComplete, compareString)) {
                 toComplete[compareString] = {
                     files: [{ id: file_id, title }],
@@ -6069,21 +6071,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.addAppMetadata = exports.retryPolicies = exports.ErrorCode = exports.LogLevel = exports.WebClientEvent = exports.WebClient = void 0;
+exports.WebClientEvent = exports.WebClient = exports.retryPolicies = exports.LogLevel = exports.addAppMetadata = exports.ErrorCode = void 0;
+var errors_1 = __nccwpck_require__(8486);
+Object.defineProperty(exports, "ErrorCode", ({ enumerable: true, get: function () { return errors_1.ErrorCode; } }));
+var instrument_1 = __nccwpck_require__(9224);
+Object.defineProperty(exports, "addAppMetadata", ({ enumerable: true, get: function () { return instrument_1.addAppMetadata; } }));
+var logger_1 = __nccwpck_require__(4385);
+Object.defineProperty(exports, "LogLevel", ({ enumerable: true, get: function () { return logger_1.LogLevel; } }));
+var retry_policies_1 = __nccwpck_require__(1766);
+Object.defineProperty(exports, "retryPolicies", ({ enumerable: true, get: function () { return __importDefault(retry_policies_1).default; } }));
+__exportStar(__nccwpck_require__(381), exports);
+__exportStar(__nccwpck_require__(5591), exports);
 var WebClient_1 = __nccwpck_require__(4048);
 Object.defineProperty(exports, "WebClient", ({ enumerable: true, get: function () { return WebClient_1.WebClient; } }));
 Object.defineProperty(exports, "WebClientEvent", ({ enumerable: true, get: function () { return WebClient_1.WebClientEvent; } }));
-var logger_1 = __nccwpck_require__(4385);
-Object.defineProperty(exports, "LogLevel", ({ enumerable: true, get: function () { return logger_1.LogLevel; } }));
-var errors_1 = __nccwpck_require__(8486);
-Object.defineProperty(exports, "ErrorCode", ({ enumerable: true, get: function () { return errors_1.ErrorCode; } }));
-var retry_policies_1 = __nccwpck_require__(1766);
-Object.defineProperty(exports, "retryPolicies", ({ enumerable: true, get: function () { return __importDefault(retry_policies_1).default; } }));
-var instrument_1 = __nccwpck_require__(9224);
-Object.defineProperty(exports, "addAppMetadata", ({ enumerable: true, get: function () { return instrument_1.addAppMetadata; } }));
+// methods must be exported after WebClient
 __exportStar(__nccwpck_require__(9339), exports);
-__exportStar(__nccwpck_require__(381), exports);
-__exportStar(__nccwpck_require__(5591), exports);
 //# sourceMappingURL=index.js.map
 
 /***/ }),
@@ -6163,7 +6166,7 @@ function getUserAgent() {
     const appIdentifier = Object.entries(appMetadata)
         .map(([name, version]) => `${name}/${version}`)
         .join(' ');
-    // only prepend the appIdentifier when its not empty
+    // only prepend the appIdentifier when it's not empty
     return (appIdentifier.length > 0 ? `${appIdentifier} ` : '') + baseUserAgent;
 }
 //# sourceMappingURL=instrument.js.map
@@ -6257,7 +6260,7 @@ class Methods extends eventemitter3_1.EventEmitter {
             analytics: {
                 /**
                  * @description Retrieve analytics data for a given date, presented as a compressed JSON file.
-                 * @see {@link https://api.slack.com/methods/api.test `api.test` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/api.test `api.test` API reference}.
                  */
                 getFile: bindApiCall(this, 'admin.analytics.getFile'),
             },
@@ -6265,66 +6268,66 @@ class Methods extends eventemitter3_1.EventEmitter {
                 activities: {
                     /**
                      * @description Get logs for a specified team/org.
-                     * @see {@link https://api.slack.com/methods/admin.apps.activities.list `admin.apps.activities.list` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.apps.activities.list `admin.apps.activities.list` API reference}.
                      */
                     list: bindApiCallWithOptionalArgument(this, 'admin.apps.activities.list'),
                 },
                 /**
                  * @description Approve an app for installation on a workspace.
-                 * @see {@link https://api.slack.com/methods/admin.apps.approve `admin.apps.approve` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.apps.approve `admin.apps.approve` API reference}.
                  */
                 approve: bindApiCall(this, 'admin.apps.approve'),
                 approved: {
                     /**
                      * @description List approved apps for an org or workspace.
-                     * @see {@link https://api.slack.com/methods/admin.apps.approved.list `admin.apps.approved.list` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.apps.approved.list `admin.apps.approved.list` API reference}.
                      */
                     list: bindApiCall(this, 'admin.apps.approved.list'),
                 },
                 /**
                  * @description Clear an app resolution.
-                 * @see {@link https://api.slack.com/methods/admin.apps.clearResolution `admin.apps.clearResolution` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.apps.clearResolution `admin.apps.clearResolution` API reference}.
                  */
                 clearResolution: bindApiCall(this, 'admin.apps.clearResolution'),
                 config: {
                     /**
                      * @description Look up the app config for connectors by their IDs.
-                     * @see {@link https://api.slack.com/methods/admin.apps.config.lookup `admin.apps.config.lookup` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.apps.config.lookup `admin.apps.config.lookup` API reference}.
                      */
                     lookup: bindApiCall(this, 'admin.apps.config.lookup'),
                     /**
                      * @description Set the app config for a connector.
-                     * @see {@link https://api.slack.com/methods/admin.apps.config.set `admin.apps.config.set` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.apps.config.set `admin.apps.config.set` API reference}.
                      */
                     set: bindApiCall(this, 'admin.apps.config.set'),
                 },
                 requests: {
                     /**
                      * @description Cancel app request for team.
-                     * @see {@link https://api.slack.com/methods/admin.apps.requests.cancel `admin.apps.requests.cancel` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.apps.requests.cancel `admin.apps.requests.cancel` API reference}.
                      */
                     cancel: bindApiCall(this, 'admin.apps.requests.cancel'),
                     /**
                      * @description List app requests for a team/workspace.
-                     * @see {@link https://api.slack.com/methods/admin.apps.requests.list `admin.apps.requests.list` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.apps.requests.list `admin.apps.requests.list` API reference}.
                      */
                     list: bindApiCall(this, 'admin.apps.requests.list'),
                 },
                 /**
                  * @description Restrict an app for installation on a workspace.
-                 * @see {@link https://api.slack.com/methods/admin.apps.restrict `admin.apps.restrict` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.apps.restrict `admin.apps.restrict` API reference}.
                  */
                 restrict: bindApiCall(this, 'admin.apps.restrict'),
                 restricted: {
                     /**
                      * @description List restricted apps for an org or workspace.
-                     * @see {@link https://api.slack.com/methods/admin.apps.restricted.list `admin.apps.restricted.list` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.apps.restricted.list `admin.apps.restricted.list` API reference}.
                      */
                     list: bindApiCall(this, 'admin.apps.restricted.list'),
                 },
                 /**
                  * @description Uninstall an app from one or many workspaces, or an entire enterprise organization.
-                 * @see {@link https://api.slack.com/methods/admin.apps.uninstall `admin.apps.uninstall` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.apps.uninstall `admin.apps.uninstall` API reference}.
                  */
                 uninstall: bindApiCall(this, 'admin.apps.uninstall'),
             },
@@ -6332,17 +6335,17 @@ class Methods extends eventemitter3_1.EventEmitter {
                 policy: {
                     /**
                      * @description Assign entities to a particular authentication policy.
-                     * @see {@link https://api.slack.com/methods/admin.auth.policy.assignEntities `admin.auth.policy.assignEntities` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.auth.policy.assignEntities `admin.auth.policy.assignEntities` API reference}.
                      */
                     assignEntities: bindApiCall(this, 'admin.auth.policy.assignEntities'),
                     /**
                      * @description Fetch all the entities assigned to a particular authentication policy by name.
-                     * @see {@link https://api.slack.com/methods/admin.auth.policy.getEntities `admin.auth.policy.getEntities` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.auth.policy.getEntities `admin.auth.policy.getEntities` API reference}.
                      */
                     getEntities: bindApiCall(this, 'admin.auth.policy.getEntities'),
                     /**
                      * @description Remove specified entities from a specified authentication policy.
-                     * @see {@link https://api.slack.com/methods/admin.auth.policy.removeEntities `admin.auth.policy.removeEntities` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.auth.policy.removeEntities `admin.auth.policy.removeEntities` API reference}.
                      */
                     removeEntities: bindApiCall(this, 'admin.auth.policy.removeEntities'),
                 },
@@ -6350,202 +6353,202 @@ class Methods extends eventemitter3_1.EventEmitter {
             barriers: {
                 /**
                  * @description Create an Information Barrier.
-                 * @see {@link https://api.slack.com/methods/admin.barriers.create `admin.barriers.create` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.barriers.create `admin.barriers.create` API reference}.
                  */
                 create: bindApiCall(this, 'admin.barriers.create'),
                 /**
                  * @description Delete an existing Information Barrier.
-                 * @see {@link https://api.slack.com/methods/admin.barriers.delete `admin.barriers.delete` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.barriers.delete `admin.barriers.delete` API reference}.
                  */
                 delete: bindApiCall(this, 'admin.barriers.delete'),
                 /**
                  * @description Get all Information Barriers for your organization.
-                 * @see {@link https://api.slack.com/methods/admin.barriers.list `admin.barriers.list` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.barriers.list `admin.barriers.list` API reference}.
                  */
                 list: bindApiCallWithOptionalArgument(this, 'admin.barriers.list'),
                 /**
                  * @description Update an existing Information Barrier.
-                 * @see {@link https://api.slack.com/methods/admin.barriers.update `admin.barriers.update` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.barriers.update `admin.barriers.update` API reference}.
                  */
                 update: bindApiCall(this, 'admin.barriers.update'),
             },
             conversations: {
                 /**
                  * @description Archive a public or private channel.
-                 * @see {@link https://api.slack.com/methods/admin.conversations.archive `admin.conversations.archive` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.conversations.archive `admin.conversations.archive` API reference}.
                  */
                 archive: bindApiCall(this, 'admin.conversations.archive'),
                 /**
                  * @description Archive public or private channels in bulk.
-                 * @see {@link https://api.slack.com/methods/admin.conversations.bulkArchive `admin.conversations.bulkArchive` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.conversations.bulkArchive `admin.conversations.bulkArchive` API reference}.
                  */
                 bulkArchive: bindApiCall(this, 'admin.conversations.bulkArchive'),
                 /**
                  * @description Delete public or private channels in bulk.
-                 * @see {@link https://api.slack.com/methods/admin.conversations.bulkDelet `admin.conversations.bulkDelete` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.conversations.bulkDelete `admin.conversations.bulkDelete` API reference}.
                  */
                 bulkDelete: bindApiCall(this, 'admin.conversations.bulkDelete'),
                 /**
                  * @description Move public or private channels in bulk.
-                 * @see {@link https://api.slack.com/methods/admin.conversations.bulkMove `admin.conversations.bulkMove` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.conversations.bulkMove `admin.conversations.bulkMove` API reference}.
                  */
                 bulkMove: bindApiCall(this, 'admin.conversations.bulkMove'),
                 /**
                  * @description Convert a public channel to a private channel.
-                 * @see {@link https://api.slack.com/methods/admin.conversations.convertToPrivate `admin.conversations.convertToPrivate` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.conversations.convertToPrivate `admin.conversations.convertToPrivate` API reference}.
                  */
                 convertToPrivate: bindApiCall(this, 'admin.conversations.convertToPrivate'),
                 /**
                  * @description Convert a private channel to a public channel.
-                 * @see {@link https://api.slack.com/methods/admin.conversations.convertToPublic `admin.conversations.convertToPublic` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.conversations.convertToPublic `admin.conversations.convertToPublic` API reference}.
                  */
                 convertToPublic: bindApiCall(this, 'admin.conversations.convertToPublic'),
                 /**
                  * @description Create a public or private channel-based conversation.
-                 * @see {@link https://api.slack.com/methods/admin.conversations.create `admin.conversations.create` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.conversations.create `admin.conversations.create` API reference}.
                  */
                 create: bindApiCall(this, 'admin.conversations.create'),
                 /**
                  * @description Delete a public or private channel.
-                 * @see {@link https://api.slack.com/methods/admin.conversations.delete `admin.conversations.delete` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.conversations.delete `admin.conversations.delete` API reference}.
                  */
                 delete: bindApiCall(this, 'admin.conversations.delete'),
                 /**
                  * @description Disconnect a connected channel from one or more workspaces.
-                 * @see {@link https://api.slack.com/methods/admin.conversations.disconnectShared `admin.conversations.disconnectShared` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.conversations.disconnectShared `admin.conversations.disconnectShared` API reference}.
                  */
                 disconnectShared: bindApiCall(this, 'admin.conversations.disconnectShared'),
                 ekm: {
                     /**
                      * @description List all disconnected channels — i.e., channels that were once connected to other workspaces
                      * and then disconnected — and the corresponding original channel IDs for key revocation with EKM.
-                     * @see {@link https://api.slack.com/methods/admin.conversations.ekm.listOriginalConnectedChannelInfo `admin.conversations.ekm.listOriginalConnectedChannelInfo` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.conversations.ekm.listOriginalConnectedChannelInfo `admin.conversations.ekm.listOriginalConnectedChannelInfo` API reference}.
                      */
                     listOriginalConnectedChannelInfo: bindApiCallWithOptionalArgument(this, 'admin.conversations.ekm.listOriginalConnectedChannelInfo'),
                 },
                 /**
                  * @description Get conversation preferences for a public or private channel.
-                 * @see {@link https://api.slack.com/methods/admin.conversations.getConversationPrefs `admin.conversations.getConversationPrefs` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.conversations.getConversationPrefs `admin.conversations.getConversationPrefs` API reference}.
                  */
                 getConversationPrefs: bindApiCall(this, 'admin.conversations.getConversationPrefs'),
                 /**
                  * @description Get a conversation's retention policy.
-                 * @see {@link https://api.slack.com/methods/admin.conversations.getCustomRetention `admin.conversations.getCustomRetention` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.conversations.getCustomRetention `admin.conversations.getCustomRetention` API reference}.
                  */
                 getCustomRetention: bindApiCall(this, 'admin.conversations.getCustomRetention'),
                 /**
                  * @description Get all the workspaces a given public or private channel is connected to within
                  * this Enterprise org.
-                 * @see {@link https://api.slack.com/methods/admin.conversations.getTeams `admin.conversations.getTeams` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.conversations.getTeams `admin.conversations.getTeams` API reference}.
                  */
                 getTeams: bindApiCall(this, 'admin.conversations.getTeams'),
                 /**
                  * @description Invite a user to a public or private channel.
-                 * @see {@link https://api.slack.com/methods/admin.conversations.invite `admin.conversations.invite` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.conversations.invite `admin.conversations.invite` API reference}.
                  */
                 invite: bindApiCall(this, 'admin.conversations.invite'),
                 /**
                  * @description Returns channels on the given team using the filters.
-                 * @see {@link https://api.slack.com/methods/admin.conversations.lookup `admin.conversations.lookup` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.conversations.lookup `admin.conversations.lookup` API reference}.
                  */
                 lookup: bindApiCall(this, 'admin.conversations.lookup'),
                 /**
                  * @description Remove a conversation's retention policy.
-                 * @see {@link https://api.slack.com/methods/admin.conversations.removeCustomRetention `admin.conversations.removeCustomRetention` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.conversations.removeCustomRetention `admin.conversations.removeCustomRetention` API reference}.
                  */
                 removeCustomRetention: bindApiCall(this, 'admin.conversations.removeCustomRetention'),
                 /**
                  * @description Rename a public or private channel.
-                 * @see {@link https://api.slack.com/methods/admin.conversations.rename `admin.conversations.rename` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.conversations.rename `admin.conversations.rename` API reference}.
                  */
                 rename: bindApiCall(this, 'admin.conversations.rename'),
                 restrictAccess: {
                     /**
                      * @description Add an allowlist of IDP groups for accessing a channel.
-                     * @see {@link https://api.slack.com/methods/admin.conversations.restrictAccess.addGroup `admin.conversations.restrictAccess.addGroup` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.conversations.restrictAccess.addGroup `admin.conversations.restrictAccess.addGroup` API reference}.
                      */
                     addGroup: bindApiCall(this, 'admin.conversations.restrictAccess.addGroup'),
                     /**
                      * @description List all IDP Groups linked to a channel.
-                     * @see {@link https://api.slack.com/methods/admin.conversations.restrictAccess.listGroups `admin.conversations.restrictAccess.listGroups` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.conversations.restrictAccess.listGroups `admin.conversations.restrictAccess.listGroups` API reference}.
                      */
                     listGroups: bindApiCall(this, 'admin.conversations.restrictAccess.listGroups'),
                     /**
                      * @description Remove a linked IDP group linked from a private channel.
-                     * @see {@link https://api.slack.com/methods/admin.conversations.restrictAccess.removeGroup `admin.conversations.restrictAccess.removeGroup` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.conversations.restrictAccess.removeGroup `admin.conversations.restrictAccess.removeGroup` API reference}.
                      */
                     removeGroup: bindApiCall(this, 'admin.conversations.restrictAccess.removeGroup'),
                 },
                 /**
                  * @description Search for public or private channels in an Enterprise organization.
-                 * @see {@link https://api.slack.com/methods/admin.conversations.search `admin.conversations.search` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.conversations.search `admin.conversations.search` API reference}.
                  */
                 search: bindApiCallWithOptionalArgument(this, 'admin.conversations.search'),
                 /**
                  * @description Set the posting permissions for a public or private channel.
-                 * @see {@link https://api.slack.com/methods/admin.conversations.setConversationPrefs `admin.conversations.setConversationPrefs` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.conversations.setConversationPrefs `admin.conversations.setConversationPrefs` API reference}.
                  */
                 setConversationPrefs: bindApiCall(this, 'admin.conversations.setConversationPrefs'),
                 /**
                  * @description Set a conversation's retention policy.
-                 * @see {@link https://api.slack.com/methods/admin.conversations.setCustomRetention `admin.conversations.setCustomRetention` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.conversations.setCustomRetention `admin.conversations.setCustomRetention` API reference}.
                  */
                 setCustomRetention: bindApiCall(this, 'admin.conversations.setCustomRetention'),
                 /**
                  * @description Set the workspaces in an Enterprise grid org that connect to a public or private channel.
-                 * @see {@link https://api.slack.com/methods/admin.conversations.setTeams `admin.conversations.setTeams` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.conversations.setTeams `admin.conversations.setTeams` API reference}.
                  */
                 setTeams: bindApiCall(this, 'admin.conversations.setTeams'),
                 /**
                  * @description Unarchive a public or private channel.
-                 * @see {@link https://api.slack.com/methods/admin.conversations.unarchive `admin.conversations.unarchive` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.conversations.unarchive `admin.conversations.unarchive` API reference}.
                  */
                 unarchive: bindApiCall(this, 'admin.conversations.unarchive'),
             },
             emoji: {
                 /**
                  * @description Add an emoji.
-                 * @see {@link https://api.slack.com/methods/admin.emoji.add `admin.emoji.add` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.emoji.add `admin.emoji.add` API reference}.
                  */
                 add: bindApiCall(this, 'admin.emoji.add'),
                 /**
                  * @description Add an emoji alias.
-                 * @see {@link https://api.slack.com/methods/admin.emoji.addAlias `admin.emoji.addAlias` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.emoji.addAlias `admin.emoji.addAlias` API reference}.
                  */
                 addAlias: bindApiCall(this, 'admin.emoji.addAlias'),
                 /**
                  * @description List emoji for an Enterprise Grid organization.
-                 * @see {@link https://api.slack.com/methods/admin.emoji.list `admin.emoji.list` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.emoji.list `admin.emoji.list` API reference}.
                  */
                 list: bindApiCallWithOptionalArgument(this, 'admin.emoji.list'),
                 /**
                  * @description Remove an emoji across an Enterprise Grid organization.
-                 * @see {@link https://api.slack.com/methods/admin.emoji.remove `admin.emoji.remove` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.emoji.remove `admin.emoji.remove` API reference}.
                  */
                 remove: bindApiCall(this, 'admin.emoji.remove'),
                 /**
                  * @description Rename an emoji.
-                 * @see {@link https://api.slack.com/methods/admin.emoji.rename `admin.emoji.rename` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.emoji.rename `admin.emoji.rename` API reference}.
                  */
                 rename: bindApiCall(this, 'admin.emoji.rename'),
             },
             functions: {
                 /**
                  * @description Look up functions by a set of apps.
-                 * @see {@link https://api.slack.com/methods/admin.functions.list `admin.functions.list` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.functions.list `admin.functions.list` API reference}.
                  */
                 list: bindApiCall(this, 'admin.functions.list'),
                 permissions: {
                     /**
                      * @description Lookup the visibility of multiple Slack functions and include the users if
                      * it is limited to particular named entities.
-                     * @see {@link https://api.slack.com/methods/admin.functions.permissions.lookup `admin.functions.permissions.lookup` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.functions.permissions.lookup `admin.functions.permissions.lookup` API reference}.
                      */
                     lookup: bindApiCall(this, 'admin.functions.permissions.lookup'),
                     /**
                      * @description Set the visibility of a Slack function and define the users or workspaces if
                      * it is set to named_entities.
-                     * @see {@link https://api.slack.com/methods/admin.functions.permissions.set `admin.functions.permissions.set` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.functions.permissions.set `admin.functions.permissions.set` API reference}.
                      */
                     set: bindApiCall(this, 'admin.functions.permissions.set'),
                 },
@@ -6553,49 +6556,49 @@ class Methods extends eventemitter3_1.EventEmitter {
             inviteRequests: {
                 /**
                  * @description Approve a workspace invite request.
-                 * @see {@link https://api.slack.com/methods/admin.inviteRequests.approve `admin.inviteRequests.approve` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.inviteRequests.approve `admin.inviteRequests.approve` API reference}.
                  */
                 approve: bindApiCall(this, 'admin.inviteRequests.approve'),
                 approved: {
                     /**
                      * @description List all approved workspace invite requests.
-                     * @see {@link https://api.slack.com/methods/admin.inviteRequests.approved.list `admin.inviteRequests.approved.list` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.inviteRequests.approved.list `admin.inviteRequests.approved.list` API reference}.
                      */
                     list: bindApiCall(this, 'admin.inviteRequests.approved.list'),
                 },
                 denied: {
                     /**
                      * @description List all denied workspace invite requests.
-                     * @see {@link https://api.slack.com/methods/admin.inviteRequests.denied.list `admin.inviteRequests.denied.list` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.inviteRequests.denied.list `admin.inviteRequests.denied.list` API reference}.
                      */
                     list: bindApiCall(this, 'admin.inviteRequests.denied.list'),
                 },
                 /**
                  * @description Deny a workspace invite request.
-                 * @see {@link https://api.slack.com/methods/admin.inviteRequests.deny `admin.inviteRequests.deny` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.inviteRequests.deny `admin.inviteRequests.deny` API reference}.
                  */
                 deny: bindApiCall(this, 'admin.inviteRequests.deny'),
                 /**
                  * @description List all pending workspace invite requests.
-                 * @see {@link https://api.slack.com/methods/admin.inviteRequests.list `admin.inviteRequests.list` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.inviteRequests.list `admin.inviteRequests.list` API reference}.
                  */
                 list: bindApiCall(this, 'admin.inviteRequests.list'),
             },
             roles: {
                 /**
                  * @description Adds members to the specified role with the specified scopes.
-                 * @see {@link https://api.slack.com/methods/admin.roles.addAssignments `admin.roles.addAssignments` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.roles.addAssignments `admin.roles.addAssignments` API reference}.
                  */
                 addAssignments: bindApiCall(this, 'admin.roles.addAssignments'),
                 /**
                  * @description Lists assignments for all roles across entities.
                  * Options to scope results by any combination of roles or entities.
-                 * @see {@link https://api.slack.com/methods/admin.roles.listAssignments `admin.roles.listAssignments` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.roles.listAssignments `admin.roles.listAssignments` API reference}.
                  */
                 listAssignments: bindApiCallWithOptionalArgument(this, 'admin.roles.listAssignments'),
                 /**
                  * @description Removes a set of users from a role for the given scopes and entities.
-                 * @see {@link https://api.slack.com/methods/admin.roles.removeAssignments `admin.roles.removeAssignments` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.roles.removeAssignments `admin.roles.removeAssignments` API reference}.
                  */
                 removeAssignments: bindApiCall(this, 'admin.roles.removeAssignments'),
             },
@@ -6603,56 +6606,56 @@ class Methods extends eventemitter3_1.EventEmitter {
                 admins: {
                     /**
                      * @description List all of the admins on a given workspace.
-                     * @see {@link https://api.slack.com/methods/admin.teams.admins.list `admin.teams.admins.list` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.teams.admins.list `admin.teams.admins.list` API reference}.
                      */
                     list: bindApiCall(this, 'admin.teams.admins.list'),
                 },
                 /**
                  * @description Create an Enterprise team.
-                 * @see {@link https://api.slack.com/methods/admin.teams.create `admin.teams.create` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.teams.create `admin.teams.create` API reference}.
                  */
                 create: bindApiCall(this, 'admin.teams.create'),
                 /**
                  * @description List all teams on an Enterprise organization.
-                 * @see {@link https://api.slack.com/methods/admin.teams.list `admin.teams.list` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.teams.list `admin.teams.list` API reference}.
                  */
                 list: bindApiCallWithOptionalArgument(this, 'admin.teams.list'),
                 owners: {
                     /**
                      * @description List all of the owners on a given workspace.
-                     * @see {@link https://api.slack.com/methods/admin.teams.owners.list `admin.teams.owners.list` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.teams.owners.list `admin.teams.owners.list` API reference}.
                      */
                     list: bindApiCall(this, 'admin.teams.owners.list'),
                 },
                 settings: {
                     /**
                      * @description Fetch information about settings in a workspace.
-                     * @see {@link https://api.slack.com/methods/admin.teams.owners.list `admin.teams.owners.list` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.teams.settings.info `admin.teams.settings.info` API reference}.
                      */
                     info: bindApiCall(this, 'admin.teams.settings.info'),
                     /**
                      * @description Set the default channels of a workspace.
-                     * @see {@link https://api.slack.com/methods/admin.teams.settings.setDefaultChannels `admin.teams.settings.setDefaultChannels` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.teams.settings.setDefaultChannels `admin.teams.settings.setDefaultChannels` API reference}.
                      */
                     setDefaultChannels: bindApiCall(this, 'admin.teams.settings.setDefaultChannels'),
                     /**
                      * @description Set the description of a given workspace.
-                     * @see {@link https://api.slack.com/methods/admin.teams.settings.setDescription `admin.teams.settings.setDescription` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.teams.settings.setDescription `admin.teams.settings.setDescription` API reference}.
                      */
                     setDescription: bindApiCall(this, 'admin.teams.settings.setDescription'),
                     /**
                      * @description Set the discoverability of a given workspace.
-                     * @see {@link https://api.slack.com/methods/admin.teams.settings.setDiscoverability `admin.teams.settings.setDiscoverability` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.teams.settings.setDiscoverability `admin.teams.settings.setDiscoverability` API reference}.
                      */
                     setDiscoverability: bindApiCall(this, 'admin.teams.settings.setDiscoverability'),
                     /**
                      * @description Sets the icon of a workspace.
-                     * @see {@link https://api.slack.com/methods/admin.teams.settings.setIcon `admin.teams.settings.setIcon` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.teams.settings.setIcon `admin.teams.settings.setIcon` API reference}.
                      */
                     setIcon: bindApiCall(this, 'admin.teams.settings.setIcon'),
                     /**
                      * @description Set the name of a given workspace.
-                     * @see {@link https://api.slack.com/methods/admin.teams.settings.setName `admin.teams.settings.setName` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.teams.settings.setName `admin.teams.settings.setName` API reference}.
                      */
                     setName: bindApiCall(this, 'admin.teams.settings.setName'),
                 },
@@ -6660,111 +6663,111 @@ class Methods extends eventemitter3_1.EventEmitter {
             usergroups: {
                 /**
                  * @description Add up to one hundred default channels to an IDP group.
-                 * @see {@link https://api.slack.com/methods/admin.usergroups.addChannels `admin.teams.usergroups.addChannels` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.usergroups.addChannels `admin.teams.usergroups.addChannels` API reference}.
                  */
                 addChannels: bindApiCall(this, 'admin.usergroups.addChannels'),
                 /**
                  * @description Associate one or more default workspaces with an organization-wide IDP group.
-                 * @see {@link https://api.slack.com/methods/admin.usergroups.addTeams `admin.teams.usergroups.addTeams` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.usergroups.addTeams `admin.teams.usergroups.addTeams` API reference}.
                  */
                 addTeams: bindApiCall(this, 'admin.usergroups.addTeams'),
                 /**
                  * @description List the channels linked to an org-level IDP group (user group).
-                 * @see {@link https://api.slack.com/methods/admin.usergroups.listChannels `admin.teams.usergroups.listChannels` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.usergroups.listChannels `admin.teams.usergroups.listChannels` API reference}.
                  */
                 listChannels: bindApiCall(this, 'admin.usergroups.listChannels'),
                 /**
                  * @description Remove one or more default channels from an org-level IDP group (user group).
-                 * @see {@link https://api.slack.com/methods/admin.usergroups.removeChannels `admin.teams.usergroups.removeChannels` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.usergroups.removeChannels `admin.teams.usergroups.removeChannels` API reference}.
                  */
                 removeChannels: bindApiCall(this, 'admin.usergroups.removeChannels'),
             },
             users: {
                 /**
                  * @description Add an Enterprise user to a workspace.
-                 * @see {@link https://api.slack.com/methods/admin.users.assign `admin.users.assign` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.users.assign `admin.users.assign` API reference}.
                  */
                 assign: bindApiCall(this, 'admin.users.assign'),
                 /**
                  * @description Invite a user to a workspace.
-                 * @see {@link https://api.slack.com/methods/admin.users.invite `admin.users.invite` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.users.invite `admin.users.invite` API reference}.
                  */
                 invite: bindApiCall(this, 'admin.users.invite'),
                 /**
                  * @description List users on a workspace.
-                 * @see {@link https://api.slack.com/methods/admin.users.list `admin.users.list` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.users.list `admin.users.list` API reference}.
                  */
                 list: bindApiCallWithOptionalArgument(this, 'admin.users.list'),
                 /**
                  * @description Remove a user from a workspace.
-                 * @see {@link https://api.slack.com/methods/admin.users.remove `admin.users.remove` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.users.remove `admin.users.remove` API reference}.
                  */
                 remove: bindApiCall(this, 'admin.users.remove'),
                 session: {
                     /**
                      * @description Clear user-specific session settings—the session duration and what happens when the client
                      * closes—for a list of users.
-                     * @see {@link https://api.slack.com/methods/admin.users.session.clearSettings `admin.users.session.clearSettings` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.users.session.clearSettings `admin.users.session.clearSettings` API reference}.
                      */
                     clearSettings: bindApiCall(this, 'admin.users.session.clearSettings'),
                     /**
                      * @description Get user-specific session settings—the session duration and what happens when the client
                      * closes—given a list of users.
-                     * @see {@link https://api.slack.com/methods/admin.users.session.getSettings `admin.users.session.getSettings` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.users.session.getSettings `admin.users.session.getSettings` API reference}.
                      */
                     getSettings: bindApiCall(this, 'admin.users.session.getSettings'),
                     /**
                      * @description Revoke a single session for a user. The user will be forced to login to Slack.
-                     * @see {@link https://api.slack.com/methods/admin.users.session.invalidate `admin.users.session.invalidate` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.users.session.invalidate `admin.users.session.invalidate` API reference}.
                      */
                     invalidate: bindApiCall(this, 'admin.users.session.invalidate'),
                     /**
                      * @description List active user sessions for an organization.
-                     * @see {@link https://api.slack.com/methods/admin.users.session.list `admin.users.session.list` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.users.session.list `admin.users.session.list` API reference}.
                      */
                     list: bindApiCallWithOptionalArgument(this, 'admin.users.session.list'),
                     /**
                      * @description Wipes all valid sessions on all devices for a given user.
-                     * @see {@link https://api.slack.com/methods/admin.users.session.reset `admin.users.session.reset` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.users.session.reset `admin.users.session.reset` API reference}.
                      */
                     reset: bindApiCall(this, 'admin.users.session.reset'),
                     /**
                      * @description Enqueues an asynchronous job to wipe all valid sessions on all devices for a given user list.
-                     * @see {@link https://api.slack.com/methods/admin.users.session.resetBulk `admin.users.session.resetBulk` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.users.session.resetBulk `admin.users.session.resetBulk` API reference}.
                      */
                     resetBulk: bindApiCall(this, 'admin.users.session.resetBulk'),
                     /**
                      * @description Configure the user-level session settings—the session duration and what happens when the client
                      * closes—for one or more users.
-                     * @see {@link https://api.slack.com/methods/admin.users.session.setSettings `admin.users.session.setSettings` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.users.session.setSettings `admin.users.session.setSettings` API reference}.
                      */
                     setSettings: bindApiCall(this, 'admin.users.session.setSettings'),
                 },
                 /**
                  * @description Set an existing guest, regular user, or owner to be an admin user.
-                 * @see {@link https://api.slack.com/methods/admin.users.setAdmin `admin.users.setAdmin` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.users.setAdmin `admin.users.setAdmin` API reference}.
                  */
                 setAdmin: bindApiCall(this, 'admin.users.setAdmin'),
                 /**
                  * @description Set an expiration for a guest user.
-                 * @see {@link https://api.slack.com/methods/admin.users.setExpiration `admin.users.setExpiration` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.users.setExpiration `admin.users.setExpiration` API reference}.
                  */
                 setExpiration: bindApiCall(this, 'admin.users.setExpiration'),
                 /**
                  * @description Set an existing guest, regular user, or admin user to be a workspace owner.
-                 * @see {@link https://api.slack.com/methods/admin.users.setOwner `admin.users.setOwner` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.users.setOwner `admin.users.setOwner` API reference}.
                  */
                 setOwner: bindApiCall(this, 'admin.users.setOwner'),
                 /**
                  * @description Set an existing guest user, admin user, or owner to be a regular user.
-                 * @see {@link https://api.slack.com/methods/admin.users.setRegular `admin.users.setRegular` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.users.setRegular `admin.users.setRegular` API reference}.
                  */
                 setRegular: bindApiCall(this, 'admin.users.setRegular'),
                 unsupportedVersions: {
                     /**
                      * @description Ask Slackbot to send you an export listing all workspace members using unsupported software,
                      * presented as a zipped CSV file.
-                     * @see {@link https://api.slack.com/methods/admin.users.unsupportedVersions.export `admin.users.unsupportedVersions.export` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.users.unsupportedVersions.export `admin.users.unsupportedVersions.export` API reference}.
                      */
                     export: bindApiCall(this, 'admin.users.unsupportedVersions.export'),
                 },
@@ -6773,30 +6776,30 @@ class Methods extends eventemitter3_1.EventEmitter {
                 collaborators: {
                     /**
                      * @description Add collaborators to workflows within the team or enterprise.
-                     * @see {@link https://api.slack.com/methods/admin.workflows.collaborators.add `admin.workflows.collaborators.add` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.workflows.collaborators.add `admin.workflows.collaborators.add` API reference}.
                      */
                     add: bindApiCall(this, 'admin.workflows.collaborators.add'),
                     /**
                      * @description Remove collaborators from workflows within the team or enterprise.
-                     * @see {@link https://api.slack.com/methods/admin.workflows.collaborators.remove `admin.workflows.collaborators.remove` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.workflows.collaborators.remove `admin.workflows.collaborators.remove` API reference}.
                      */
                     remove: bindApiCall(this, 'admin.workflows.collaborators.remove'),
                 },
                 permissions: {
                     /**
                      * @description Look up the permissions for a set of workflows.
-                     * @see {@link https://api.slack.com/methods/admin.workflows.permissions.lookup `admin.workflows.permissions.lookup` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/admin.workflows.permissions.lookup `admin.workflows.permissions.lookup` API reference}.
                      */
                     lookup: bindApiCall(this, 'admin.workflows.permissions.lookup'),
                 },
                 /**
                  * @description Search workflows within the team or enterprise.
-                 * @see {@link https://api.slack.com/methods/admin.workflows.search `admin.workflows.search` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.workflows.search `admin.workflows.search` API reference}.
                  */
                 search: bindApiCallWithOptionalArgument(this, 'admin.workflows.search'),
                 /**
                  * @description Unpublish workflows within the team or enterprise.
-                 * @see {@link https://api.slack.com/methods/admin.workflows.unpublish `admin.workflows.unpublish` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/admin.workflows.unpublish `admin.workflows.unpublish` API reference}.
                  */
                 unpublish: bindApiCall(this, 'admin.workflows.unpublish'),
             },
@@ -6804,7 +6807,7 @@ class Methods extends eventemitter3_1.EventEmitter {
         this.api = {
             /**
              * @description Checks API calling code.
-             * @see {@link https://api.slack.com/methods/api.test `api.test` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/api.test `api.test` API reference}.
              */
             test: bindApiCallWithOptionalArgument(this, 'api.test'),
         };
@@ -6812,17 +6815,17 @@ class Methods extends eventemitter3_1.EventEmitter {
             threads: {
                 /**
                  * @description Set loading status to indicate that the app is building a response.
-                 * @see {@link https://api.slack.com/methods/assistant.threads.setStatus `assistant.threads.setStatus` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/assistant.threads.setStatus `assistant.threads.setStatus` API reference}.
                  */
                 setStatus: bindApiCall(this, 'assistant.threads.setStatus'),
                 /**
                  * @description Set suggested prompts for the user. Can suggest up to four prompts.
-                 * @see {@link https://api.slack.com/methods/assistant.threads.setSuggestedPrompts `assistant.threads.setSuggestedPrompts` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/assistant.threads.setSuggestedPrompts `assistant.threads.setSuggestedPrompts` API reference}.
                  */
                 setSuggestedPrompts: bindApiCall(this, 'assistant.threads.setSuggestedPrompts'),
                 /**
                  * @description Set the title of the thread. This is shown when a user views the app's chat history.
-                 * @see {@link https://api.slack.com/methods/assistant.threads.setTitle `assistant.threads.setTitle` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/assistant.threads.setTitle `assistant.threads.setTitle` API reference}.
                  */
                 setTitle: bindApiCall(this, 'assistant.threads.setTitle'),
             },
@@ -6832,7 +6835,7 @@ class Methods extends eventemitter3_1.EventEmitter {
                 /**
                  * @description Generate a temporary Socket Mode WebSocket URL that your app can connect to in order to receive
                  * events and interactive payloads over.
-                 * @see {@link https://api.slack.com/methods/apps.connections.open `apps.connections.open` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/apps.connections.open `apps.connections.open` API reference}.
                  */
                 open: bindApiCallWithOptionalArgument(this, 'apps.connections.open'),
             },
@@ -6841,7 +6844,7 @@ class Methods extends eventemitter3_1.EventEmitter {
                     /**
                      * @description Get a list of authorizations for the given event context.
                      * Each authorization represents an app installation that the event is visible to.
-                     * @see {@link https://api.slack.com/methods/apps.event.authorizations.list `apps.event.authorizations.list` API reference}.
+                     * @see {@link https://docs.slack.dev/reference/methods/apps.event.authorizations.list `apps.event.authorizations.list` API reference}.
                      */
                     list: bindApiCall(this, 'apps.event.authorizations.list'),
                 },
@@ -6849,46 +6852,46 @@ class Methods extends eventemitter3_1.EventEmitter {
             manifest: {
                 /**
                  * @description Create an app from an app manifest.
-                 * @see {@link https://api.slack.com/methods/apps.manifest.create `apps.manifest.create` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/apps.manifest.create `apps.manifest.create` API reference}.
                  */
                 create: bindApiCall(this, 'apps.manifest.create'),
                 /**
                  * @description Permanently deletes an app created through app manifests.
-                 * @see {@link https://api.slack.com/methods/apps.manifest.delete `apps.manifest.delete` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/apps.manifest.delete `apps.manifest.delete` API reference}.
                  */
                 delete: bindApiCall(this, 'apps.manifest.delete'),
                 /**
                  * @description Export an app manifest from an existing app.
-                 * @see {@link https://api.slack.com/methods/apps.manifest.export `apps.manifest.export` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/apps.manifest.export `apps.manifest.export` API reference}.
                  */
                 export: bindApiCall(this, 'apps.manifest.export'),
                 /**
                  * @description Update an app from an app manifest.
-                 * @see {@link https://api.slack.com/methods/apps.manifest.update `apps.manifest.update` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/apps.manifest.update `apps.manifest.update` API reference}.
                  */
                 update: bindApiCall(this, 'apps.manifest.update'),
                 /**
                  * @description Validate an app manifest.
-                 * @see {@link https://api.slack.com/methods/apps.manifest.validate `apps.manifest.validate` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/apps.manifest.validate `apps.manifest.validate` API reference}.
                  */
                 validate: bindApiCall(this, 'apps.manifest.validate'),
             },
             /**
              * @description Uninstalls your app from a workspace.
-             * @see {@link https://api.slack.com/methods/apps.uninstall `apps.uninstall` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/apps.uninstall `apps.uninstall` API reference}.
              */
             uninstall: bindApiCall(this, 'apps.uninstall'),
         };
         this.auth = {
             /**
              * @description Revokes a token.
-             * @see {@link https://api.slack.com/methods/auth.revoke `auth.revoke` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/auth.revoke `auth.revoke` API reference}.
              */
             revoke: bindApiCallWithOptionalArgument(this, 'auth.revoke'),
             teams: {
                 /**
                  * @description Obtain a full list of workspaces your org-wide app has been approved for.
-                 * @see {@link https://api.slack.com/methods/auth.teams.list `auth.teams.list` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/auth.teams.list `auth.teams.list` API reference}.
                  */
                 list: bindApiCallWithOptionalArgument(this, 'auth.teams.list'),
             },
@@ -6897,57 +6900,57 @@ class Methods extends eventemitter3_1.EventEmitter {
         this.bookmarks = {
             /**
              * @description Add bookmark to a channel.
-             * @see {@link https://api.slack.com/methods/bookmarks.add `bookmarks.add` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/bookmarks.add `bookmarks.add` API reference}.
              */
             add: bindApiCall(this, 'bookmarks.add'),
             /**
              * @description Edit bookmark.
-             * @see {@link https://api.slack.com/methods/bookmarks.edit `bookmarks.edit` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/bookmarks.edit `bookmarks.edit` API reference}.
              */
             edit: bindApiCall(this, 'bookmarks.edit'),
             /**
              * @description List bookmarks for a channel.
-             * @see {@link https://api.slack.com/methods/bookmarks.list `bookmarks.list` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/bookmarks.list `bookmarks.list` API reference}.
              */
             list: bindApiCall(this, 'bookmarks.list'),
             /**
              * @description Remove bookmark from a channel.
-             * @see {@link https://api.slack.com/methods/bookmarks.remove `bookmarks.remove` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/bookmarks.remove `bookmarks.remove` API reference}.
              */
             remove: bindApiCall(this, 'bookmarks.remove'),
         };
         this.bots = {
             /**
              * @description Gets information about a bot user.
-             * @see {@link https://api.slack.com/methods/bots.info `bots.info` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/bots.info `bots.info` API reference}.
              */
             info: bindApiCallWithOptionalArgument(this, 'bots.info'),
         };
         this.calls = {
             /**
              * @description Registers a new Call.
-             * @see {@link https://api.slack.com/methods/calls.add `calls.add` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/calls.add `calls.add` API reference}.
              */
             add: bindApiCall(this, 'calls.add'),
             /**
              * @description Ends a Call.
-             * @see {@link https://api.slack.com/methods/calls.end `calls.end` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/calls.end `calls.end` API reference}.
              */
             end: bindApiCall(this, 'calls.end'),
             /**
              * @description Returns information about a Call.
-             * @see {@link https://api.slack.com/methods/calls.info `calls.info` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/calls.info `calls.info` API reference}.
              */
             info: bindApiCall(this, 'calls.info'),
             /**
              * @description Updates information about a Call.
-             * @see {@link https://api.slack.com/methods/calls.info `calls.info` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/calls.update `calls.update` API reference}.
              */
             update: bindApiCall(this, 'calls.update'),
             participants: {
                 /**
                  * @description Registers new participants added to a Call.
-                 * @see {@link https://api.slack.com/methods/calls.participants.add `calls.participants.add` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/calls.participants.add `calls.participants.add` API reference}.
                  */
                 add: bindApiCall(this, 'calls.participants.add'),
                 remove: bindApiCall(this, 'calls.participants.remove'),
@@ -6957,34 +6960,34 @@ class Methods extends eventemitter3_1.EventEmitter {
             access: {
                 /**
                  * @description Remove access to a canvas for specified entities.
-                 * @see {@link https://api.slack.com/methods/canvases.access.delete `canvases.access.delete` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/canvases.access.delete `canvases.access.delete` API reference}.
                  */
                 delete: bindApiCall(this, 'canvases.access.delete'),
                 /**
                  * @description Sets the access level to a canvas for specified entities.
-                 * @see {@link https://api.slack.com/methods/canvases.access.set `canvases.access.set` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/canvases.access.set `canvases.access.set` API reference}.
                  */
                 set: bindApiCall(this, 'canvases.access.set'),
             },
             /**
              * @description Create Canvas for a user.
-             * @see {@link https://api.slack.com/methods/canvases.create `canvases.create` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/canvases.create `canvases.create` API reference}.
              */
             create: bindApiCallWithOptionalArgument(this, 'canvases.create'),
             /**
              * @description Deletes a canvas.
-             * @see {@link https://api.slack.com/methods/canvases.delete `canvases.delete` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/canvases.delete `canvases.delete` API reference}.
              */
             delete: bindApiCall(this, 'canvases.delete'),
             /**
              * @description Update an existing canvas.
-             * @see {@link https://api.slack.com/methods/canvases.edit `canvases.edit` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/canvases.edit `canvases.edit` API reference}.
              */
             edit: bindApiCall(this, 'canvases.edit'),
             sections: {
                 /**
                  * @description Find sections matching the provided criteria.
-                 * @see {@link https://api.slack.com/methods/canvases.sections.lookup `canvases.sections.lookup` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/canvases.sections.lookup `canvases.sections.lookup` API reference}.
                  */
                 lookup: bindApiCall(this, 'canvases.sections.lookup'),
             },
@@ -6992,288 +6995,288 @@ class Methods extends eventemitter3_1.EventEmitter {
         this.chat = {
             /**
              * @description Deletes a message.
-             * @see {@link https://api.slack.com/methods/chat.delete `chat.delete` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/chat.delete `chat.delete` API reference}.
              */
             delete: bindApiCall(this, 'chat.delete'),
             /**
              * @description Deletes a pending scheduled message from the queue.
-             * @see {@link https://api.slack.com/methods/chat.deleteScheduledMessage `chat.deleteScheduledMessage` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/chat.deleteScheduledMessage `chat.deleteScheduledMessage` API reference}.
              */
             deleteScheduledMessage: bindApiCall(this, 'chat.deleteScheduledMessage'),
             /**
              * @description Retrieve a permalink URL for a specific extant message.
-             * @see {@link https://api.slack.com/methods/chat.getPermalink `chat.getPermalink` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/chat.getPermalink `chat.getPermalink` API reference}.
              */
             getPermalink: bindApiCall(this, 'chat.getPermalink'),
             /**
              * @description Share a me message into a channel.
-             * @see {@link https://api.slack.com/methods/chat.meMessage `chat.meMessage` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/chat.meMessage `chat.meMessage` API reference}.
              */
             meMessage: bindApiCall(this, 'chat.meMessage'),
             /**
              * @description Sends an ephemeral message to a user in a channel.
-             * @see {@link https://api.slack.com/methods/chat.postEphemeral `chat.postEphemeral` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/chat.postEphemeral `chat.postEphemeral` API reference}.
              */
             postEphemeral: bindApiCall(this, 'chat.postEphemeral'),
             /**
              * @description Sends a message to a channel.
-             * @see {@link https://api.slack.com/methods/chat.postMessage `chat.postMessage` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/chat.postMessage `chat.postMessage` API reference}.
              */
             postMessage: bindApiCall(this, 'chat.postMessage'),
             /**
              * @description Schedules a message to be sent to a channel.
-             * @see {@link https://api.slack.com/methods/chat.scheduleMessage `chat.scheduleMessage` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/chat.scheduleMessage `chat.scheduleMessage` API reference}.
              */
             scheduleMessage: bindApiCall(this, 'chat.scheduleMessage'),
             scheduledMessages: {
                 /**
                  * @description Returns a list of scheduled messages.
-                 * @see {@link https://api.slack.com/methods/chat.scheduledMessages.list `chat.scheduledMessages.list` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/chat.scheduledMessages.list `chat.scheduledMessages.list` API reference}.
                  */
                 list: bindApiCallWithOptionalArgument(this, 'chat.scheduledMessages.list'),
             },
             /**
              * @description Provide custom unfurl behavior for user-posted URLs.
-             * @see {@link https://api.slack.com/methods/chat.unfurl `chat.unfurl` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/chat.unfurl `chat.unfurl` API reference}.
              */
             unfurl: bindApiCall(this, 'chat.unfurl'),
             /**
              * @description Updates a message.
-             * @see {@link https://api.slack.com/methods/chat.update `chat.update` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/chat.update `chat.update` API reference}.
              */
             update: bindApiCall(this, 'chat.update'),
         };
         this.conversations = {
             /**
              * @description Accepts an invitation to a Slack Connect channel.
-             * @see {@link https://api.slack.com/methods/conversations.acceptSharedInvite `conversations.acceptSharedInvite` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/conversations.acceptSharedInvite `conversations.acceptSharedInvite` API reference}.
              */
             acceptSharedInvite: bindApiCall(this, 'conversations.acceptSharedInvite'),
             /**
              * @description Approves an invitation to a Slack Connect channel.
-             * @see {@link https://api.slack.com/methods/conversations.approveSharedInvite `conversations.approveSharedInvite` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/conversations.approveSharedInvite `conversations.approveSharedInvite` API reference}.
              */
             approveSharedInvite: bindApiCall(this, 'conversations.approveSharedInvite'),
             /**
              * @description Archives a conversation.
-             * @see {@link https://api.slack.com/methods/conversations.archive `conversations.archive` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/conversations.archive `conversations.archive` API reference}.
              */
             archive: bindApiCall(this, 'conversations.archive'),
             canvases: {
                 /**
                  * @description Create a Channel Canvas for a channel.
-                 * @see {@link https://api.slack.com/methods/conversations.canvases.create `conversations.canvases.create` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/conversations.canvases.create `conversations.canvases.create` API reference}.
                  */
                 create: bindApiCall(this, 'conversations.canvases.create'),
             },
             /**
              * @description Closes a direct message or multi-person direct message.
-             * @see {@link https://api.slack.com/methods/conversations.close `conversations.close` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/conversations.close `conversations.close` API reference}.
              */
             close: bindApiCall(this, 'conversations.close'),
             /**
              * @description Initiates a public or private channel-based conversation.
-             * @see {@link https://api.slack.com/methods/conversations.create `conversations.create` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/conversations.create `conversations.create` API reference}.
              */
             create: bindApiCall(this, 'conversations.create'),
             /**
              * @description Declines an invitation to a Slack Connect channel.
-             * @see {@link https://api.slack.com/methods/conversations.declineSharedInvite `conversations.declineSharedInvite` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/conversations.declineSharedInvite `conversations.declineSharedInvite` API reference}.
              */
             declineSharedInvite: bindApiCall(this, 'conversations.declineSharedInvite'),
             externalInvitePermissions: {
                 /**
                  * @description Convert a team in a shared channel from an External Limited channel to a fully shared Slack
                  * Connect channel or vice versa.
-                 * @see {@link https://api.slack.com/methods/conversations.externalInvitePermissions.set `conversations.externalInvitePermissions.set` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/conversations.externalInvitePermissions.set `conversations.externalInvitePermissions.set` API reference}.
                  */
                 set: bindApiCall(this, 'conversations.externalInvitePermissions.set'),
             },
             /**
              * @description Fetches a conversation's history of messages and events.
-             * @see {@link https://api.slack.com/methods/conversations.history `conversations.history` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/conversations.history `conversations.history` API reference}.
              */
             history: bindApiCall(this, 'conversations.history'),
             /**
              * @description Retrieve information about a conversation.
-             * @see {@link https://api.slack.com/methods/conversations.info `conversations.info` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/conversations.info `conversations.info` API reference}.
              */
             info: bindApiCall(this, 'conversations.info'),
             /**
              * @description Invites users to a channel.
-             * @see {@link https://api.slack.com/methods/conversations.invite `conversations.invite` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/conversations.invite `conversations.invite` API reference}.
              */
             invite: bindApiCall(this, 'conversations.invite'),
             /**
              * @description Sends an invitation to a Slack Connect channel.
-             * @see {@link https://api.slack.com/methods/conversations.inviteShared `conversations.inviteShared` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/conversations.inviteShared `conversations.inviteShared` API reference}.
              */
             inviteShared: bindApiCall(this, 'conversations.inviteShared'),
             /**
              * @description Joins an existing conversation.
-             * @see {@link https://api.slack.com/methods/conversations.join `conversations.join` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/conversations.join `conversations.join` API reference}.
              */
             join: bindApiCall(this, 'conversations.join'),
             /**
              * @description Removes a user from a conversation.
-             * @see {@link https://api.slack.com/methods/conversations.kick `conversations.kick` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/conversations.kick `conversations.kick` API reference}.
              */
             kick: bindApiCall(this, 'conversations.kick'),
             /**
              * @description Leaves a conversation.
-             * @see {@link https://api.slack.com/methods/conversations.leave `conversations.leave` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/conversations.leave `conversations.leave` API reference}.
              */
             leave: bindApiCall(this, 'conversations.leave'),
             /**
              * @description List all channels in a Slack team.
-             * @see {@link https://api.slack.com/methods/conversations.list `conversations.list` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/conversations.list `conversations.list` API reference}.
              */
             list: bindApiCallWithOptionalArgument(this, 'conversations.list'),
             /**
              * @description Lists shared channel invites that have been generated or received but have not been approved by
              * all parties.
-             * @see {@link https://api.slack.com/methods/conversations.listConnectInvites `conversations.listConnectInvites` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/conversations.listConnectInvites `conversations.listConnectInvites` API reference}.
              */
             listConnectInvites: bindApiCallWithOptionalArgument(this, 'conversations.listConnectInvites'),
             /**
              * @description Sets the read cursor in a channel.
-             * @see {@link https://api.slack.com/methods/conversations.mark `conversations.mark` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/conversations.mark `conversations.mark` API reference}.
              */
             mark: bindApiCall(this, 'conversations.mark'),
             /**
              * @description Retrieve members of a conversation.
-             * @see {@link https://api.slack.com/methods/conversations.members `conversations.members` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/conversations.members `conversations.members` API reference}.
              */
             members: bindApiCall(this, 'conversations.members'),
             /**
              * @description Opens or resumes a direct message or multi-person direct message.
-             * @see {@link https://api.slack.com/methods/conversations.open `conversations.open` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/conversations.open `conversations.open` API reference}.
              */
             open: bindApiCall(this, 'conversations.open'),
             /**
              * @description Renames a conversation.
-             * @see {@link https://api.slack.com/methods/conversations.rename `conversations.rename` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/conversations.rename `conversations.rename` API reference}.
              */
             rename: bindApiCall(this, 'conversations.rename'),
             /**
              * @description Retrieve a thread of messages posted to a conversation.
-             * @see {@link https://api.slack.com/methods/conversations.replies `conversations.replies` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/conversations.replies `conversations.replies` API reference}.
              */
             replies: bindApiCall(this, 'conversations.replies'),
             requestSharedInvite: {
                 /**
                  * @description Approves a request to add an external user to a channel and sends them a Slack Connect invite.
-                 * @see {@link https://api.slack.com/methods/conversations.requestSharedInvite.approve `conversations.requestSharedInvite.approve` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/conversations.requestSharedInvite.approve `conversations.requestSharedInvite.approve` API reference}.
                  */
                 approve: bindApiCall(this, 'conversations.requestSharedInvite.approve'),
                 /**
                  * @description Denies a request to invite an external user to a channel.
-                 * @see {@link https://api.slack.com/methods/conversations.requestSharedInvite.deny `conversations.requestSharedInvite.deny` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/conversations.requestSharedInvite.deny `conversations.requestSharedInvite.deny` API reference}.
                  */
                 deny: bindApiCall(this, 'conversations.requestSharedInvite.deny'),
                 /**
                  * @description Lists requests to add external users to channels with ability to filter.
-                 * @see {@link https://api.slack.com/methods/conversations.requestSharedInvite.list `conversations.requestSharedInvite.list` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/conversations.requestSharedInvite.list `conversations.requestSharedInvite.list` API reference}.
                  */
                 list: bindApiCallWithOptionalArgument(this, 'conversations.requestSharedInvite.list'),
             },
             /**
              * @description Sets the purpose for a conversation.
-             * @see {@link https://api.slack.com/methods/conversations.setPurpose `conversations.setPurpose` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/conversations.setPurpose `conversations.setPurpose` API reference}.
              */
             setPurpose: bindApiCall(this, 'conversations.setPurpose'),
             /**
              * @description Sets the topic for a conversation.
-             * @see {@link https://api.slack.com/methods/conversations.setTopic `conversations.setTopic` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/conversations.setTopic `conversations.setTopic` API reference}.
              */
             setTopic: bindApiCall(this, 'conversations.setTopic'),
             /**
              * @description Reverses conversation archival.
-             * @see {@link https://api.slack.com/methods/conversations.unarchive `conversations.unarchive` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/conversations.unarchive `conversations.unarchive` API reference}.
              */
             unarchive: bindApiCall(this, 'conversations.unarchive'),
         };
         this.dialog = {
             /**
              * @description Open a dialog with a user.
-             * @see {@link https://api.slack.com/methods/dialog.open `dialog.open` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/dialog.open `dialog.open` API reference}.
              */
             open: bindApiCall(this, 'dialog.open'),
         };
         this.dnd = {
             /**
              * @description Ends the current user's Do Not Disturb session immediately.
-             * @see {@link https://api.slack.com/methods/dnd.endDnd `dnd.endDnd` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/dnd.endDnd `dnd.endDnd` API reference}.
              */
             endDnd: bindApiCallWithOptionalArgument(this, 'dnd.endDnd'),
             /**
              * @description Ends the current user's snooze mode immediately.
-             * @see {@link https://api.slack.com/methods/dnd.endSnooze `dnd.endSnooze` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/dnd.endSnooze `dnd.endSnooze` API reference}.
              */
             endSnooze: bindApiCallWithOptionalArgument(this, 'dnd.endSnooze'),
             /**
              * @description Retrieves a user's current Do Not Disturb status.
-             * @see {@link https://api.slack.com/methods/dnd.info `dnd.info` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/dnd.info `dnd.info` API reference}.
              */
             info: bindApiCallWithOptionalArgument(this, 'dnd.info'),
             /**
              * @description Turns on Do Not Disturb mode for the current user, or changes its duration.
-             * @see {@link https://api.slack.com/methods/dnd.setSnooze `dnd.setSnooze` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/dnd.setSnooze `dnd.setSnooze` API reference}.
              */
             setSnooze: bindApiCall(this, 'dnd.setSnooze'),
             /**
              * @description Retrieves the Do Not Disturb status for up to 50 users on a team.
-             * @see {@link https://api.slack.com/methods/dnd.teamInfo `dnd.teamInfo` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/dnd.teamInfo `dnd.teamInfo` API reference}.
              */
             teamInfo: bindApiCall(this, 'dnd.teamInfo'),
         };
         this.emoji = {
             /**
              * @description Lists custom emoji for a team.
-             * @see {@link https://api.slack.com/methods/emoji.list `emoji.list` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/emoji.list `emoji.list` API reference}.
              */
             list: bindApiCallWithOptionalArgument(this, 'emoji.list'),
         };
         this.files = {
             /**
-             * @description Finishes an upload started with {@link https://api.slack.com/methods/files.getUploadURLExternal `files.getUploadURLExternal`}.
-             * @see {@link https://api.slack.com/methods/files.completeUploadExternal `files.completeUploadExternal` API reference}.
+             * @description Finishes an upload started with {@link https://docs.slack.dev/reference/methods/files.getUploadURLExternal `files.getUploadURLExternal`}.
+             * @see {@link https://docs.slack.dev/reference/methods/files.completeUploadExternal `files.completeUploadExternal` API reference}.
              */
             completeUploadExternal: bindApiCall(this, 'files.completeUploadExternal'),
             /**
              * @description Deletes a file.
-             * @see {@link https://api.slack.com/methods/files.delete `files.delete` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/files.delete `files.delete` API reference}.
              */
             delete: bindApiCall(this, 'files.delete'),
             /**
              * @description Gets a URL for an edge external file upload.
-             * @see {@link https://api.slack.com/methods/files.getUploadURLExternal `files.getUploadURLExternal` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/files.getUploadURLExternal `files.getUploadURLExternal` API reference}.
              */
             getUploadURLExternal: bindApiCall(this, 'files.getUploadURLExternal'),
             /**
              * @description Gets information about a file.
-             * @see {@link https://api.slack.com/methods/files.info `files.info` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/files.info `files.info` API reference}.
              */
             info: bindApiCall(this, 'files.info'),
             /**
              * @description List files for a team, in a channel, or from a user with applied filters.
-             * @see {@link https://api.slack.com/methods/files.list `files.list` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/files.list `files.list` API reference}.
              */
             list: bindApiCall(this, 'files.list'),
             /**
              * @description Revokes public/external sharing access for a file.
-             * @see {@link https://api.slack.com/methods/files.revokePublicURL `files.revokePublicURL` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/files.revokePublicURL `files.revokePublicURL` API reference}.
              */
             revokePublicURL: bindApiCall(this, 'files.revokePublicURL'),
             /**
              * @description Enables a file for public/external sharing.
-             * @see {@link https://api.slack.com/methods/files.revokePublicURL `files.revokePublicURL` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/files.sharedPublicURL `files.sharedPublicURL` API reference}.
              */
             sharedPublicURL: bindApiCall(this, 'files.sharedPublicURL'),
             /**
              * @description Uploads or creates a file.
-             * @deprecated Use `uploadV2` instead. See {@link https://api.slack.com/changelog/2024-04-a-better-way-to-upload-files-is-here-to-stay our post on retiring `files.upload`}.
-             * @see {@link https://api.slack.com/methods/files.upload `files.upload` API reference}.
+             * @deprecated Use `uploadV2` instead. See {@link https://docs.slack.dev/changelog/2024-04-a-better-way-to-upload-files-is-here-to-stay our post on retiring `files.upload`}.
+             * @see {@link https://docs.slack.dev/reference/methods/files.upload `files.upload` API reference}.
              */
             upload: bindApiCall(this, 'files.upload'),
             /**
@@ -7293,39 +7296,39 @@ class Methods extends eventemitter3_1.EventEmitter {
             comments: {
                 /**
                  * @description Deletes an existing comment on a file.
-                 * @see {@link https://api.slack.com/methods/files.comments.delete `files.comments.delete` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/files.comments.delete `files.comments.delete` API reference}.
                  */
                 delete: bindApiCall(this, 'files.comments.delete'),
             },
             remote: {
                 /**
                  * @description Adds a file from a remote service.
-                 * @see {@link https://api.slack.com/methods/files.remote.add `files.remote.add` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/files.remote.add `files.remote.add` API reference}.
                  */
                 add: bindApiCall(this, 'files.remote.add'),
                 /**
                  * @description Retrieve information about a remote file added to Slack.
-                 * @see {@link https://api.slack.com/methods/files.remote.info `files.remote.info` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/files.remote.info `files.remote.info` API reference}.
                  */
                 info: bindApiCall(this, 'files.remote.info'),
                 /**
                  * @description List remote files added to Slack.
-                 * @see {@link https://api.slack.com/methods/files.remote.list `files.remote.list` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/files.remote.list `files.remote.list` API reference}.
                  */
                 list: bindApiCall(this, 'files.remote.list'),
                 /**
                  * @description Remove a remote file.
-                 * @see {@link https://api.slack.com/methods/files.remote.remove `files.remote.remove` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/files.remote.remove `files.remote.remove` API reference}.
                  */
                 remove: bindApiCall(this, 'files.remote.remove'),
                 /**
                  * @description Share a remote file into a channel.
-                 * @see {@link https://api.slack.com/methods/files.remote.share `files.remote.share` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/files.remote.share `files.remote.share` API reference}.
                  */
                 share: bindApiCall(this, 'files.remote.share'),
                 /**
                  * @description Updates an existing remote file.
-                 * @see {@link https://api.slack.com/methods/files.remote.update `files.remote.update` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/files.remote.update `files.remote.update` API reference}.
                  */
                 update: bindApiCall(this, 'files.remote.update'),
             },
@@ -7333,19 +7336,19 @@ class Methods extends eventemitter3_1.EventEmitter {
         this.functions = {
             /**
              * @description Signal the failure to execute a Custom Function.
-             * @see {@link https://api.slack.com/methods/functions.completeError `functions.completeError` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/functions.completeError `functions.completeError` API reference}.
              */
             completeError: bindApiCall(this, 'functions.completeError'),
             /**
              * @description Signal the successful completion of a Custom Function.
-             * @see {@link https://api.slack.com/methods/functions.completeSuccess `functions.completeSuccess` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/functions.completeSuccess `functions.completeSuccess` API reference}.
              */
             completeSuccess: bindApiCall(this, 'functions.completeSuccess'),
         };
         this.migration = {
             /**
              * @description For Enterprise Grid workspaces, map local user IDs to global user IDs.
-             * @see {@link https://api.slack.com/methods/migration.exchange `migration.exchange` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/migration.exchange `migration.exchange` API reference}.
              */
             exchange: bindApiCall(this, 'migration.exchange'),
         };
@@ -7353,18 +7356,18 @@ class Methods extends eventemitter3_1.EventEmitter {
             /**
              * @description Exchanges a temporary OAuth verifier code for an access token.
              * @deprecated This is a legacy method only used by classic Slack apps. Use `oauth.v2.access` for new Slack apps.
-             * @see {@link https://api.slack.com/methods/oauth.access `oauth.access` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/oauth.access `oauth.access` API reference}.
              */
             access: bindApiCall(this, 'oauth.access'),
             v2: {
                 /**
                  * @description Exchanges a temporary OAuth verifier code for an access token.
-                 * @see {@link https://api.slack.com/methods/oauth.v2.access `oauth.v2.access` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/oauth.v2.access `oauth.v2.access` API reference}.
                  */
                 access: bindApiCall(this, 'oauth.v2.access'),
                 /**
                  * @description Exchanges a legacy access token for a new expiring access token and refresh token.
-                 * @see {@link https://api.slack.com/methods/oauth.v2.exchange `oauth.v2.exchange` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/oauth.v2.exchange `oauth.v2.exchange` API reference}.
                  */
                 exchange: bindApiCall(this, 'oauth.v2.exchange'),
             },
@@ -7372,13 +7375,13 @@ class Methods extends eventemitter3_1.EventEmitter {
         this.openid = {
             connect: {
                 /**
-                 * @description Exchanges a temporary OAuth verifier code for an access token for {@link https://api.slack.com/authentication/sign-in-with-slack Sign in with Slack}.
-                 * @see {@link https://api.slack.com/methods/openid.connect.token `openid.connect.token` API reference}.
+                 * @description Exchanges a temporary OAuth verifier code for an access token for {@link https://docs.slack.dev/authentication/sign-in-with-slack Sign in with Slack}.
+                 * @see {@link https://docs.slack.dev/reference/methods/openid.connect.token `openid.connect.token` API reference}.
                  */
                 token: bindApiCall(this, 'openid.connect.token'),
                 /**
-                 * @description Get the identity of a user who has authorized {@link https://api.slack.com/authentication/sign-in-with-slack Sign in with Slack}.
-                 * @see {@link https://api.slack.com/methods/openid.connect.userInfo `openid.connect.userInfo` API reference}.
+                 * @description Get the identity of a user who has authorized {@link https://docs.slack.dev/authentication/sign-in-with-slack Sign in with Slack}.
+                 * @see {@link https://docs.slack.dev/reference/methods/openid.connect.userInfo `openid.connect.userInfo` API reference}.
                  */
                 userInfo: bindApiCallWithOptionalArgument(this, 'openid.connect.userInfo'),
             },
@@ -7386,152 +7389,152 @@ class Methods extends eventemitter3_1.EventEmitter {
         this.pins = {
             /**
              * @description Pins an item to a channel.
-             * @see {@link https://api.slack.com/methods/pins.add `pins.add` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/pins.add `pins.add` API reference}.
              */
             add: bindApiCall(this, 'pins.add'),
             /**
              * @description Lists items pinned to a channel.
-             * @see {@link https://api.slack.com/methods/pins.list `pins.list` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/pins.list `pins.list` API reference}.
              */
             list: bindApiCall(this, 'pins.list'),
             /**
              * @description Un-pins an item from a channel.
-             * @see {@link https://api.slack.com/methods/pins.remove `pins.remove` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/pins.remove `pins.remove` API reference}.
              */
             remove: bindApiCall(this, 'pins.remove'),
         };
         this.reactions = {
             /**
              * @description Adds a reaction to an item.
-             * @see {@link https://api.slack.com/methods/reactions.add `reactions.add` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/reactions.add `reactions.add` API reference}.
              */
             add: bindApiCall(this, 'reactions.add'),
             /**
              * @description Gets reactions for an item.
-             * @see {@link https://api.slack.com/methods/reactions.get `reactions.get` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/reactions.get `reactions.get` API reference}.
              */
             get: bindApiCall(this, 'reactions.get'),
             /**
              * @description List reactions made by a user.
-             * @see {@link https://api.slack.com/methods/reactions.list `reactions.list` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/reactions.list `reactions.list` API reference}.
              */
             list: bindApiCallWithOptionalArgument(this, 'reactions.list'),
             /**
              * @description Removes a reaction from an item.
-             * @see {@link https://api.slack.com/methods/reactions.remove `reactions.remove` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/reactions.remove `reactions.remove` API reference}.
              */
             remove: bindApiCall(this, 'reactions.remove'),
         };
         // TODO: keep tabs on reminders APIs, may be deprecated once Later list APIs land
-        // See: https://api.slack.com/changelog/2023-07-its-later-already-for-stars-and-reminders
+        // See: https://docs.slack.dev/changelog/2023-07-its-later-already-for-stars-and-reminders
         this.reminders = {
             /**
              * @description Creates a reminder.
-             * @see {@link https://api.slack.com/methods/reminders.add `reminders.add` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/reminders.add `reminders.add` API reference}.
              */
             add: bindApiCall(this, 'reminders.add'),
             /**
              * @description Marks a reminder as complete.
-             * @see {@link https://api.slack.com/methods/reminders.complete `reminders.complete` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/reminders.complete `reminders.complete` API reference}.
              */
             complete: bindApiCall(this, 'reminders.complete'),
             /**
              * @description Deletes a reminder.
-             * @see {@link https://api.slack.com/methods/reminders.delete `reminders.delete` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/reminders.delete `reminders.delete` API reference}.
              */
             delete: bindApiCall(this, 'reminders.delete'),
             /**
              * @description Gets information about a reminder.
-             * @see {@link https://api.slack.com/methods/reminders.info `reminders.info` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/reminders.info `reminders.info` API reference}.
              */
             info: bindApiCall(this, 'reminders.info'),
             /**
              * @description Lists all reminders created by or for a given user.
-             * @see {@link https://api.slack.com/methods/reminders.list `reminders.list` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/reminders.list `reminders.list` API reference}.
              */
             list: bindApiCallWithOptionalArgument(this, 'reminders.list'),
         };
         this.rtm = {
             /**
              * @description Starts a Real Time Messaging session.
-             * @see {@link https://api.slack.com/methods/rtm.connect `rtm.connect` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/rtm.connect `rtm.connect` API reference}.
              */
             connect: bindApiCallWithOptionalArgument(this, 'rtm.connect'),
             /**
              * @description Starts a Real Time Messaging session.
-             * @deprecated Use `rtm.connect` instead. See {@link https://api.slack.com/changelog/2021-10-rtm-start-to-stop our post on retiring `rtm.start`}.
-             * @see {@link https://api.slack.com/methods/rtm.start `rtm.start` API reference}.
+             * @deprecated Use `rtm.connect` instead. See {@link https://docs.slack.dev/changelog/2021-10-rtm-start-to-stop our post on retiring `rtm.start`}.
+             * @see {@link https://docs.slack.dev/reference/methods/rtm.start `rtm.start` API reference}.
              */
             start: bindApiCallWithOptionalArgument(this, 'rtm.start'),
         };
         this.search = {
             /**
              * @description Searches for messages and files matching a query.
-             * @see {@link https://api.slack.com/methods/search.all search.all` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/search.all search.all` API reference}.
              */
             all: bindApiCall(this, 'search.all'),
             /**
              * @description Searches for files matching a query.
-             * @see {@link https://api.slack.com/methods/search.files search.files` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/search.files search.files` API reference}.
              */
             files: bindApiCall(this, 'search.files'),
             /**
              * @description Searches for messages matching a query.
-             * @see {@link https://api.slack.com/methods/search.messages search.messages` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/search.messages search.messages` API reference}.
              */
             messages: bindApiCall(this, 'search.messages'),
         };
         this.team = {
             /**
              * @description Gets the access logs for the current team.
-             * @see {@link https://api.slack.com/methods/team.accessLogs `team.accessLogs` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/team.accessLogs `team.accessLogs` API reference}.
              */
             accessLogs: bindApiCallWithOptionalArgument(this, 'team.accessLogs'),
             /**
              * @description Gets billable users information for the current team.
-             * @see {@link https://api.slack.com/methods/team.billableInfo `team.billableInfo` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/team.billableInfo `team.billableInfo` API reference}.
              */
             billableInfo: bindApiCallWithOptionalArgument(this, 'team.billableInfo'),
             billing: {
                 /**
                  * @description Reads a workspace's billing plan information.
-                 * @see {@link https://api.slack.com/methods/team.billing.info `team.billing.info` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/team.billing.info `team.billing.info` API reference}.
                  */
                 info: bindApiCall(this, 'team.billing.info'),
             },
             externalTeams: {
                 /**
                  * @description Disconnect an external organization.
-                 * @see {@link https://api.slack.com/methods/team.externalTeams.disconnect `team.externalTeams.disconnect` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/team.externalTeams.disconnect `team.externalTeams.disconnect` API reference}.
                  */
                 disconnect: bindApiCall(this, 'team.externalTeams.disconnect'),
                 /**
                  * @description Returns a list of all the external teams connected and details about the connection.
-                 * @see {@link https://api.slack.com/methods/team.externalTeams.list `team.externalTeams.list` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/team.externalTeams.list `team.externalTeams.list` API reference}.
                  */
                 list: bindApiCall(this, 'team.externalTeams.list'),
             },
             /**
              * @description Gets information about the current team.
-             * @see {@link https://api.slack.com/methods/team.info `team.info` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/team.info `team.info` API reference}.
              */
             info: bindApiCallWithOptionalArgument(this, 'team.info'),
             /**
              * @description Gets the integration logs for the current team.
-             * @see {@link https://api.slack.com/methods/team.integrationLogs `team.integrationLogs` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/team.integrationLogs `team.integrationLogs` API reference}.
              */
             integrationLogs: bindApiCallWithOptionalArgument(this, 'team.integrationLogs'),
             preferences: {
                 /**
                  * @description Retrieve a list of a workspace's team preferences.
-                 * @see {@link https://api.slack.com/methods/team.preferences.list `team.preferences.list` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/team.preferences.list `team.preferences.list` API reference}.
                  */
                 list: bindApiCallWithOptionalArgument(this, 'team.preferences.list'),
             },
             profile: {
                 /**
                  * @description Retrieve a team's profile.
-                 * @see {@link https://api.slack.com/methods/team.profile.get `team.profile.get` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/team.profile.get `team.profile.get` API reference}.
                  */
                 get: bindApiCallWithOptionalArgument(this, 'team.profile.get'),
             },
@@ -7540,7 +7543,7 @@ class Methods extends eventemitter3_1.EventEmitter {
             tokens: {
                 /**
                  * @description Exchanges a refresh token for a new app configuration token.
-                 * @see {@link https://api.slack.com/methods/tooling.tokens.rotate `tooling.tokens.rotate` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/tooling.tokens.rotate `tooling.tokens.rotate` API reference}.
                  */
                 rotate: bindApiCall(this, 'tooling.tokens.rotate'),
             },
@@ -7548,38 +7551,38 @@ class Methods extends eventemitter3_1.EventEmitter {
         this.usergroups = {
             /**
              * @description Create a User Group.
-             * @see {@link https://api.slack.com/methods/usergroups.create `usergroups.create` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/usergroups.create `usergroups.create` API reference}.
              */
             create: bindApiCall(this, 'usergroups.create'),
             /**
              * @description Disable an existing User Group.
-             * @see {@link https://api.slack.com/methods/usergroups.disable `usergroups.disable` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/usergroups.disable `usergroups.disable` API reference}.
              */
             disable: bindApiCall(this, 'usergroups.disable'),
             /**
              * @description Enable an existing User Group.
-             * @see {@link https://api.slack.com/methods/usergroups.enable `usergroups.enable` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/usergroups.enable `usergroups.enable` API reference}.
              */
             enable: bindApiCall(this, 'usergroups.enable'),
             /**
              * @description List all User Groups for a team.
-             * @see {@link https://api.slack.com/methods/usergroups.list `usergroups.list` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/usergroups.list `usergroups.list` API reference}.
              */
             list: bindApiCallWithOptionalArgument(this, 'usergroups.list'),
             /**
              * @description Update an existing User Group.
-             * @see {@link https://api.slack.com/methods/usergroups.update `usergroups.update` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/usergroups.update `usergroups.update` API reference}.
              */
             update: bindApiCall(this, 'usergroups.update'),
             users: {
                 /**
                  * @description List all users in a User Group.
-                 * @see {@link https://api.slack.com/methods/usergroups.users.list `usergroups.users.list` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/usergroups.users.list `usergroups.users.list` API reference}.
                  */
                 list: bindApiCall(this, 'usergroups.users.list'),
                 /**
                  * @description Update the list of users in a User Group.
-                 * @see {@link https://api.slack.com/methods/usergroups.users.update `usergroups.users.update` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/usergroups.users.update `usergroups.users.update` API reference}.
                  */
                 update: bindApiCall(this, 'usergroups.users.update'),
             },
@@ -7587,65 +7590,65 @@ class Methods extends eventemitter3_1.EventEmitter {
         this.users = {
             /**
              * @description List conversations the calling user may access.
-             * @see {@link https://api.slack.com/methods/users.conversations `users.conversations` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/users.conversations `users.conversations` API reference}.
              */
             conversations: bindApiCall(this, 'users.conversations'),
             /**
              * @description Delete the user profile photo.
-             * @see {@link https://api.slack.com/methods/users.deletePhoto `users.deletePhoto` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/users.deletePhoto `users.deletePhoto` API reference}.
              */
             deletePhoto: bindApiCall(this, 'users.deletePhoto'),
             discoverableContacts: {
                 /**
                  * @description Lookup an email address to see if someone is on Slack.
-                 * @see {@link https://api.slack.com/methods/users.discoverableContacts.lookup `users.discoverableContacts.lookup` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/users.discoverableContacts.lookup `users.discoverableContacts.lookup` API reference}.
                  */
                 lookup: bindApiCall(this, 'users.discoverableContacts.lookup'),
             },
             /**
              * @description Gets user presence information.
-             * @see {@link https://api.slack.com/methods/users.getPresence `users.getPresence` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/users.getPresence `users.getPresence` API reference}.
              */
             getPresence: bindApiCall(this, 'users.getPresence'),
             /**
              * @description Get a user's identity.
-             * @see {@link https://api.slack.com/methods/users.identity `users.identity` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/users.identity `users.identity` API reference}.
              */
             identity: bindApiCall(this, 'users.identity'),
             /**
              * @description Gets information about a user.
-             * @see {@link https://api.slack.com/methods/users.info `users.info` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/users.info `users.info` API reference}.
              */
             info: bindApiCall(this, 'users.info'),
             /**
              * @description Lists all users in a Slack team.
-             * @see {@link https://api.slack.com/methods/users.list `users.list` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/users.list `users.list` API reference}.
              */
             list: bindApiCall(this, 'users.list'),
             /**
              * @description Find a user with an email address.
-             * @see {@link https://api.slack.com/methods/users.lookupByEmail `users.lookupByEmail` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/users.lookupByEmail `users.lookupByEmail` API reference}.
              */
             lookupByEmail: bindApiCall(this, 'users.lookupByEmail'),
             /**
              * @description Set the user profile photo.
-             * @see {@link https://api.slack.com/methods/users.setPhoto `users.setPhoto` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/users.setPhoto `users.setPhoto` API reference}.
              */
             setPhoto: bindApiCall(this, 'users.setPhoto'),
             /**
              * @description Manually sets user presence.
-             * @see {@link https://api.slack.com/methods/users.setPresence `users.setPresence` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/users.setPresence `users.setPresence` API reference}.
              */
             setPresence: bindApiCall(this, 'users.setPresence'),
             profile: {
                 /**
                  * @description Retrieve a user's profile information, including their custom status.
-                 * @see {@link https://api.slack.com/methods/users.profile.get `users.profile.get` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/users.profile.get `users.profile.get` API reference}.
                  */
                 get: bindApiCall(this, 'users.profile.get'),
                 /**
                  * @description Set a user's profile information, including custom status.
-                 * @see {@link https://api.slack.com/methods/users.profile.set `users.profile.set` API reference}.
+                 * @see {@link https://docs.slack.dev/reference/methods/users.profile.set `users.profile.set` API reference}.
                  */
                 set: bindApiCall(this, 'users.profile.set'),
             },
@@ -7653,22 +7656,22 @@ class Methods extends eventemitter3_1.EventEmitter {
         this.views = {
             /**
              * @description Open a view for a user.
-             * @see {@link https://api.slack.com/methods/views.open `views.open` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/views.open `views.open` API reference}.
              */
             open: bindApiCall(this, 'views.open'),
             /**
              * @description Publish a static view for a user.
-             * @see {@link https://api.slack.com/methods/views.publish `views.publish` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/views.publish `views.publish` API reference}.
              */
             publish: bindApiCall(this, 'views.publish'),
             /**
              * @description Push a view onto the stack of a root view.
-             * @see {@link https://api.slack.com/methods/views.push `views.push` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/views.push `views.push` API reference}.
              */
             push: bindApiCall(this, 'views.push'),
             /**
              * @description Update an existing view.
-             * @see {@link https://api.slack.com/methods/views.update `views.update` API reference}.
+             * @see {@link https://docs.slack.dev/reference/methods/views.update `views.update` API reference}.
              */
             update: bindApiCall(this, 'views.update'),
         };
@@ -7677,53 +7680,75 @@ class Methods extends eventemitter3_1.EventEmitter {
         // ------------------
         // TODO: breaking changes for future majors:
         // - stars.* methods are marked as deprecated; once Later has APIs, these will see an official sunsetting timeline
-        // - workflows.* methods, Sep 12 2024: https://api.slack.com/changelog/2023-08-workflow-steps-from-apps-step-back
+        // - workflows.* methods, Sep 12 2024: https://docs.slack.dev/changelog/2023-08-workflow-steps-from-apps-step-back
         this.stars = {
             /**
              * @description Save an item for later. Formerly known as adding a star.
              * @deprecated Stars can still be added but they can no longer be viewed or interacted with by end-users.
-             * See {@link https://api.slack.com/changelog/2023-07-its-later-already-for-stars-and-reminders our post on stars and the Later list}.
-             * @see {@link https://api.slack.com/methods/stars.add `stars.add` API reference}.
+             * See {@link https://docs.slack.dev/changelog/2023-07-its-later-already-for-stars-and-reminders our post on stars and the Later list}.
+             * @see {@link https://docs.slack.dev/reference/methods/stars.add `stars.add` API reference}.
              */
             add: bindApiCall(this, 'stars.add'),
             /**
              * @description List a user's saved items, formerly known as stars.
              * @deprecated Stars can still be listed but they can no longer be viewed or interacted with by end-users.
-             * See {@link https://api.slack.com/changelog/2023-07-its-later-already-for-stars-and-reminders our post on stars and the Later list}.
-             * @see {@link https://api.slack.com/methods/stars.list `stars.list` API reference}.
+             * See {@link https://docs.slack.dev/changelog/2023-07-its-later-already-for-stars-and-reminders our post on stars and the Later list}.
+             * @see {@link https://docs.slack.dev/reference/methods/stars.list `stars.list` API reference}.
              */
             list: bindApiCall(this, 'stars.list'),
             /**
              * @description Remove a saved item from a user's saved items, formerly known as stars.
              * @deprecated Stars can still be removed but they can no longer be viewed or interacted with by end-users.
-             * See {@link https://api.slack.com/changelog/2023-07-its-later-already-for-stars-and-reminders our post on stars and the Later list}.
-             * @see {@link https://api.slack.com/methods/stars.remove `stars.remove` API reference}.
+             * See {@link https://docs.slack.dev/changelog/2023-07-its-later-already-for-stars-and-reminders our post on stars and the Later list}.
+             * @see {@link https://docs.slack.dev/reference/methods/stars.remove `stars.remove` API reference}.
              */
             remove: bindApiCall(this, 'stars.remove'),
         };
         this.workflows = {
+            featured: {
+                /**
+                 * @description Add featured workflows to a channel.
+                 * @see {@link https://docs.slack.dev/reference/methods/workflows.featured.add `workflows.featured.add` API reference}.
+                 */
+                add: bindApiCall(this, 'workflows.featured.add'),
+                /**
+                 * @description List the featured workflows for specified channels.
+                 * @see {@link https://docs.slack.dev/reference/methods/workflows.featured.list `workflows.featured.list` API reference}.
+                 */
+                list: bindApiCall(this, 'workflows.featured.list'),
+                /**
+                 * @description Remove featured workflows from a channel.
+                 * @see {@link https://docs.slack.dev/reference/methods/workflows.featured.remove `workflows.featured.remove` API reference}.
+                 */
+                remove: bindApiCall(this, 'workflows.featured.remove'),
+                /**
+                 * @description Set featured workflows for a channel.
+                 * @see {@link https://docs.slack.dev/reference/methods/workflows.featured.set `workflows.featured.set` API reference}.
+                 */
+                set: bindApiCall(this, 'workflows.featured.set'),
+            },
             /**
              * @description Indicate that an app's step in a workflow completed execution.
              * @deprecated Steps from Apps is deprecated.
              * We're retiring all Slack app functionality around Steps from Apps in September 2024.
-             * See {@link https://api.slack.com/changelog/2023-08-workflow-steps-from-apps-step-back our post on deprecating Steps from Apps}.
-             * @see {@link https://api.slack.com/methods/workflows.stepCompleted `workflows.stepCompleted` API reference}.
+             * See {@link https://docs.slack.dev/changelog/2023-08-workflow-steps-from-apps-step-back our post on deprecating Steps from Apps}.
+             * @see {@link https://docs.slack.dev/legacy/legacy-steps-from-apps/legacy-steps-from-apps-workflow_step-object `workflows.stepCompleted` API reference}.
              */
             stepCompleted: bindApiCall(this, 'workflows.stepCompleted'),
             /**
              * @description Indicate that an app's step in a workflow failed to execute.
              * @deprecated Steps from Apps is deprecated.
              * We're retiring all Slack app functionality around Steps from Apps in September 2024.
-             * See {@link https://api.slack.com/changelog/2023-08-workflow-steps-from-apps-step-back our post on deprecating Steps from Apps}.
-             * @see {@link https://api.slack.com/methods/workflows.stepFailed `workflows.stepFailed` API reference}.
+             * See {@link https://docs.slack.dev/changelog/2023-08-workflow-steps-from-apps-step-back our post on deprecating Steps from Apps}.
+             * @see {@link https://docs.slack.dev/legacy/legacy-steps-from-apps/legacy-steps-from-apps-workflow_step-object `workflows.stepFailed` API reference}.
              */
             stepFailed: bindApiCall(this, 'workflows.stepFailed'),
             /**
              * @description Update the configuration for a workflow step.
              * @deprecated Steps from Apps is deprecated.
              * We're retiring all Slack app functionality around Steps from Apps in September 2024.
-             * See {@link https://api.slack.com/changelog/2023-08-workflow-steps-from-apps-step-back our post on deprecating Steps from Apps}.
-             * @see {@link https://api.slack.com/methods/workflows.updateStep `workflows.updateStep` API reference}.
+             * See {@link https://docs.slack.dev/changelog/2023-08-workflow-steps-from-apps-step-back our post on deprecating Steps from Apps}.
+             * @see {@link https://docs.slack.dev/legacy/legacy-steps-from-apps/legacy-steps-from-apps-workflow_step-object `workflows.updateStep` API reference}.
              */
             updateStep: bindApiCall(this, 'workflows.updateStep'),
         };
@@ -15712,7 +15737,7 @@ module.exports = require("zlib");
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
-/*! Axios v1.8.4 Copyright (c) 2025 Matt Zabriskie and contributors */
+/*! Axios v1.11.0 Copyright (c) 2025 Matt Zabriskie and contributors */
 
 
 const FormData$1 = __nccwpck_require__(6454);
@@ -15750,6 +15775,7 @@ function bind(fn, thisArg) {
 
 const {toString} = Object.prototype;
 const {getPrototypeOf} = Object;
+const {iterator, toStringTag} = Symbol;
 
 const kindOf = (cache => thing => {
     const str = toString.call(thing);
@@ -15876,7 +15902,28 @@ const isPlainObject = (val) => {
   }
 
   const prototype = getPrototypeOf(val);
-  return (prototype === null || prototype === Object.prototype || Object.getPrototypeOf(prototype) === null) && !(Symbol.toStringTag in val) && !(Symbol.iterator in val);
+  return (prototype === null || prototype === Object.prototype || Object.getPrototypeOf(prototype) === null) && !(toStringTag in val) && !(iterator in val);
+};
+
+/**
+ * Determine if a value is an empty object (safely handles Buffers)
+ *
+ * @param {*} val The value to test
+ *
+ * @returns {boolean} True if value is an empty object, otherwise false
+ */
+const isEmptyObject = (val) => {
+  // Early return for non-objects or Buffers to prevent RangeError
+  if (!isObject(val) || isBuffer(val)) {
+    return false;
+  }
+  
+  try {
+    return Object.keys(val).length === 0 && Object.getPrototypeOf(val) === Object.prototype;
+  } catch (e) {
+    // Fallback for any other objects that might cause RangeError with Object.keys()
+    return false;
+  }
 };
 
 /**
@@ -16001,6 +16048,11 @@ function forEach(obj, fn, {allOwnKeys = false} = {}) {
       fn.call(null, obj[i], i, obj);
     }
   } else {
+    // Buffer check
+    if (isBuffer(obj)) {
+      return;
+    }
+
     // Iterate over object keys
     const keys = allOwnKeys ? Object.getOwnPropertyNames(obj) : Object.keys(obj);
     const len = keys.length;
@@ -16014,6 +16066,10 @@ function forEach(obj, fn, {allOwnKeys = false} = {}) {
 }
 
 function findKey(obj, key) {
+  if (isBuffer(obj)){
+    return null;
+  }
+
   key = key.toLowerCase();
   const keys = Object.keys(obj);
   let i = keys.length;
@@ -16227,13 +16283,13 @@ const isTypedArray = (TypedArray => {
  * @returns {void}
  */
 const forEachEntry = (obj, fn) => {
-  const generator = obj && obj[Symbol.iterator];
+  const generator = obj && obj[iterator];
 
-  const iterator = generator.call(obj);
+  const _iterator = generator.call(obj);
 
   let result;
 
-  while ((result = iterator.next()) && !result.done) {
+  while ((result = _iterator.next()) && !result.done) {
     const pair = result.value;
     fn.call(obj, pair[0], pair[1]);
   }
@@ -16354,7 +16410,7 @@ const toFiniteNumber = (value, defaultValue) => {
  * @returns {boolean}
  */
 function isSpecCompliantForm(thing) {
-  return !!(thing && isFunction(thing.append) && thing[Symbol.toStringTag] === 'FormData' && thing[Symbol.iterator]);
+  return !!(thing && isFunction(thing.append) && thing[toStringTag] === 'FormData' && thing[iterator]);
 }
 
 const toJSONObject = (obj) => {
@@ -16365,6 +16421,11 @@ const toJSONObject = (obj) => {
     if (isObject(source)) {
       if (stack.indexOf(source) >= 0) {
         return;
+      }
+
+      //Buffer check
+      if (isBuffer(source)) {
+        return source;
       }
 
       if(!('toJSON' in source)) {
@@ -16423,6 +16484,10 @@ const asap = typeof queueMicrotask !== 'undefined' ?
 
 // *********************
 
+
+const isIterable = (thing) => thing != null && isFunction(thing[iterator]);
+
+
 const utils$1 = {
   isArray,
   isArrayBuffer,
@@ -16434,6 +16499,7 @@ const utils$1 = {
   isBoolean,
   isObject,
   isPlainObject,
+  isEmptyObject,
   isReadableStream,
   isRequest,
   isResponse,
@@ -16478,7 +16544,8 @@ const utils$1 = {
   isAsyncFn,
   isThenable,
   setImmediate: _setImmediate,
-  asap
+  asap,
+  isIterable
 };
 
 /**
@@ -16692,6 +16759,10 @@ function toFormData(obj, formData, options) {
 
     if (utils$1.isDate(value)) {
       return value.toISOString();
+    }
+
+    if (utils$1.isBoolean(value)) {
+      return value.toString();
     }
 
     if (!useBlob && utils$1.isBlob(value)) {
@@ -17078,7 +17149,7 @@ const platform = {
 };
 
 function toURLEncodedForm(data, options) {
-  return toFormData(data, new platform.classes.URLSearchParams(), Object.assign({
+  return toFormData(data, new platform.classes.URLSearchParams(), {
     visitor: function(value, key, path, helpers) {
       if (platform.isNode && utils$1.isBuffer(value)) {
         this.append(key, value.toString('base64'));
@@ -17086,8 +17157,9 @@ function toURLEncodedForm(data, options) {
       }
 
       return helpers.defaultVisitor.apply(this, arguments);
-    }
-  }, options));
+    },
+    ...options
+  });
 }
 
 /**
@@ -17481,10 +17553,18 @@ class AxiosHeaders {
       setHeaders(header, valueOrRewrite);
     } else if(utils$1.isString(header) && (header = header.trim()) && !isValidHeaderName(header)) {
       setHeaders(parseHeaders(header), valueOrRewrite);
-    } else if (utils$1.isHeaders(header)) {
-      for (const [key, value] of header.entries()) {
-        setHeader(value, key, rewrite);
+    } else if (utils$1.isObject(header) && utils$1.isIterable(header)) {
+      let obj = {}, dest, key;
+      for (const entry of header) {
+        if (!utils$1.isArray(entry)) {
+          throw TypeError('Object iterator must return a key-value pair');
+        }
+
+        obj[key = entry[0]] = (dest = obj[key]) ?
+          (utils$1.isArray(dest) ? [...dest, entry[1]] : [dest, entry[1]]) : entry[1];
       }
+
+      setHeaders(obj, valueOrRewrite);
     } else {
       header != null && setHeader(valueOrRewrite, header, rewrite);
     }
@@ -17624,6 +17704,10 @@ class AxiosHeaders {
 
   toString() {
     return Object.entries(this.toJSON()).map(([header, value]) => header + ': ' + value).join('\n');
+  }
+
+  getSetCookie() {
+    return this.get("set-cookie") || [];
   }
 
   get [Symbol.toStringTag]() {
@@ -17798,7 +17882,7 @@ function buildFullPath(baseURL, requestedURL, allowAbsoluteUrls) {
   return requestedURL;
 }
 
-const VERSION = "1.8.4";
+const VERSION = "1.11.0";
 
 function parseProtocol(url) {
   const match = /^([-+\w]{1,25})(:?\/\/|:)/.exec(url);
@@ -18080,7 +18164,7 @@ const formDataToStream = (form, headersHandler, options) => {
   }
 
   const boundaryBytes = textEncoder.encode('--' + boundary + CRLF);
-  const footerBytes = textEncoder.encode('--' + boundary + '--' + CRLF + CRLF);
+  const footerBytes = textEncoder.encode('--' + boundary + '--' + CRLF);
   let contentLength = footerBytes.byteLength;
 
   const parts = Array.from(form.entries()).map(([name, value]) => {
@@ -18226,7 +18310,7 @@ function throttle(fn, freq) {
       clearTimeout(timer);
       timer = null;
     }
-    fn.apply(null, args);
+    fn(...args);
   };
 
   const throttled = (...args) => {
@@ -19100,7 +19184,7 @@ function mergeConfig(config1, config2) {
     headers: (a, b , prop) => mergeDeepProperties(headersToObject(a), headersToObject(b),prop, true)
   };
 
-  utils$1.forEach(Object.keys(Object.assign({}, config1, config2)), function computeConfigValue(prop) {
+  utils$1.forEach(Object.keys({...config1, ...config2}), function computeConfigValue(prop) {
     const merge = mergeMap[prop] || mergeDeepProperties;
     const configValue = merge(config1[prop], config2[prop], prop);
     (utils$1.isUndefined(configValue) && merge !== mergeDirectKeys) || (config[prop] = configValue);
@@ -19635,7 +19719,7 @@ const fetchAdapter = isFetchSupported && (async (config) => {
       credentials: isCredentialsSupported ? withCredentials : undefined
     });
 
-    let response = await fetch(request);
+    let response = await fetch(request, fetchOptions);
 
     const isStreamResponse = supportsResponseStream && (responseType === 'stream' || responseType === 'response');
 
@@ -19681,7 +19765,7 @@ const fetchAdapter = isFetchSupported && (async (config) => {
   } catch (err) {
     unsubscribe && unsubscribe();
 
-    if (err && err.name === 'TypeError' && /fetch/i.test(err.message)) {
+    if (err && err.name === 'TypeError' && /Load failed|fetch/i.test(err.message)) {
       throw Object.assign(
         new AxiosError('Network Error', AxiosError.ERR_NETWORK, config, request),
         {
@@ -19947,7 +20031,7 @@ const validators = validator.validators;
  */
 class Axios {
   constructor(instanceConfig) {
-    this.defaults = instanceConfig;
+    this.defaults = instanceConfig || {};
     this.interceptors = {
       request: new InterceptorManager$1(),
       response: new InterceptorManager$1()
@@ -20078,8 +20162,8 @@ class Axios {
 
     if (!synchronousRequestInterceptors) {
       const chain = [dispatchRequest.bind(this), undefined];
-      chain.unshift.apply(chain, requestInterceptorChain);
-      chain.push.apply(chain, responseInterceptorChain);
+      chain.unshift(...requestInterceptorChain);
+      chain.push(...responseInterceptorChain);
       len = chain.length;
 
       promise = Promise.resolve(config);
@@ -20485,7 +20569,7 @@ module.exports = axios;
 /***/ ((module) => {
 
 "use strict";
-module.exports = /*#__PURE__*/JSON.parse('{"name":"@slack/web-api","version":"7.9.3","description":"Official library for using the Slack Platform\'s Web API","author":"Slack Technologies, LLC","license":"MIT","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"main":"dist/index.js","types":"./dist/index.d.ts","files":["dist/**/*"],"engines":{"node":">= 18","npm":">= 8.6.0"},"repository":"slackapi/node-slack-sdk","homepage":"https://tools.slack.dev/node-slack-sdk/web-api","publishConfig":{"access":"public"},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"scripts":{"prepare":"npm run build","build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist ./coverage","lint":"npx @biomejs/biome check .","lint:fix":"npx @biomejs/biome check --write .","mocha":"mocha --config ./test/.mocharc.json \\"./src/**/*.spec.ts\\"","test":"npm run lint && npm run test:types && npm run test:integration && npm run test:unit","test:integration":"npm run build && node test/integration/commonjs-project/index.js && node test/integration/esm-project/index.mjs && npm run test:integration:ts","test:integration:ts":"cd test/integration/ts-4.7-project && npm i && npm run build","test:unit":"npm run build && c8 --config ./test/.c8rc.json npm run mocha","test:types":"tsd","watch":"npx nodemon --watch \'src\' --ext \'ts\' --exec npm run build"},"dependencies":{"@slack/logger":"^4.0.0","@slack/types":"^2.9.0","@types/node":">=18.0.0","@types/retry":"0.12.0","axios":"^1.8.3","eventemitter3":"^5.0.1","form-data":"^4.0.0","is-electron":"2.2.2","is-stream":"^2","p-queue":"^6","p-retry":"^4","retry":"^0.13.1"},"devDependencies":{"@biomejs/biome":"^1.8.3","@tsconfig/recommended":"^1","@types/busboy":"^1.5.4","@types/chai":"^4","@types/mocha":"^10","@types/sinon":"^17","busboy":"^1","c8":"^10.1.2","chai":"^4","mocha":"^11","mocha-junit-reporter":"^2.2.1","mocha-multi-reporters":"^1.5.1","nock":"^14","shx":"^0.4.0","sinon":"^21","source-map-support":"^0.5.21","ts-node":"^10","tsd":"^0.32.0","typescript":"5.8.3"},"tsd":{"directory":"test/types"}}');
+module.exports = /*#__PURE__*/JSON.parse('{"name":"@slack/web-api","version":"7.10.0","description":"Official library for using the Slack Platform\'s Web API","author":"Slack Technologies, LLC","license":"MIT","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"main":"dist/index.js","types":"./dist/index.d.ts","files":["dist/**/*"],"engines":{"node":">= 18","npm":">= 8.6.0"},"repository":"slackapi/node-slack-sdk","homepage":"https://tools.slack.dev/node-slack-sdk/web-api","publishConfig":{"access":"public"},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"scripts":{"prepare":"npm run build","build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist ./coverage","docs":"npx typedoc --plugin typedoc-plugin-markdown","lint":"npx @biomejs/biome check .","lint:fix":"npx @biomejs/biome check --write .","mocha":"mocha --config ./test/.mocharc.json \\"./src/**/*.spec.ts\\"","test":"npm run lint && npm run test:types && npm run test:integration && npm run test:unit","test:integration":"npm run build && node test/integration/commonjs-project/index.js && node test/integration/esm-project/index.mjs && npm run test:integration:ts","test:integration:ts":"cd test/integration/ts-4.7-project && npm i && npm run build","test:unit":"npm run build && c8 --config ./test/.c8rc.json npm run mocha","test:types":"tsd","watch":"npx nodemon --watch \'src\' --ext \'ts\' --exec npm run build"},"dependencies":{"@slack/logger":"^4.0.0","@slack/types":"^2.9.0","@types/node":">=18.0.0","@types/retry":"0.12.0","axios":"^1.11.0","eventemitter3":"^5.0.1","form-data":"^4.0.4","is-electron":"2.2.2","is-stream":"^2","p-queue":"^6","p-retry":"^4","retry":"^0.13.1"},"devDependencies":{"@biomejs/biome":"^2.0.5","@tsconfig/recommended":"^1","@types/busboy":"^1.5.4","@types/chai":"^4","@types/mocha":"^10","@types/sinon":"^17","busboy":"^1","c8":"^10.1.2","chai":"^4","mocha":"^11","mocha-junit-reporter":"^2.2.1","mocha-multi-reporters":"^1.5.1","nock":"^14","shx":"^0.4.0","sinon":"^21","source-map-support":"^0.5.21","ts-node":"^10","tsd":"^0.33.0","typedoc":"^0.28.7","typedoc-plugin-markdown":"^4.7.1","typescript":"5.9.2"},"tsd":{"directory":"test/types"}}');
 
 /***/ }),
 
