@@ -4628,7 +4628,7 @@ ConsoleLogger.severity = {
 
 "use strict";
 
-// This file contains objects documented here: https://api.slack.com/reference/block-kit/block-elements
+// This file contains objects documented here: https://docs.slack.dev/reference/block-kit/block-elements
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 //# sourceMappingURL=block-elements.js.map
 
@@ -4639,7 +4639,6 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 "use strict";
 
-// This file contains objects documented here: https://api.slack.com/reference/block-kit/blocks
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 //# sourceMappingURL=blocks.js.map
 
@@ -4650,7 +4649,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 "use strict";
 
-// This file contains objects documented here: https://api.slack.com/reference/block-kit/composition-objects
+// This file contains objects documented here: https://docs.slack.dev/reference/block-kit/composition-objects
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 //# sourceMappingURL=composition-objects.js.map
 
@@ -4672,8 +4671,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 "use strict";
 
 // These types represent users in Slack Calls, which is an API for showing 3rd party calls within the Slack client.
-// More information on the API guide for Calls: https://api.slack.com/apis/calls
-// and on User objects for use with Calls: https://api.slack.com/apis/calls#users
+// More information on the API guide for Calls: https://docs.slack.dev/apis/web-api/using-the-calls-api
+// and on User objects for use with Calls: https://docs.slack.dev/apis/web-api/using-the-calls-api
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 //# sourceMappingURL=calls.js.map
 
@@ -4686,6 +4685,317 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 //# sourceMappingURL=dialog.js.map
+
+/***/ }),
+
+/***/ 4854:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=app.js.map
+
+/***/ }),
+
+/***/ 2149:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=assistant.js.map
+
+/***/ }),
+
+/***/ 6077:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=call.js.map
+
+/***/ }),
+
+/***/ 674:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=channel.js.map
+
+/***/ }),
+
+/***/ 3147:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=dnd.js.map
+
+/***/ }),
+
+/***/ 245:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=email.js.map
+
+/***/ }),
+
+/***/ 9679:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=emoji.js.map
+
+/***/ }),
+
+/***/ 9335:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+// NOTE: `file_comment_added` and `file_comment_edited` are left out because they are discontinued
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=file.js.map
+
+/***/ }),
+
+/***/ 365:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=function.js.map
+
+/***/ }),
+
+/***/ 9660:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=grid-migration.js.map
+
+/***/ }),
+
+/***/ 6850:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=group.js.map
+
+/***/ }),
+
+/***/ 7783:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=im.js.map
+
+/***/ }),
+
+/***/ 4573:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__nccwpck_require__(4854), exports);
+__exportStar(__nccwpck_require__(2149), exports);
+__exportStar(__nccwpck_require__(6077), exports);
+__exportStar(__nccwpck_require__(674), exports);
+__exportStar(__nccwpck_require__(3147), exports);
+__exportStar(__nccwpck_require__(245), exports);
+__exportStar(__nccwpck_require__(9679), exports);
+__exportStar(__nccwpck_require__(9335), exports);
+__exportStar(__nccwpck_require__(365), exports);
+__exportStar(__nccwpck_require__(9660), exports);
+__exportStar(__nccwpck_require__(6850), exports);
+__exportStar(__nccwpck_require__(7783), exports);
+__exportStar(__nccwpck_require__(8324), exports);
+__exportStar(__nccwpck_require__(2199), exports);
+__exportStar(__nccwpck_require__(495), exports);
+__exportStar(__nccwpck_require__(6286), exports);
+__exportStar(__nccwpck_require__(1710), exports);
+__exportStar(__nccwpck_require__(5710), exports);
+__exportStar(__nccwpck_require__(4178), exports);
+__exportStar(__nccwpck_require__(7662), exports);
+__exportStar(__nccwpck_require__(7145), exports);
+__exportStar(__nccwpck_require__(8064), exports);
+__exportStar(__nccwpck_require__(8974), exports);
+__exportStar(__nccwpck_require__(5876), exports);
+__exportStar(__nccwpck_require__(6000), exports);
+__exportStar(__nccwpck_require__(5906), exports);
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+
+/***/ 8324:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=invite.js.map
+
+/***/ }),
+
+/***/ 2199:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=link-shared.js.map
+
+/***/ }),
+
+/***/ 495:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=member.js.map
+
+/***/ }),
+
+/***/ 1710:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=message-metadata.js.map
+
+/***/ }),
+
+/***/ 6286:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=message.js.map
+
+/***/ }),
+
+/***/ 5710:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=pin.js.map
+
+/***/ }),
+
+/***/ 4178:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=reaction.js.map
+
+/***/ }),
+
+/***/ 7662:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=shared-channel.js.map
+
+/***/ }),
+
+/***/ 7145:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=star.js.map
+
+/***/ }),
+
+/***/ 8064:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=steps-from-apps.js.map
+
+/***/ }),
+
+/***/ 8974:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=subteam.js.map
+
+/***/ }),
+
+/***/ 5876:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=team.js.map
+
+/***/ }),
+
+/***/ 6000:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=token.js.map
+
+/***/ }),
+
+/***/ 5906:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=user.js.map
 
 /***/ }),
 
@@ -4709,15 +5019,16 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__nccwpck_require__(9110), exports);
-__exportStar(__nccwpck_require__(5523), exports);
-__exportStar(__nccwpck_require__(6999), exports);
-__exportStar(__nccwpck_require__(5723), exports);
-__exportStar(__nccwpck_require__(7445), exports);
+__exportStar(__nccwpck_require__(4591), exports);
 __exportStar(__nccwpck_require__(1356), exports);
 __exportStar(__nccwpck_require__(3819), exports);
-__exportStar(__nccwpck_require__(4591), exports);
 __exportStar(__nccwpck_require__(4148), exports);
+__exportStar(__nccwpck_require__(9110), exports);
+__exportStar(__nccwpck_require__(5523), exports);
+__exportStar(__nccwpck_require__(4573), exports);
+__exportStar(__nccwpck_require__(5723), exports);
+__exportStar(__nccwpck_require__(6999), exports);
+__exportStar(__nccwpck_require__(7445), exports);
 //# sourceMappingURL=index.js.map
 
 /***/ }),
@@ -4819,6 +5130,17 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
     function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
     function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -4835,6 +5157,7 @@ const is_electron_1 = __importDefault(__nccwpck_require__(201));
 const is_stream_1 = __importDefault(__nccwpck_require__(6543));
 const p_queue_1 = __importDefault(__nccwpck_require__(6459));
 const p_retry_1 = __importStar(__nccwpck_require__(2103));
+const chat_stream_1 = __nccwpck_require__(7760);
 const errors_1 = __nccwpck_require__(8486);
 const file_upload_1 = __nccwpck_require__(2577);
 const helpers_1 = __importDefault(__nccwpck_require__(4060));
@@ -5065,6 +5388,37 @@ class WebClient extends methods_1.Methods {
             }
             return accumulator;
         }))();
+    }
+    /**
+     * Stream markdown text into a conversation.
+     *
+     * @description The "chatStream" method starts a new chat stream in a conversation that can be appended to. After appending an entire message, the stream can be stopped with concluding arguments such as "blocks" for gathering feedback.
+     *
+     * @example
+     * const streamer = client.chatStream({
+     *   channel: "C0123456789",
+     *   thread_ts: "1700000001.123456",
+     *   recipient_team_id: "T0123456789",
+     *   recipient_user_id: "U0123456789",
+     * });
+     * await streamer.append({
+     *   markdown_text: "**hello wo",
+     * });
+     * await streamer.append({
+     *   markdown_text: "rld!**",
+     * });
+     * await streamer.stop();
+     *
+     * @see {@link https://docs.slack.dev/reference/methods/chat.startStream}
+     * @see {@link https://docs.slack.dev/reference/methods/chat.appendStream}
+     * @see {@link https://docs.slack.dev/reference/methods/chat.stopStream}
+     */
+    chatStream(params) {
+        const { buffer_size } = params, args = __rest(params, ["buffer_size"]);
+        const options = {
+            buffer_size,
+        };
+        return new chat_stream_1.ChatStreamer(this, this.logger, args, options);
     }
     /**
      * This wrapper method provides an easy way to upload files using the following endpoints:
@@ -5554,6 +5908,162 @@ function redact(body) {
     }, initialValue);
 }
 //# sourceMappingURL=WebClient.js.map
+
+/***/ }),
+
+/***/ 7760:
+/***/ (function(__unused_webpack_module, exports) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ChatStreamer = void 0;
+class ChatStreamer {
+    /**
+     * Instantiate a new chat streamer.
+     *
+     * @description The "constructor" method creates a unique {@link ChatStreamer} instance that keeps track of one chat stream.
+     * @example
+     * const client = new WebClient(process.env.SLACK_BOT_TOKEN);
+     * const logger = new ConsoleLogger();
+     * const args = {
+     *   channel: "C0123456789",
+     *   thread_ts: "1700000001.123456",
+     *   recipient_team_id: "T0123456789",
+     *   recipient_user_id: "U0123456789",
+     * };
+     * const streamer = new ChatStreamer(client, logger, args, { buffer_size: 512 });
+     * await streamer.append({
+     *   markdown_text: "**hello world!**",
+     * });
+     * await streamer.stop();
+     * @see {@link https://docs.slack.dev/reference/methods/chat.startStream}
+     * @see {@link https://docs.slack.dev/reference/methods/chat.appendStream}
+     * @see {@link https://docs.slack.dev/reference/methods/chat.stopStream}
+     */
+    constructor(client, logger, args, options) {
+        var _a;
+        this.buffer = '';
+        this.client = client;
+        this.logger = logger;
+        this.options = {
+            buffer_size: (_a = options.buffer_size) !== null && _a !== void 0 ? _a : 256,
+        };
+        this.state = 'starting';
+        this.streamArgs = args;
+    }
+    /**
+     * Append to the stream.
+     *
+     * @description The "append" method appends to the chat stream being used. This method can be called multiple times. After the stream is stopped this method cannot be called.
+     * @example
+     * const streamer = client.chatStream({
+     *   channel: "C0123456789",
+     *   thread_ts: "1700000001.123456",
+     *   recipient_team_id: "T0123456789",
+     *   recipient_user_id: "U0123456789",
+     * });
+     * await streamer.append({
+     *   markdown_text: "**hello wo",
+     * });
+     * await streamer.append({
+     *   markdown_text: "rld!**",
+     * });
+     * await streamer.stop();
+     * @see {@link https://docs.slack.dev/reference/methods/chat.appendStream}
+     */
+    append(args) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.state === 'completed') {
+                throw new Error(`failed to append stream: stream state is ${this.state}`);
+            }
+            if (args.token) {
+                this.token = args.token;
+            }
+            this.buffer += args.markdown_text;
+            if (this.buffer.length >= this.options.buffer_size) {
+                return yield this.flushBuffer(args);
+            }
+            const details = {
+                bufferLength: this.buffer.length,
+                bufferSize: this.options.buffer_size,
+                channel: this.streamArgs.channel,
+                recipientTeamId: this.streamArgs.recipient_team_id,
+                recipientUserId: this.streamArgs.recipient_user_id,
+                threadTs: this.streamArgs.thread_ts,
+            };
+            this.logger.debug(`ChatStreamer appended to buffer: ${JSON.stringify(details)}`);
+            return null;
+        });
+    }
+    /**
+     * Stop the stream and finalize the message.
+     *
+     * @description The "stop" method stops the chat stream being used. This method can be called once to end the stream. Additional "blocks" and "metadata" can be provided.
+     *
+     * @example
+     * const streamer = client.chatStream({
+     *   channel: "C0123456789",
+     *   thread_ts: "1700000001.123456",
+     *   recipient_team_id: "T0123456789",
+     *   recipient_user_id: "U0123456789",
+     * });
+     * await streamer.append({
+     *   markdown_text: "**hello world!**",
+     * });
+     * await streamer.stop();
+     * @see {@link https://docs.slack.dev/reference/methods/chat.stopStream}
+     */
+    stop(args) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.state === 'completed') {
+                throw new Error(`failed to stop stream: stream state is ${this.state}`);
+            }
+            if (args === null || args === void 0 ? void 0 : args.token) {
+                this.token = args.token;
+            }
+            if (args === null || args === void 0 ? void 0 : args.markdown_text) {
+                this.buffer += args.markdown_text;
+            }
+            if (!this.streamTs) {
+                const response = yield this.client.chat.startStream(Object.assign(Object.assign({}, this.streamArgs), { token: this.token }));
+                if (!response.ts) {
+                    throw new Error('failed to stop stream: stream not started');
+                }
+                this.streamTs = response.ts;
+                this.state = 'in_progress';
+            }
+            const response = yield this.client.chat.stopStream(Object.assign(Object.assign({ token: this.token, channel: this.streamArgs.channel, ts: this.streamTs }, args), { markdown_text: this.buffer }));
+            this.state = 'completed';
+            return response;
+        });
+    }
+    flushBuffer(args) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.streamTs) {
+                const response = yield this.client.chat.startStream(Object.assign(Object.assign(Object.assign(Object.assign({}, this.streamArgs), { token: this.token }), args), { markdown_text: this.buffer }));
+                this.buffer = '';
+                this.streamTs = response.ts;
+                this.state = 'in_progress';
+                return response;
+            }
+            const response = yield this.client.chat.appendStream(Object.assign(Object.assign({ token: this.token, channel: this.streamArgs.channel, ts: this.streamTs }, args), { markdown_text: this.buffer }));
+            this.buffer = '';
+            return response;
+        });
+    }
+}
+exports.ChatStreamer = ChatStreamer;
+//# sourceMappingURL=chat-stream.js.map
 
 /***/ }),
 
@@ -6994,6 +7504,10 @@ class Methods extends eventemitter3_1.EventEmitter {
         };
         this.chat = {
             /**
+             * @description Appends text to an existing streaming conversation.
+             */
+            appendStream: bindApiCall(this, 'chat.appendStream'),
+            /**
              * @description Deletes a message.
              * @see {@link https://docs.slack.dev/reference/methods/chat.delete `chat.delete` API reference}.
              */
@@ -7035,6 +7549,14 @@ class Methods extends eventemitter3_1.EventEmitter {
                  */
                 list: bindApiCallWithOptionalArgument(this, 'chat.scheduledMessages.list'),
             },
+            /**
+             * @description Starts a new streaming conversation.
+             */
+            startStream: bindApiCall(this, 'chat.startStream'),
+            /**
+             * @description Stops a streaming conversation.
+             */
+            stopStream: bindApiCall(this, 'chat.stopStream'),
             /**
              * @description Provide custom unfurl behavior for user-posted URLs.
              * @see {@link https://docs.slack.dev/reference/methods/chat.unfurl `chat.unfurl` API reference}.
@@ -7290,7 +7812,7 @@ class Methods extends eventemitter3_1.EventEmitter {
              * - multiple upload_files
              * Will try to honor both single file or content data supplied as well
              * as multiple file uploads property.
-             * @see {@link https://tools.slack.dev/node-slack-sdk/web-api#upload-a-file `@slack/web-api` Upload a file documentation}.
+             * @see {@link https://docs.slack.dev/tools/node-slack-sdk/web-api/#upload-a-file `@slack/web-api` Upload a file documentation}.
              */
             uploadV2: bindFilesUploadV2(this),
             comments: {
@@ -20735,7 +21257,7 @@ module.exports = axios;
 /***/ ((module) => {
 
 "use strict";
-module.exports = /*#__PURE__*/JSON.parse('{"name":"@slack/web-api","version":"7.10.0","description":"Official library for using the Slack Platform\'s Web API","author":"Slack Technologies, LLC","license":"MIT","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"main":"dist/index.js","types":"./dist/index.d.ts","files":["dist/**/*"],"engines":{"node":">= 18","npm":">= 8.6.0"},"repository":"slackapi/node-slack-sdk","homepage":"https://tools.slack.dev/node-slack-sdk/web-api","publishConfig":{"access":"public"},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"scripts":{"prepare":"npm run build","build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist ./coverage","docs":"npx typedoc --plugin typedoc-plugin-markdown","lint":"npx @biomejs/biome check .","lint:fix":"npx @biomejs/biome check --write .","mocha":"mocha --config ./test/.mocharc.json \\"./src/**/*.spec.ts\\"","test":"npm run lint && npm run test:types && npm run test:integration && npm run test:unit","test:integration":"npm run build && node test/integration/commonjs-project/index.js && node test/integration/esm-project/index.mjs && npm run test:integration:ts","test:integration:ts":"cd test/integration/ts-4.7-project && npm i && npm run build","test:unit":"npm run build && c8 --config ./test/.c8rc.json npm run mocha","test:types":"tsd","watch":"npx nodemon --watch \'src\' --ext \'ts\' --exec npm run build"},"dependencies":{"@slack/logger":"^4.0.0","@slack/types":"^2.9.0","@types/node":">=18.0.0","@types/retry":"0.12.0","axios":"^1.11.0","eventemitter3":"^5.0.1","form-data":"^4.0.4","is-electron":"2.2.2","is-stream":"^2","p-queue":"^6","p-retry":"^4","retry":"^0.13.1"},"devDependencies":{"@biomejs/biome":"^2.0.5","@tsconfig/recommended":"^1","@types/busboy":"^1.5.4","@types/chai":"^4","@types/mocha":"^10","@types/sinon":"^17","busboy":"^1","c8":"^10.1.2","chai":"^4","mocha":"^11","mocha-junit-reporter":"^2.2.1","mocha-multi-reporters":"^1.5.1","nock":"^14","shx":"^0.4.0","sinon":"^21","source-map-support":"^0.5.21","ts-node":"^10","tsd":"^0.33.0","typedoc":"^0.28.7","typedoc-plugin-markdown":"^4.7.1","typescript":"5.9.2"},"tsd":{"directory":"test/types"}}');
+module.exports = /*#__PURE__*/JSON.parse('{"name":"@slack/web-api","version":"7.11.0","description":"Official library for using the Slack Platform\'s Web API","author":"Slack Technologies, LLC","license":"MIT","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"main":"dist/index.js","types":"./dist/index.d.ts","files":["dist/**/*"],"engines":{"node":">= 18","npm":">= 8.6.0"},"repository":"slackapi/node-slack-sdk","homepage":"https://docs.slack.dev/tools/node-slack-sdk/web-api/","publishConfig":{"access":"public"},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"scripts":{"prepare":"npm run build","build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist ./coverage","docs":"npx typedoc --plugin typedoc-plugin-markdown","lint":"npx @biomejs/biome check .","lint:fix":"npx @biomejs/biome check --write .","mocha":"mocha --config ./test/.mocharc.json \\"./src/**/*.spec.ts\\"","test":"npm run lint && npm run test:types && npm run test:integration && npm run test:unit","test:integration":"npm run build && node test/integration/commonjs-project/index.js && node test/integration/esm-project/index.mjs && npm run test:integration:ts","test:integration:ts":"cd test/integration/ts-4.7-project && npm i && npm run build","test:unit":"npm run build && c8 --config ./test/.c8rc.json npm run mocha","test:types":"tsd","watch":"npx nodemon --watch \'src\' --ext \'ts\' --exec npm run build"},"dependencies":{"@slack/logger":"^4.0.0","@slack/types":"^2.17.0","@types/node":">=18.0.0","@types/retry":"0.12.0","axios":"^1.11.0","eventemitter3":"^5.0.1","form-data":"^4.0.4","is-electron":"2.2.2","is-stream":"^2","p-queue":"^6","p-retry":"^4","retry":"^0.13.1"},"devDependencies":{"@biomejs/biome":"^2.0.5","@tsconfig/recommended":"^1","@types/busboy":"^1.5.4","@types/chai":"^4","@types/mocha":"^10","@types/sinon":"^17","busboy":"^1","c8":"^10.1.2","chai":"^4","mocha":"^11","mocha-junit-reporter":"^2.2.1","mocha-multi-reporters":"^1.5.1","nock":"^14","shx":"^0.4.0","sinon":"^21","source-map-support":"^0.5.21","ts-node":"^10","tsd":"^0.33.0","typedoc":"^0.28.7","typedoc-plugin-markdown":"^4.7.1","typescript":"5.9.3"},"tsd":{"directory":"test/types"}}');
 
 /***/ }),
 
