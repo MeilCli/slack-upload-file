@@ -5049,6 +5049,27 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CustomFieldType = exports.EntityType = void 0;
+var EntityType;
+(function (EntityType) {
+    EntityType["Task"] = "slack#/entities/task";
+    EntityType["File"] = "slack#/entities/file";
+    EntityType["Item"] = "slack#/entities/item";
+    EntityType["Incident"] = "slack#/entities/incident";
+    EntityType["ContentItem"] = "slack#/entities/content_item";
+})(EntityType || (exports.EntityType = EntityType = {}));
+var CustomFieldType;
+(function (CustomFieldType) {
+    CustomFieldType["Integer"] = "integer";
+    CustomFieldType["String"] = "string";
+    CustomFieldType["Array"] = "array";
+    CustomFieldType["Date"] = "slack#/types/date";
+    CustomFieldType["Timestamp"] = "slack#/types/timestamp";
+    CustomFieldType["Image"] = "slack#/types/image";
+    CustomFieldType["ChannelId"] = "slack#/types/channel_id";
+    CustomFieldType["User"] = "slack#/types/user";
+    CustomFieldType["EntityRef"] = "slack#/types/entity_ref";
+})(CustomFieldType || (exports.CustomFieldType = CustomFieldType = {}));
 //# sourceMappingURL=message-metadata.js.map
 
 /***/ }),
@@ -7758,6 +7779,13 @@ class Methods extends eventemitter3_1.EventEmitter {
              * @see {@link https://docs.slack.dev/reference/methods/emoji.list `emoji.list` API reference}.
              */
             list: bindApiCallWithOptionalArgument(this, 'emoji.list'),
+        };
+        this.entity = {
+            /**
+             * @description Provide information about the entity to be displayed in the flexpane.
+             * @see {@link https://docs.slack.dev/reference/methods/entity.presentDetails}
+             */
+            presentDetails: bindApiCall(this, 'entity.presentDetails'),
         };
         this.files = {
             /**
@@ -21257,7 +21285,7 @@ module.exports = axios;
 /***/ ((module) => {
 
 "use strict";
-module.exports = /*#__PURE__*/JSON.parse('{"name":"@slack/web-api","version":"7.11.0","description":"Official library for using the Slack Platform\'s Web API","author":"Slack Technologies, LLC","license":"MIT","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"main":"dist/index.js","types":"./dist/index.d.ts","files":["dist/**/*"],"engines":{"node":">= 18","npm":">= 8.6.0"},"repository":"slackapi/node-slack-sdk","homepage":"https://docs.slack.dev/tools/node-slack-sdk/web-api/","publishConfig":{"access":"public"},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"scripts":{"prepare":"npm run build","build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist ./coverage","docs":"npx typedoc --plugin typedoc-plugin-markdown","lint":"npx @biomejs/biome check .","lint:fix":"npx @biomejs/biome check --write .","mocha":"mocha --config ./test/.mocharc.json \\"./src/**/*.spec.ts\\"","test":"npm run lint && npm run test:types && npm run test:integration && npm run test:unit","test:integration":"npm run build && node test/integration/commonjs-project/index.js && node test/integration/esm-project/index.mjs && npm run test:integration:ts","test:integration:ts":"cd test/integration/ts-4.7-project && npm i && npm run build","test:unit":"npm run build && c8 --config ./test/.c8rc.json npm run mocha","test:types":"tsd","watch":"npx nodemon --watch \'src\' --ext \'ts\' --exec npm run build"},"dependencies":{"@slack/logger":"^4.0.0","@slack/types":"^2.17.0","@types/node":">=18.0.0","@types/retry":"0.12.0","axios":"^1.11.0","eventemitter3":"^5.0.1","form-data":"^4.0.4","is-electron":"2.2.2","is-stream":"^2","p-queue":"^6","p-retry":"^4","retry":"^0.13.1"},"devDependencies":{"@biomejs/biome":"^2.0.5","@tsconfig/recommended":"^1","@types/busboy":"^1.5.4","@types/chai":"^4","@types/mocha":"^10","@types/sinon":"^17","busboy":"^1","c8":"^10.1.2","chai":"^4","mocha":"^11","mocha-junit-reporter":"^2.2.1","mocha-multi-reporters":"^1.5.1","nock":"^14","shx":"^0.4.0","sinon":"^21","source-map-support":"^0.5.21","ts-node":"^10","tsd":"^0.33.0","typedoc":"^0.28.7","typedoc-plugin-markdown":"^4.7.1","typescript":"5.9.3"},"tsd":{"directory":"test/types"}}');
+module.exports = /*#__PURE__*/JSON.parse('{"name":"@slack/web-api","version":"7.12.0","description":"Official library for using the Slack Platform\'s Web API","author":"Slack Technologies, LLC","license":"MIT","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"main":"dist/index.js","types":"./dist/index.d.ts","files":["dist/**/*"],"engines":{"node":">= 18","npm":">= 8.6.0"},"repository":"slackapi/node-slack-sdk","homepage":"https://docs.slack.dev/tools/node-slack-sdk/web-api/","publishConfig":{"access":"public"},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"scripts":{"prepare":"npm run build","build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist ./coverage","docs":"npx typedoc --plugin typedoc-plugin-markdown","lint":"npx @biomejs/biome check .","lint:fix":"npx @biomejs/biome check --write .","mocha":"mocha --config ./test/.mocharc.json \\"./src/**/*.spec.ts\\"","test":"npm run lint && npm run test:types && npm run test:integration && npm run test:unit","test:integration":"npm run build && node test/integration/commonjs-project/index.js && node test/integration/esm-project/index.mjs && npm run test:integration:ts","test:integration:ts":"cd test/integration/ts-4.7-project && npm i && npm run build","test:unit":"npm run build && c8 --config ./test/.c8rc.json npm run mocha","test:types":"tsd","watch":"npx nodemon --watch \'src\' --ext \'ts\' --exec npm run build"},"dependencies":{"@slack/logger":"^4.0.0","@slack/types":"^2.18.0","@types/node":">=18.0.0","@types/retry":"0.12.0","axios":"^1.11.0","eventemitter3":"^5.0.1","form-data":"^4.0.4","is-electron":"2.2.2","is-stream":"^2","p-queue":"^6","p-retry":"^4","retry":"^0.13.1"},"devDependencies":{"@biomejs/biome":"^2.0.5","@tsconfig/recommended":"^1","@types/busboy":"^1.5.4","@types/chai":"^4","@types/mocha":"^10","@types/sinon":"^17","busboy":"^1","c8":"^10.1.2","chai":"^4","mocha":"^11","mocha-junit-reporter":"^2.2.1","mocha-multi-reporters":"^1.5.1","nock":"^14","shx":"^0.4.0","sinon":"^21","source-map-support":"^0.5.21","ts-node":"^10","tsd":"^0.33.0","typedoc":"^0.28.7","typedoc-plugin-markdown":"^4.7.1","typescript":"5.9.3"},"tsd":{"directory":"test/types"}}');
 
 /***/ }),
 
