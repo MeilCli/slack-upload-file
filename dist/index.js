@@ -5415,6 +5415,8 @@ class WebClient extends methods_1.Methods {
      *
      * @description The "chatStream" method starts a new chat stream in a conversation that can be appended to. After appending an entire message, the stream can be stopped with concluding arguments such as "blocks" for gathering feedback.
      *
+     * The "markdown_text" content is appended to a buffer before being sent to the recipient, with a default buffer size of "256" characters. Setting the "buffer_size" value to a smaller number sends more frequent updates for the same amount of characters, but might reach rate limits more often.
+     *
      * @example
      * const streamer = client.chatStream({
      *   channel: "C0123456789",
@@ -7526,6 +7528,7 @@ class Methods extends eventemitter3_1.EventEmitter {
         this.chat = {
             /**
              * @description Appends text to an existing streaming conversation.
+             * @see {@link https://docs.slack.dev/reference/methods/chat.appendStream `chat.appendStream` API reference}.
              */
             appendStream: bindApiCall(this, 'chat.appendStream'),
             /**
@@ -7572,10 +7575,12 @@ class Methods extends eventemitter3_1.EventEmitter {
             },
             /**
              * @description Starts a new streaming conversation.
+             * @see {@link https://docs.slack.dev/reference/methods/chat.startStream `chat.startStream` API reference}.
              */
             startStream: bindApiCall(this, 'chat.startStream'),
             /**
              * @description Stops a streaming conversation.
+             * @see {@link https://docs.slack.dev/reference/methods/chat.stopStream `chat.stopStream` API reference}.
              */
             stopStream: bindApiCall(this, 'chat.stopStream'),
             /**
@@ -8033,6 +8038,74 @@ class Methods extends eventemitter3_1.EventEmitter {
              * @see {@link https://docs.slack.dev/reference/methods/search.messages search.messages` API reference}.
              */
             messages: bindApiCall(this, 'search.messages'),
+        };
+        this.slackLists = {
+            access: {
+                /**
+                 * @description Delete access for specified entities.
+                 * @see {@link https://docs.slack.dev/reference/methods/slackLists.access.delete `slackLists.access.delete` API reference}.
+                 */
+                delete: bindApiCall(this, 'slackLists.access.delete'),
+                /**
+                 * @description Set access level for specified entities.
+                 * @see {@link https://docs.slack.dev/reference/methods/slackLists.access.set `slackLists.access.set` API reference}.
+                 */
+                set: bindApiCall(this, 'slackLists.access.set'),
+            },
+            /**
+             * @description Create a List.
+             * @see {@link https://docs.slack.dev/reference/methods/slackLists.create `slackLists.create` API reference}.
+             */
+            create: bindApiCall(this, 'slackLists.create'),
+            download: {
+                /**
+                 * @description Get download job status.
+                 * @see {@link https://docs.slack.dev/reference/methods/slackLists.download.get `slackLists.download.get` API reference}.
+                 */
+                get: bindApiCall(this, 'slackLists.download.get'),
+                /**
+                 * @description Start a download job for a list.
+                 * @see {@link https://docs.slack.dev/reference/methods/slackLists.download.start `slackLists.download.start` API reference}.
+                 */
+                start: bindApiCall(this, 'slackLists.download.start'),
+            },
+            items: {
+                /**
+                 * @description Create a list item.
+                 * @see {@link https://docs.slack.dev/reference/methods/slackLists.items.create `slackLists.items.create` API reference}.
+                 */
+                create: bindApiCall(this, 'slackLists.items.create'),
+                /**
+                 * @description Delete a list item.
+                 * @see {@link https://docs.slack.dev/reference/methods/slackLists.items.delete `slackLists.items.delete` API reference}.
+                 */
+                delete: bindApiCall(this, 'slackLists.items.delete'),
+                /**
+                 * @description Delete multiple list items.
+                 * @see {@link https://docs.slack.dev/reference/methods/slackLists.items.deleteMultiple `slackLists.items.deleteMultiple` API reference}.
+                 */
+                deleteMultiple: bindApiCall(this, 'slackLists.items.deleteMultiple'),
+                /**
+                 * @description Get info about a list item.
+                 * @see {@link https://docs.slack.dev/reference/methods/slackLists.items.info `slackLists.items.info` API reference}.
+                 */
+                info: bindApiCall(this, 'slackLists.items.info'),
+                /**
+                 * @description Get records from a List.
+                 * @see {@link https://docs.slack.dev/reference/methods/slackLists.items.list `slackLists.items.list` API reference}.
+                 */
+                list: bindApiCall(this, 'slackLists.items.list'),
+                /**
+                 * @description Update a list item.
+                 * @see {@link https://docs.slack.dev/reference/methods/slackLists.items.update `slackLists.items.update` API reference}.
+                 */
+                update: bindApiCall(this, 'slackLists.items.update'),
+            },
+            /**
+             * @description Update a list.
+             * @see {@link https://docs.slack.dev/reference/methods/slackLists.update `slackLists.update` API reference}.
+             */
+            update: bindApiCall(this, 'slackLists.update'),
         };
         this.team = {
             /**
@@ -21285,7 +21358,7 @@ module.exports = axios;
 /***/ ((module) => {
 
 "use strict";
-module.exports = /*#__PURE__*/JSON.parse('{"name":"@slack/web-api","version":"7.12.0","description":"Official library for using the Slack Platform\'s Web API","author":"Slack Technologies, LLC","license":"MIT","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"main":"dist/index.js","types":"./dist/index.d.ts","files":["dist/**/*"],"engines":{"node":">= 18","npm":">= 8.6.0"},"repository":"slackapi/node-slack-sdk","homepage":"https://docs.slack.dev/tools/node-slack-sdk/web-api/","publishConfig":{"access":"public"},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"scripts":{"prepare":"npm run build","build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist ./coverage","docs":"npx typedoc --plugin typedoc-plugin-markdown","lint":"npx @biomejs/biome check .","lint:fix":"npx @biomejs/biome check --write .","mocha":"mocha --config ./test/.mocharc.json \\"./src/**/*.spec.ts\\"","test":"npm run lint && npm run test:types && npm run test:integration && npm run test:unit","test:integration":"npm run build && node test/integration/commonjs-project/index.js && node test/integration/esm-project/index.mjs && npm run test:integration:ts","test:integration:ts":"cd test/integration/ts-4.7-project && npm i && npm run build","test:unit":"npm run build && c8 --config ./test/.c8rc.json npm run mocha","test:types":"tsd","watch":"npx nodemon --watch \'src\' --ext \'ts\' --exec npm run build"},"dependencies":{"@slack/logger":"^4.0.0","@slack/types":"^2.18.0","@types/node":">=18.0.0","@types/retry":"0.12.0","axios":"^1.11.0","eventemitter3":"^5.0.1","form-data":"^4.0.4","is-electron":"2.2.2","is-stream":"^2","p-queue":"^6","p-retry":"^4","retry":"^0.13.1"},"devDependencies":{"@biomejs/biome":"^2.0.5","@tsconfig/recommended":"^1","@types/busboy":"^1.5.4","@types/chai":"^4","@types/mocha":"^10","@types/sinon":"^17","busboy":"^1","c8":"^10.1.2","chai":"^4","mocha":"^11","mocha-junit-reporter":"^2.2.1","mocha-multi-reporters":"^1.5.1","nock":"^14","shx":"^0.4.0","sinon":"^21","source-map-support":"^0.5.21","ts-node":"^10","tsd":"^0.33.0","typedoc":"^0.28.7","typedoc-plugin-markdown":"^4.7.1","typescript":"5.9.3"},"tsd":{"directory":"test/types"}}');
+module.exports = /*#__PURE__*/JSON.parse('{"name":"@slack/web-api","version":"7.13.0","description":"Official library for using the Slack Platform\'s Web API","author":"Slack Technologies, LLC","license":"MIT","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"main":"dist/index.js","types":"./dist/index.d.ts","files":["dist/**/*"],"engines":{"node":">= 18","npm":">= 8.6.0"},"repository":"slackapi/node-slack-sdk","homepage":"https://docs.slack.dev/tools/node-slack-sdk/web-api/","publishConfig":{"access":"public"},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"scripts":{"prepare":"npm run build","build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist ./coverage","docs":"npx typedoc --plugin typedoc-plugin-markdown","lint":"npx @biomejs/biome check .","lint:fix":"npx @biomejs/biome check --write .","mocha":"mocha --config ./test/.mocharc.json \\"./src/**/*.spec.ts\\"","test":"npm run lint && npm run test:types && npm run test:integration && npm run test:unit","test:integration":"npm run build && node test/integration/commonjs-project/index.js && node test/integration/esm-project/index.mjs && npm run test:integration:ts","test:integration:ts":"cd test/integration/ts-4.7-project && npm i && npm run build","test:unit":"npm run build && c8 --config ./test/.c8rc.json npm run mocha","test:types":"tsd","watch":"npx nodemon --watch \'src\' --ext \'ts\' --exec npm run build"},"dependencies":{"@slack/logger":"^4.0.0","@slack/types":"^2.18.0","@types/node":">=18.0.0","@types/retry":"0.12.0","axios":"^1.11.0","eventemitter3":"^5.0.1","form-data":"^4.0.4","is-electron":"2.2.2","is-stream":"^2","p-queue":"^6","p-retry":"^4","retry":"^0.13.1"},"devDependencies":{"@biomejs/biome":"^2.0.5","@tsconfig/recommended":"^1","@types/busboy":"^1.5.4","@types/chai":"^4","@types/mocha":"^10","@types/sinon":"^21","busboy":"^1","c8":"^10.1.2","chai":"^4","mocha":"^11","mocha-junit-reporter":"^2.2.1","mocha-multi-reporters":"^1.5.1","nock":"^14","shx":"^0.4.0","sinon":"^21","source-map-support":"^0.5.21","ts-node":"^10","tsd":"^0.33.0","typedoc":"^0.28.7","typedoc-plugin-markdown":"^4.7.1","typescript":"5.9.3"},"tsd":{"directory":"test/types"}}');
 
 /***/ }),
 
