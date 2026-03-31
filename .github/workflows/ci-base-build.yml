@@ -26,7 +26,6 @@ jobs:
           path: |
             eslint_report.json
       - run: npm run pack
-        if: github.event_name != 'pull_request'
       - name: Create Pull Request
         if: github.event_name != 'pull_request'
         uses: peter-evans/create-pull-request@v6
