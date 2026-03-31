@@ -13,19 +13,19 @@
     "author": "",
     "license": "MIT",
     "dependencies": {
-        "@actions/core": "^1.11.1",
-        "@actions/glob": "^0.6.1",
-        "@slack/web-api": "^7.15.0"
+        "@actions/core": "1.11.1",
+        "@actions/glob": "0.6.1",
+        "@slack/web-api": "7.15.0"
     },
     "devDependencies": {
-        "@types/node": "^20.19.0",
-        "@typescript-eslint/eslint-plugin": "^8.57.2",
-        "@typescript-eslint/parser": "^8.57.2",
-        "@vercel/ncc": "^0.38.4",
-        "eslint": "^9.39.2",
-        "eslint-config-prettier": "^10.1.8",
-        "eslint-plugin-prettier": "^5.5.5",
-        "prettier": "^3.8.1",
-        "typescript": "^5.9.3"
+        "@types/node": "20.19.0",
+        "@typescript-eslint/eslint-plugin": "8.57.2",
+        "@typescript-eslint/parser": "8.57.2",
+        "@vercel/ncc": "0.38.4",
+        "eslint": "9.39.2",
+        "eslint-config-prettier": "10.1.8",
+        "eslint-plugin-prettier": "5.5.5",
+        "prettier": "3.8.1",
+        "typescript": "5.9.3"
     }
 }
