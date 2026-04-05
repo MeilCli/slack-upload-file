@@ -41,5 +41,5 @@ outputs:
   uploaded_file_ids:
     description: 'comma separated uploaded file ids'
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'dist/index.js'

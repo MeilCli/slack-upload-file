@@ -8,4 +8,6 @@ on:
 jobs:
   build:
     uses: ./.github/workflows/ci-base-build.yml
+    permissions:
+      contents: read
     secrets: inherit

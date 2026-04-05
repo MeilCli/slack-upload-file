@@ -23,16 +23,21 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
-          node-version: 20
-      - run: npm install
-      - run: npm run build
-      - uses: MeilCli/bump-release-action@master
+          node-version: 24
+      - run: pnpm install
+      - run: pnpm run build
+      - run: pnpm run pack
+      - uses: MeilCli/bump-release-action@44b5a1748bdeaaea82c8ebf9de0a1b2d2cbbfad5 # v3.0.0
         with:
           config_path: '.github/bump.yml'
           bump: ${{ github.event.inputs.bump }}
