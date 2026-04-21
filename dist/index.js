@@ -538,7 +538,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 1608:
+/***/ 7673:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -622,14 +622,14 @@ const is_electron_1 = __importDefault(__nccwpck_require__(7299));
 const is_stream_1 = __importDefault(__nccwpck_require__(2198));
 const p_queue_1 = __importDefault(__nccwpck_require__(4902));
 const p_retry_1 = __importStar(__nccwpck_require__(8081));
-const chat_stream_1 = __nccwpck_require__(9864);
-const errors_1 = __nccwpck_require__(9438);
-const file_upload_1 = __nccwpck_require__(1289);
-const helpers_1 = __importDefault(__nccwpck_require__(8948));
-const instrument_1 = __nccwpck_require__(4544);
-const logger_1 = __nccwpck_require__(457);
-const methods_1 = __nccwpck_require__(4147);
-const retry_policies_1 = __nccwpck_require__(5102);
+const chat_stream_1 = __nccwpck_require__(5769);
+const errors_1 = __nccwpck_require__(2269);
+const file_upload_1 = __nccwpck_require__(4696);
+const helpers_1 = __importDefault(__nccwpck_require__(9481));
+const instrument_1 = __nccwpck_require__(5195);
+const logger_1 = __nccwpck_require__(3954);
+const methods_1 = __nccwpck_require__(46);
+const retry_policies_1 = __nccwpck_require__(3941);
 /*
  * Helpers
  */
@@ -1362,7 +1362,7 @@ function redact(body) {
 
 /***/ }),
 
-/***/ 9864:
+/***/ 5769:
 /***/ (function(__unused_webpack_module, exports) {
 
 
@@ -1538,7 +1538,7 @@ exports.ChatStreamer = ChatStreamer;
 
 /***/ }),
 
-/***/ 9438:
+/***/ 2269:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -1624,7 +1624,7 @@ function rateLimitedErrorWithDelay(retrySec) {
 
 /***/ }),
 
-/***/ 1289:
+/***/ 4696:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 
@@ -1654,7 +1654,7 @@ exports.buildMultipleChannelsErrorMsg = buildMultipleChannelsErrorMsg;
 exports.buildInvalidFilesUploadParamError = buildInvalidFilesUploadParamError;
 const node_fs_1 = __nccwpck_require__(3024);
 const node_stream_1 = __nccwpck_require__(7075);
-const errors_1 = __nccwpck_require__(9438);
+const errors_1 = __nccwpck_require__(2269);
 async function getFileUploadJob(options, logger) {
     var _a, _b, _c, _d;
     // Validate parameters
@@ -1988,7 +1988,7 @@ function buildInvalidFilesUploadParamError() {
 
 /***/ }),
 
-/***/ 8948:
+/***/ 9481:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -2008,7 +2008,7 @@ function delay(ms) {
 
 /***/ }),
 
-/***/ 2089:
+/***/ 4540:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -2032,28 +2032,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.WebClientEvent = exports.WebClient = exports.ChatStreamer = exports.retryPolicies = exports.LogLevel = exports.addAppMetadata = exports.ErrorCode = void 0;
-var errors_1 = __nccwpck_require__(9438);
+var errors_1 = __nccwpck_require__(2269);
 Object.defineProperty(exports, "ErrorCode", ({ enumerable: true, get: function () { return errors_1.ErrorCode; } }));
-var instrument_1 = __nccwpck_require__(4544);
+var instrument_1 = __nccwpck_require__(5195);
 Object.defineProperty(exports, "addAppMetadata", ({ enumerable: true, get: function () { return instrument_1.addAppMetadata; } }));
-var logger_1 = __nccwpck_require__(457);
+var logger_1 = __nccwpck_require__(3954);
 Object.defineProperty(exports, "LogLevel", ({ enumerable: true, get: function () { return logger_1.LogLevel; } }));
-var retry_policies_1 = __nccwpck_require__(5102);
+var retry_policies_1 = __nccwpck_require__(3941);
 Object.defineProperty(exports, "retryPolicies", ({ enumerable: true, get: function () { return __importDefault(retry_policies_1).default; } }));
-__exportStar(__nccwpck_require__(8773), exports);
-__exportStar(__nccwpck_require__(6191), exports);
-var chat_stream_1 = __nccwpck_require__(9864);
+__exportStar(__nccwpck_require__(1140), exports);
+__exportStar(__nccwpck_require__(5784), exports);
+var chat_stream_1 = __nccwpck_require__(5769);
 Object.defineProperty(exports, "ChatStreamer", ({ enumerable: true, get: function () { return chat_stream_1.ChatStreamer; } }));
-var WebClient_1 = __nccwpck_require__(1608);
+var WebClient_1 = __nccwpck_require__(7673);
 Object.defineProperty(exports, "WebClient", ({ enumerable: true, get: function () { return WebClient_1.WebClient; } }));
 Object.defineProperty(exports, "WebClientEvent", ({ enumerable: true, get: function () { return WebClient_1.WebClientEvent; } }));
 // methods must be exported after WebClient
-__exportStar(__nccwpck_require__(4147), exports);
+__exportStar(__nccwpck_require__(46), exports);
 //# sourceMappingURL=index.js.map
 
 /***/ }),
 
-/***/ 4544:
+/***/ 5195:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -2095,12 +2095,24 @@ exports.addAppMetadata = addAppMetadata;
 exports.getUserAgent = getUserAgent;
 const os = __importStar(__nccwpck_require__(8161));
 const node_path_1 = __nccwpck_require__(6760);
-const packageJson = __nccwpck_require__(6925);
+const packageJson = __nccwpck_require__(9086);
 /**
  * Replaces occurrences of '/' with ':' in a string, since '/' is meaningful inside User-Agent strings as a separator.
  */
 function replaceSlashes(s) {
     return s.replace('/', ':');
+}
+const MAX_LATIN1_CODE = 0xff;
+/**
+ * Ensures a string is safe for use in HTTP headers by URI-encoding characters outside the Latin-1 (ISO-8859-1) range.
+ * Latin-1 characters (code points 0x00–0xFF) are preserved as-is; all others are percent-encoded via encodeURIComponent.
+ */
+function toLatin1Safe(s) {
+    let result = '';
+    for (const char of s) {
+        result += char.charCodeAt(0) <= MAX_LATIN1_CODE ? char : encodeURIComponent(char);
+    }
+    return result;
 }
 // TODO: for the deno build (see the `npm run build:deno` npm run script), we could replace the `os-browserify` npm
 // module shim with our own shim leveraging the deno beta compatibility layer for node's `os` module (for more info
@@ -2109,7 +2121,7 @@ function replaceSlashes(s) {
 // the `os` module deno shim to correctly report operating system from a deno runtime. Until then, the below `os`-
 // based code will report "browser/undefined" from a deno runtime.
 const baseUserAgent = `${replaceSlashes(packageJson.name)}/${packageJson.version} ` +
-    `${(0, node_path_1.basename)(process.title)}/${process.version.replace('v', '')} ` +
+    `${toLatin1Safe((0, node_path_1.basename)(process.title))}/${process.version.replace('v', '')} ` +
     `${os.platform()}/${os.release()}`;
 const appMetadata = {};
 /**
@@ -2134,7 +2146,7 @@ function getUserAgent() {
 
 /***/ }),
 
-/***/ 457:
+/***/ 3954:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 
@@ -2169,7 +2181,7 @@ function getLogger(name, level, existingLogger) {
 
 /***/ }),
 
-/***/ 4147:
+/***/ 46:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -2190,7 +2202,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Methods = void 0;
 const eventemitter3_1 = __nccwpck_require__(8400);
-const WebClient_1 = __nccwpck_require__(1608);
+const WebClient_1 = __nccwpck_require__(7673);
 /**
  * Binds a certain `method` and its (required) arguments and result types to the `apiCall` method in `WebClient`.
  */
@@ -3822,7 +3834,7 @@ __exportStar(__nccwpck_require__(7836), exports);
 
 /***/ }),
 
-/***/ 5102:
+/***/ 3941:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -3862,7 +3874,7 @@ exports["default"] = policies;
 
 /***/ }),
 
-/***/ 8773:
+/***/ 1140:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -3871,7 +3883,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 6191:
+/***/ 5784:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -6757,7 +6769,7 @@ if (true) {
 
 /***/ }),
 
-/***/ 8155:
+/***/ 8438:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 var debug;
@@ -6779,7 +6791,7 @@ module.exports = function () {
 
 /***/ }),
 
-/***/ 6676:
+/***/ 3881:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 var url = __nccwpck_require__(7016);
@@ -6788,7 +6800,7 @@ var http = __nccwpck_require__(8611);
 var https = __nccwpck_require__(5692);
 var Writable = (__nccwpck_require__(2203).Writable);
 var assert = __nccwpck_require__(2613);
-var debug = __nccwpck_require__(8155);
+var debug = __nccwpck_require__(8438);
 
 // Preventive platform detection
 // istanbul ignore next
@@ -6809,6 +6821,13 @@ try {
 catch (error) {
   useNativeURL = error.code === "ERR_INVALID_URL";
 }
+
+// HTTP headers to drop across HTTP/HTTPS and domain boundaries
+var sensitiveHeaders = [
+  "Authorization",
+  "Proxy-Authorization",
+  "Cookie",
+];
 
 // URL fields to preserve in copy operations
 var preservedUrlFields = [
@@ -6890,6 +6909,11 @@ function RedirectableRequest(options, responseCallback) {
         cause : new RedirectionError({ cause: cause }));
     }
   };
+
+  // Create filter for sensitive HTTP headers
+  this._headerFilter = new RegExp("^(?:" +
+      sensitiveHeaders.concat(options.sensitiveHeaders).map(escapeRegex).join("|") +
+    ")$", "i");
 
   // Perform the first request
   this._performRequest();
@@ -7074,6 +7098,9 @@ RedirectableRequest.prototype._sanitizeOptions = function (options) {
   if (!options.headers) {
     options.headers = {};
   }
+  if (!isArray(options.sensitiveHeaders)) {
+    options.sensitiveHeaders = [];
+  }
 
   // Since http.request treats host as an alias of hostname,
   // but the url module interprets host as hostname plus port,
@@ -7256,7 +7283,7 @@ RedirectableRequest.prototype._processResponse = function (response) {
      redirectUrl.protocol !== "https:" ||
      redirectUrl.host !== currentHost &&
      !isSubdomain(redirectUrl.host, currentHost)) {
-    removeMatchingHeaders(/^(?:(?:proxy-)?authorization|cookie)$/i, this._options.headers);
+    removeMatchingHeaders(this._headerFilter, this._options.headers);
   }
 
   // Evaluate the beforeRedirect callback
@@ -7449,6 +7476,10 @@ function isSubdomain(subdomain, domain) {
   return dot > 0 && subdomain[dot] === "." && subdomain.endsWith(domain);
 }
 
+function isArray(value) {
+  return value instanceof Array;
+}
+
 function isString(value) {
   return typeof value === "string" || value instanceof String;
 }
@@ -7463,6 +7494,10 @@ function isBuffer(value) {
 
 function isURL(value) {
   return URL && value instanceof URL;
+}
+
+function escapeRegex(regex) {
+  return regex.replace(/[\]\\/()*+?.$]/g, "\\$&");
 }
 
 // Exports
@@ -8832,7 +8867,7 @@ module.exports = function sign(number) {
 
 /***/ }),
 
-/***/ 8572:
+/***/ 6191:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 /*!
@@ -8868,7 +8903,7 @@ module.exports = __nccwpck_require__(7080)
  * @private
  */
 
-var db = __nccwpck_require__(8572)
+var db = __nccwpck_require__(6191)
 var extname = (__nccwpck_require__(6928).extname)
 
 /**
@@ -39171,7 +39206,7 @@ var http = __nccwpck_require__(8611);
 var https = __nccwpck_require__(5692);
 var http2 = __nccwpck_require__(5675);
 var util = __nccwpck_require__(9023);
-var followRedirects = __nccwpck_require__(6676);
+var followRedirects = __nccwpck_require__(3881);
 var zlib = __nccwpck_require__(3106);
 var stream = __nccwpck_require__(2203);
 var events = __nccwpck_require__(4434);
@@ -43976,10 +44011,10 @@ module.exports = axios;
 
 /***/ }),
 
-/***/ 6925:
+/***/ 9086:
 /***/ ((module) => {
 
-module.exports = /*#__PURE__*/JSON.parse('{"name":"@slack/web-api","version":"7.15.0","description":"Official library for using the Slack Platform\'s Web API","author":"Slack Technologies, LLC","license":"MIT","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"main":"dist/index.js","types":"./dist/index.d.ts","files":["dist/**/*"],"engines":{"node":">= 18","npm":">= 8.6.0"},"repository":{"type":"git","url":"git+https://github.com/slackapi/node-slack-sdk.git"},"homepage":"https://docs.slack.dev/tools/node-slack-sdk/web-api/","publishConfig":{"access":"public"},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"scripts":{"build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist","docs":"npx typedoc --plugin typedoc-plugin-markdown","prepack":"npm run build","test":"npm run test:unit","test:node18":"npm run build && bash -c \'node --test --test-reporter=spec --import tsx src/*.test.ts\'","test:integration":"npm run build && node test/integration/commonjs-project/index.js && node test/integration/esm-project/index.mjs && npm run test:integration:ts","test:integration:ts":"cd test/integration/ts-4.7-project && npm i && npm run build","test:types":"tsd","test:unit":"npm run build && node --experimental-test-coverage --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=lcov.info --test-reporter=junit --test-reporter-destination=test-results.xml --import tsx --test src/*.test.ts","watch":"npx nodemon --watch \'src\' --ext \'ts\' --exec npm run build"},"dependencies":{"@slack/logger":"^4.0.1","@slack/types":"^2.20.1","@types/node":">=18","@types/retry":"0.12.0","axios":"^1.13.5","eventemitter3":"^5.0.1","form-data":"^4.0.4","is-electron":"2.2.2","is-stream":"^2","p-queue":"^6","p-retry":"^4","retry":"^0.13.1"},"devDependencies":{"@types/busboy":"^1.5.4","@types/sinon":"^21","busboy":"^1","nock":"^14","sinon":"^21","tsd":"^0.33.0"},"tsd":{"directory":"test/types"}}');
+module.exports = /*#__PURE__*/JSON.parse('{"name":"@slack/web-api","version":"7.15.1","description":"Official library for using the Slack Platform\'s Web API","author":"Slack Technologies, LLC","license":"MIT","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"main":"dist/index.js","types":"./dist/index.d.ts","files":["dist/**/*"],"engines":{"node":">= 18","npm":">= 8.6.0"},"repository":{"type":"git","url":"git+https://github.com/slackapi/node-slack-sdk.git"},"homepage":"https://docs.slack.dev/tools/node-slack-sdk/web-api/","publishConfig":{"access":"public"},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"scripts":{"build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist","docs":"npx typedoc --plugin typedoc-plugin-markdown","prepack":"npm run build","test":"npm run test:unit","test:node18":"npm run build && bash -c \'node --test --test-reporter=spec --import tsx src/*.test.ts\'","test:integration":"npm run build && node test/integration/commonjs-project/index.js && node test/integration/esm-project/index.mjs && npm run test:integration:ts","test:integration:ts":"cd test/integration/ts-4.7-project && npm i && npm run build","test:types":"tsd","test:unit":"npm run build && node --experimental-test-coverage --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=lcov.info --test-reporter=junit --test-reporter-destination=test-results.xml --import tsx --test src/*.test.ts","watch":"npx nodemon --watch \'src\' --ext \'ts\' --exec npm run build"},"dependencies":{"@slack/logger":"^4.0.1","@slack/types":"^2.20.1","@types/node":">=18","@types/retry":"0.12.0","axios":"^1.15.0","eventemitter3":"^5.0.1","form-data":"^4.0.4","is-electron":"2.2.2","is-stream":"^2","p-queue":"^6","p-retry":"^4","retry":"^0.13.1"},"devDependencies":{"@types/busboy":"^1.5.4","@types/sinon":"^21","busboy":"^1","nock":"^14","sinon":"^21","tsd":"^0.33.0"},"tsd":{"directory":"test/types"}}');
 
 /***/ }),
 
@@ -47938,8 +47973,8 @@ function glob_hashFiles(patterns_1) {
     });
 }
 //# sourceMappingURL=glob.js.map
-// EXTERNAL MODULE: ./node_modules/.pnpm/@slack+web-api@7.15.0/node_modules/@slack/web-api/dist/index.js
-var dist = __nccwpck_require__(2089);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@slack+web-api@7.15.1/node_modules/@slack/web-api/dist/index.js
+var dist = __nccwpck_require__(4540);
 ;// CONCATENATED MODULE: ./lib/main.js
 
 
