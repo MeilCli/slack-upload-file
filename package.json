@@ -22,7 +22,7 @@
         "@eslint/eslintrc": "3.3.5",
         "@eslint/js": "10.0.1",
         "@types/node": "25.6.0",
-        "@typescript-eslint/eslint-plugin": "8.58.2",
+        "@typescript-eslint/eslint-plugin": "8.59.0",
         "@typescript-eslint/parser": "8.59.0",
         "@vercel/ncc": "0.38.4",
         "eslint": "10.2.1",
