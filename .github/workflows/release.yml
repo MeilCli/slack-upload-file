@@ -37,7 +37,6 @@ jobs:
       - run: pnpm install
       - run: pnpm run build
       - run: pnpm run pack
-      - run: git diff dist/index.js
       - uses: MeilCli/bump-release-action@f0fc7238ed56f8fc8737400ef3a29d91faee63a5 # v3.0.2
         with:
           config_path: '.github/bump.yml'
