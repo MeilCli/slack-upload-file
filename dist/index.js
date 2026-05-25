@@ -47120,7 +47120,7 @@ const range = (a, b, str) => {
     return result;
 };
 //# sourceMappingURL=index.js.map
-;// CONCATENATED MODULE: ./node_modules/.pnpm/brace-expansion@5.0.5/node_modules/brace-expansion/dist/esm/index.js
+;// CONCATENATED MODULE: ./node_modules/.pnpm/brace-expansion@5.0.6/node_modules/brace-expansion/dist/esm/index.js
 
 const escSlash = '\0SLASH' + Math.random() + '\0';
 const escOpen = '\0OPEN' + Math.random() + '\0';
@@ -47274,7 +47274,7 @@ function expand_(str, max, isTop) {
             }
             const pad = n.some(isPadded);
             N = [];
-            for (let i = x; test(i, y); i += incr) {
+            for (let i = x; test(i, y) && N.length < max; i += incr) {
                 let c;
                 if (isAlphaSequence) {
                     c = String.fromCharCode(i);
