@@ -16,7 +16,7 @@
     "dependencies": {
         "@actions/core": "3.0.1",
         "@actions/glob": "0.7.0",
-        "@slack/web-api": "7.17.0"
+        "@slack/web-api": "7.18.0"
     },
     "devDependencies": {
         "@eslint/eslintrc": "3.3.5",
