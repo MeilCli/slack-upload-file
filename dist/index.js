@@ -101,7 +101,7 @@ ConsoleLogger.severity = {
 
 /***/ }),
 
-/***/ 6452:
+/***/ 3918:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -111,7 +111,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 5179:
+/***/ 1153:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -120,7 +120,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 3278:
+/***/ 848:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -130,7 +130,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 4487:
+/***/ 4941:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -139,7 +139,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 5763:
+/***/ 8569:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -151,7 +151,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 6579:
+/***/ 5717:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -160,7 +160,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 16:
+/***/ 1626:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -169,7 +169,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 8141:
+/***/ 487:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -178,7 +178,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 5942:
+/***/ 3032:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -187,7 +187,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 7447:
+/***/ 9126:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -196,7 +196,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 9881:
+/***/ 8543:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -205,7 +205,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 3960:
+/***/ 70:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -214,7 +214,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 5270:
+/***/ 3752:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -223,7 +223,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 3408:
+/***/ 5538:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -232,7 +232,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 4826:
+/***/ 3516:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -242,7 +242,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 2836:
+/***/ 4406:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -251,7 +251,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 2277:
+/***/ 3467:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -260,7 +260,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 281:
+/***/ 8039:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -269,7 +269,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 9502:
+/***/ 5412:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -278,7 +278,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 6254:
+/***/ 7220:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -297,37 +297,37 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__nccwpck_require__(8141), exports);
-__exportStar(__nccwpck_require__(5942), exports);
-__exportStar(__nccwpck_require__(7447), exports);
-__exportStar(__nccwpck_require__(9881), exports);
-__exportStar(__nccwpck_require__(3960), exports);
-__exportStar(__nccwpck_require__(5270), exports);
-__exportStar(__nccwpck_require__(3408), exports);
-__exportStar(__nccwpck_require__(4826), exports);
-__exportStar(__nccwpck_require__(2836), exports);
-__exportStar(__nccwpck_require__(2277), exports);
-__exportStar(__nccwpck_require__(281), exports);
-__exportStar(__nccwpck_require__(9502), exports);
-__exportStar(__nccwpck_require__(8997), exports);
-__exportStar(__nccwpck_require__(7060), exports);
-__exportStar(__nccwpck_require__(2934), exports);
-__exportStar(__nccwpck_require__(8009), exports);
-__exportStar(__nccwpck_require__(9643), exports);
-__exportStar(__nccwpck_require__(3497), exports);
-__exportStar(__nccwpck_require__(9755), exports);
-__exportStar(__nccwpck_require__(2727), exports);
-__exportStar(__nccwpck_require__(6520), exports);
-__exportStar(__nccwpck_require__(9975), exports);
-__exportStar(__nccwpck_require__(4717), exports);
-__exportStar(__nccwpck_require__(8233), exports);
-__exportStar(__nccwpck_require__(7640), exports);
-__exportStar(__nccwpck_require__(7035), exports);
+__exportStar(__nccwpck_require__(487), exports);
+__exportStar(__nccwpck_require__(3032), exports);
+__exportStar(__nccwpck_require__(9126), exports);
+__exportStar(__nccwpck_require__(8543), exports);
+__exportStar(__nccwpck_require__(70), exports);
+__exportStar(__nccwpck_require__(3752), exports);
+__exportStar(__nccwpck_require__(5538), exports);
+__exportStar(__nccwpck_require__(3516), exports);
+__exportStar(__nccwpck_require__(4406), exports);
+__exportStar(__nccwpck_require__(3467), exports);
+__exportStar(__nccwpck_require__(8039), exports);
+__exportStar(__nccwpck_require__(5412), exports);
+__exportStar(__nccwpck_require__(2627), exports);
+__exportStar(__nccwpck_require__(4598), exports);
+__exportStar(__nccwpck_require__(4908), exports);
+__exportStar(__nccwpck_require__(9983), exports);
+__exportStar(__nccwpck_require__(2005), exports);
+__exportStar(__nccwpck_require__(4511), exports);
+__exportStar(__nccwpck_require__(3169), exports);
+__exportStar(__nccwpck_require__(2921), exports);
+__exportStar(__nccwpck_require__(6750), exports);
+__exportStar(__nccwpck_require__(1273), exports);
+__exportStar(__nccwpck_require__(4855), exports);
+__exportStar(__nccwpck_require__(5559), exports);
+__exportStar(__nccwpck_require__(9401), exports);
+__exportStar(__nccwpck_require__(9689), exports);
 //# sourceMappingURL=index.js.map
 
 /***/ }),
 
-/***/ 8997:
+/***/ 2627:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -336,7 +336,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 7060:
+/***/ 4598:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -345,7 +345,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 2934:
+/***/ 4908:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -354,7 +354,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 9643:
+/***/ 2005:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -363,7 +363,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 8009:
+/***/ 9983:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -372,7 +372,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 3497:
+/***/ 4511:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -381,7 +381,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 9755:
+/***/ 3169:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -390,7 +390,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 2727:
+/***/ 2921:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -399,7 +399,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 6520:
+/***/ 6750:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -408,7 +408,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 9975:
+/***/ 1273:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -417,7 +417,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 4717:
+/***/ 4855:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -426,7 +426,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 8233:
+/***/ 5559:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -435,7 +435,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 7640:
+/***/ 9401:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -444,7 +444,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 7035:
+/***/ 9689:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -453,7 +453,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 774:
+/***/ 1096:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -472,22 +472,22 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__nccwpck_require__(6452), exports);
-__exportStar(__nccwpck_require__(5179), exports);
-__exportStar(__nccwpck_require__(3278), exports);
-__exportStar(__nccwpck_require__(4487), exports);
-__exportStar(__nccwpck_require__(5763), exports);
-__exportStar(__nccwpck_require__(6579), exports);
-__exportStar(__nccwpck_require__(16), exports);
-__exportStar(__nccwpck_require__(6254), exports);
-__exportStar(__nccwpck_require__(5230), exports);
-__exportStar(__nccwpck_require__(4915), exports);
-__exportStar(__nccwpck_require__(0), exports);
+__exportStar(__nccwpck_require__(3918), exports);
+__exportStar(__nccwpck_require__(1153), exports);
+__exportStar(__nccwpck_require__(848), exports);
+__exportStar(__nccwpck_require__(4941), exports);
+__exportStar(__nccwpck_require__(8569), exports);
+__exportStar(__nccwpck_require__(5717), exports);
+__exportStar(__nccwpck_require__(1626), exports);
+__exportStar(__nccwpck_require__(7220), exports);
+__exportStar(__nccwpck_require__(6788), exports);
+__exportStar(__nccwpck_require__(2697), exports);
+__exportStar(__nccwpck_require__(6546), exports);
 //# sourceMappingURL=index.js.map
 
 /***/ }),
 
-/***/ 5230:
+/***/ 6788:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -496,7 +496,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 4915:
+/***/ 2697:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -529,7 +529,7 @@ var CustomFieldType;
 
 /***/ }),
 
-/***/ 0:
+/***/ 6546:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -538,7 +538,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 1921:
+/***/ 4924:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -622,14 +622,14 @@ const is_electron_1 = __importDefault(__nccwpck_require__(7155));
 const is_stream_1 = __importDefault(__nccwpck_require__(2022));
 const p_queue_1 = __importDefault(__nccwpck_require__(8278));
 const p_retry_1 = __importStar(__nccwpck_require__(6545));
-const chat_stream_1 = __nccwpck_require__(7201);
-const errors_1 = __nccwpck_require__(9909);
-const file_upload_1 = __nccwpck_require__(3024);
-const helpers_1 = __importDefault(__nccwpck_require__(6177));
-const instrument_1 = __nccwpck_require__(2435);
-const logger_1 = __nccwpck_require__(2474);
-const methods_1 = __nccwpck_require__(9414);
-const retry_policies_1 = __nccwpck_require__(7373);
+const chat_stream_1 = __nccwpck_require__(6420);
+const errors_1 = __nccwpck_require__(3578);
+const file_upload_1 = __nccwpck_require__(1485);
+const helpers_1 = __importDefault(__nccwpck_require__(5776));
+const instrument_1 = __nccwpck_require__(8980);
+const logger_1 = __nccwpck_require__(3709);
+const methods_1 = __nccwpck_require__(2431);
+const retry_policies_1 = __nccwpck_require__(3626);
 /*
  * Helpers
  */
@@ -1362,7 +1362,7 @@ function redact(body) {
 
 /***/ }),
 
-/***/ 7201:
+/***/ 6420:
 /***/ (function(__unused_webpack_module, exports) {
 
 
@@ -1546,7 +1546,7 @@ exports.ChatStreamer = ChatStreamer;
 
 /***/ }),
 
-/***/ 9909:
+/***/ 3578:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -1632,7 +1632,7 @@ function rateLimitedErrorWithDelay(retrySec) {
 
 /***/ }),
 
-/***/ 3024:
+/***/ 1485:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 
@@ -1660,9 +1660,9 @@ exports.buildFilesUploadMissingMessage = buildFilesUploadMissingMessage;
 exports.buildChannelsWarning = buildChannelsWarning;
 exports.buildMultipleChannelsErrorMsg = buildMultipleChannelsErrorMsg;
 exports.buildInvalidFilesUploadParamError = buildInvalidFilesUploadParamError;
-const node_fs_1 = __nccwpck_require__(8262);
+const node_fs_1 = __nccwpck_require__(3024);
 const node_stream_1 = __nccwpck_require__(7075);
-const errors_1 = __nccwpck_require__(9909);
+const errors_1 = __nccwpck_require__(3578);
 async function getFileUploadJob(options, logger) {
     var _a, _b, _c, _d;
     // Validate parameters
@@ -1998,7 +1998,7 @@ function buildInvalidFilesUploadParamError() {
 
 /***/ }),
 
-/***/ 6177:
+/***/ 5776:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -2018,7 +2018,7 @@ function delay(ms) {
 
 /***/ }),
 
-/***/ 2468:
+/***/ 6053:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -2042,28 +2042,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.WebClientEvent = exports.WebClient = exports.ChatStreamer = exports.retryPolicies = exports.LogLevel = exports.addAppMetadata = exports.ErrorCode = void 0;
-var errors_1 = __nccwpck_require__(9909);
+var errors_1 = __nccwpck_require__(3578);
 Object.defineProperty(exports, "ErrorCode", ({ enumerable: true, get: function () { return errors_1.ErrorCode; } }));
-var instrument_1 = __nccwpck_require__(2435);
+var instrument_1 = __nccwpck_require__(8980);
 Object.defineProperty(exports, "addAppMetadata", ({ enumerable: true, get: function () { return instrument_1.addAppMetadata; } }));
-var logger_1 = __nccwpck_require__(2474);
+var logger_1 = __nccwpck_require__(3709);
 Object.defineProperty(exports, "LogLevel", ({ enumerable: true, get: function () { return logger_1.LogLevel; } }));
-var retry_policies_1 = __nccwpck_require__(7373);
+var retry_policies_1 = __nccwpck_require__(3626);
 Object.defineProperty(exports, "retryPolicies", ({ enumerable: true, get: function () { return __importDefault(retry_policies_1).default; } }));
-__exportStar(__nccwpck_require__(396), exports);
-__exportStar(__nccwpck_require__(2016), exports);
-var chat_stream_1 = __nccwpck_require__(7201);
+__exportStar(__nccwpck_require__(9537), exports);
+__exportStar(__nccwpck_require__(5987), exports);
+var chat_stream_1 = __nccwpck_require__(6420);
 Object.defineProperty(exports, "ChatStreamer", ({ enumerable: true, get: function () { return chat_stream_1.ChatStreamer; } }));
-var WebClient_1 = __nccwpck_require__(1921);
+var WebClient_1 = __nccwpck_require__(4924);
 Object.defineProperty(exports, "WebClient", ({ enumerable: true, get: function () { return WebClient_1.WebClient; } }));
 Object.defineProperty(exports, "WebClientEvent", ({ enumerable: true, get: function () { return WebClient_1.WebClientEvent; } }));
 // methods must be exported after WebClient
-__exportStar(__nccwpck_require__(9414), exports);
+__exportStar(__nccwpck_require__(2431), exports);
 //# sourceMappingURL=index.js.map
 
 /***/ }),
 
-/***/ 2435:
+/***/ 8980:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -2105,7 +2105,7 @@ exports.addAppMetadata = addAppMetadata;
 exports.getUserAgent = getUserAgent;
 const os = __importStar(__nccwpck_require__(8161));
 const node_path_1 = __nccwpck_require__(6760);
-const packageJson = __nccwpck_require__(3598);
+const packageJson = __nccwpck_require__(7289);
 /**
  * Replaces occurrences of '/' with ':' in a string, since '/' is meaningful inside User-Agent strings as a separator.
  */
@@ -2156,7 +2156,7 @@ function getUserAgent() {
 
 /***/ }),
 
-/***/ 2474:
+/***/ 3709:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 
@@ -2191,7 +2191,7 @@ function getLogger(name, level, existingLogger) {
 
 /***/ }),
 
-/***/ 9414:
+/***/ 2431:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -2212,7 +2212,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Methods = void 0;
 const eventemitter3_1 = __nccwpck_require__(8016);
-const WebClient_1 = __nccwpck_require__(1921);
+const WebClient_1 = __nccwpck_require__(4924);
 /**
  * Binds a certain `method` and its (required) arguments and result types to the `apiCall` method in `WebClient`.
  */
@@ -3839,12 +3839,12 @@ class Methods extends eventemitter3_1.EventEmitter {
     }
 }
 exports.Methods = Methods;
-__exportStar(__nccwpck_require__(774), exports);
+__exportStar(__nccwpck_require__(1096), exports);
 //# sourceMappingURL=methods.js.map
 
 /***/ }),
 
-/***/ 7373:
+/***/ 3626:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -3884,7 +3884,7 @@ exports["default"] = policies;
 
 /***/ }),
 
-/***/ 396:
+/***/ 9537:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -3893,7 +3893,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 2016:
+/***/ 5987:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -38157,7 +38157,7 @@ module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:events"
 
 /***/ }),
 
-/***/ 8262:
+/***/ 3024:
 /***/ ((module) => {
 
 module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs");
@@ -44321,10 +44321,10 @@ module.exports = axios;
 
 /***/ }),
 
-/***/ 3598:
+/***/ 7289:
 /***/ ((module) => {
 
-module.exports = /*#__PURE__*/JSON.parse('{"name":"@slack/web-api","version":"7.18.0","description":"Official library for using the Slack Platform\'s Web API","author":"Slack Technologies, LLC","license":"MIT","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"main":"dist/index.js","types":"./dist/index.d.ts","files":["dist/**/*"],"engines":{"node":">= 18","npm":">= 8.6.0"},"repository":{"type":"git","url":"git+https://github.com/slackapi/node-slack-sdk.git"},"homepage":"https://docs.slack.dev/tools/node-slack-sdk/web-api/","publishConfig":{"access":"public"},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"scripts":{"build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist","docs":"npx typedoc --plugin typedoc-plugin-markdown","prepack":"npm run build","test":"npm run build && bash -c \'node --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=test-results.xml --import tsx --test src/*.test.ts\'","test:coverage":"npm run build && node --experimental-test-coverage --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=lcov.info --test-reporter=junit --test-reporter-destination=test-results.xml --import tsx --test src/*.test.ts","test:integration":"npm run build && node test/integration/commonjs-project/index.js && node test/integration/esm-project/index.mjs && npm run test:integration:ts","test:integration:ts":"cd test/integration/ts-4.7-project && npm i && npm run build","test:types":"tsd","watch":"npx nodemon --watch \'src\' --ext \'ts\' --exec npm run build"},"dependencies":{"@slack/logger":"^4.0.1","@slack/types":"^2.21.0","@types/node":">=18","@types/retry":"0.12.0","axios":"^1.16.0","eventemitter3":"^5.0.1","form-data":"^4.0.4","is-electron":"2.2.2","is-stream":"^2","p-queue":"^6","p-retry":"^4","retry":"^0.13.1"},"devDependencies":{"@types/busboy":"^1.5.4","@types/sinon":"^21","busboy":"^1","nock":"^14","sinon":"^21","tsd":"^0.33.0"},"tsd":{"directory":"test/types"}}');
+module.exports = /*#__PURE__*/JSON.parse('{"name":"@slack/web-api","version":"7.19.0","description":"Official library for using the Slack Platform\'s Web API","author":"Slack Technologies, LLC","license":"MIT","keywords":["slack","web-api","bot","client","http","api","proxy","rate-limiting","pagination"],"main":"dist/index.js","types":"./dist/index.d.ts","files":["dist/**/*"],"engines":{"node":">= 18","npm":">= 8.6.0"},"repository":{"type":"git","url":"git+https://github.com/slackapi/node-slack-sdk.git"},"homepage":"https://docs.slack.dev/tools/node-slack-sdk/web-api/","publishConfig":{"access":"public"},"bugs":{"url":"https://github.com/slackapi/node-slack-sdk/issues"},"scripts":{"build":"npm run build:clean && tsc","build:clean":"shx rm -rf ./dist","docs":"npx typedoc --plugin typedoc-plugin-markdown","prepack":"npm run build","test":"npm run build && bash -c \'node --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=test-results.xml --import tsx --test src/*.test.ts\'","test:coverage":"npm run build && node --experimental-test-coverage --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=lcov.info --test-reporter=junit --test-reporter-destination=test-results.xml --import tsx --test src/*.test.ts","test:integration":"npm run build && node test/integration/commonjs-project/index.js && node test/integration/esm-project/index.mjs && npm run test:integration:ts","test:integration:ts":"cd test/integration/ts-4.7-project && npm i && npm run build","test:types":"tsd","watch":"npx nodemon --watch \'src\' --ext \'ts\' --exec npm run build"},"dependencies":{"@slack/logger":"^4.0.1","@slack/types":"^2.21.0","@types/node":">=18","@types/retry":"0.12.0","axios":"^1.16.0","eventemitter3":"^5.0.1","form-data":"^4.0.4","is-electron":"2.2.2","is-stream":"^2","p-queue":"^6","p-retry":"^4","retry":"^0.13.1"},"devDependencies":{"@types/busboy":"^1.5.4","@types/sinon":"^21","busboy":"^1","nock":"^14","sinon":"^21","tsd":"^0.33.0"},"tsd":{"directory":"test/types"}}');
 
 /***/ }),
 
@@ -50720,8 +50720,8 @@ function glob_hashFiles(patterns_1) {
     });
 }
 //# sourceMappingURL=glob.js.map
-// EXTERNAL MODULE: ./node_modules/.pnpm/@slack+web-api@7.18.0/node_modules/@slack/web-api/dist/index.js
-var dist = __nccwpck_require__(2468);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@slack+web-api@7.19.0/node_modules/@slack/web-api/dist/index.js
+var dist = __nccwpck_require__(6053);
 ;// CONCATENATED MODULE: ./lib/main.js
 
 
