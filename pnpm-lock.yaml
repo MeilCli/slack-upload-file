@@ -25,8 +25,8 @@ importers:
         specifier: 10.0.1
         version: 10.0.1(eslint@10.6.0)
       '@types/node':
-        specifier: 25.9.3
-        version: 25.9.3
+        specifier: 25.9.5
+        version: 25.9.5
       '@typescript-eslint/eslint-plugin':
         specifier: 8.63.0
         version: 8.63.0(@typescript-eslint/parser@8.63.0(eslint@10.6.0)(typescript@6.0.3))(eslint@10.6.0)(typescript@6.0.3)
@@ -160,8 +160,8 @@ packages:
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
-  '@types/node@25.9.3':
-    resolution: {integrity: sha512-603BddQMv3pUcr4U2dhujk83N2tTDVr/34wII2B6bJy6g+8WD6yUb11jszNs0gdi4PesVWl7ABt8nYMVpnLUcg==}
+  '@types/node@25.9.5':
+    resolution: {integrity: sha512-OScDchr2fwuUmWdf4kZ9h7PcJiYDVInhJizG/biAq3cAvqwYktuy/TYGGdZNMtNTFUP7rnb0NU4TUdm82kt4Rg==}
 
   '@types/retry@0.12.0':
     resolution: {integrity: sha512-wWKOClTTiizcZhXnPY4wikVAwmdYHp8q6DmC+EJUzAMsycb7HB32Kh9RN4+0gExjmPmZSAQjgURXIGATPegAvA==}
@@ -818,7 +818,7 @@ snapshots:
 
   '@slack/logger@4.0.1':
     dependencies:
-      '@types/node': 25.9.3
+      '@types/node': 25.9.5
 
   '@slack/types@2.22.0': {}
 
@@ -826,7 +826,7 @@ snapshots:
     dependencies:
       '@slack/logger': 4.0.1
       '@slack/types': 2.22.0
-      '@types/node': 25.9.3
+      '@types/node': 25.9.5
       '@types/retry': 0.12.0
       axios: 1.18.1
       eventemitter3: 5.0.4
@@ -846,7 +846,7 @@ snapshots:
 
   '@types/json-schema@7.0.15': {}
 
-  '@types/node@25.9.3':
+  '@types/node@25.9.5':
     dependencies:
       undici-types: 7.24.6
 
