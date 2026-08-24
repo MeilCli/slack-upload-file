@@ -37,7 +37,7 @@ jobs:
       - run: pnpm install
       - run: pnpm run build
       - run: pnpm run pack
-      - uses: MeilCli/bump-release-action@284bd63b0feb5bb40c3c91b059f91961a9ce5775 # v3.0.8
+      - uses: MeilCli/bump-release-action@f424e546097b83e60e1a87513bf21ad72e24e4a5 # v3.0.9
         with:
           config_path: '.github/bump.yml'
           bump: ${{ github.event.inputs.bump }}
