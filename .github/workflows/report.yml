@@ -28,7 +28,7 @@ jobs:
           report_files: |
             eslint_report.json
       - name: Report lint result
-        uses: MeilCli/common-lint-reporter@a7df5f125e31b7701cdb88021c5a6c3ad1451198 # v2.0.14
+        uses: MeilCli/common-lint-reporter@0f14378a932fcaf4a342abdd00c259adf995d1af # v2.0.15
         with:
           report_type: 'check_run'
           report_name: 'Lint Report'
